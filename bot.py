@@ -17,7 +17,7 @@ API_HASH = os.environ.get("API_HASH")
 SESSION_STRING = os.environ.get("SESSION_STRING")
 
 # ==========================================
-# ⏱️ TIME SETTING
+# ⏱️ SETTINGS
 # ==========================================
 INACTIVITY_MINUTES = 3
 is_away = True
@@ -37,7 +37,7 @@ GROUP_USERNAME = "rovixbyultimate"
 SECRET_PASSWORD = "WELCOME@TO@CLN"
 
 # ==========================================
-# 🌍 OFFLINE MESSAGES
+# 🌍 OFFLINE MESSAGES (4 LANGUAGES)
 # ==========================================
 OFFLINE_MESSAGES = {
     "en": """Hello,
@@ -78,43 +78,41 @@ Best regards,
 }
 
 # ==========================================
-# 🎯 ACTION MESSAGES
+# 🎯 ACTION MESSAGES (Prompt + Contact + Join + Welcome)
 # ==========================================
 ACTION_MESSAGES = {
     "en": {
         "prompt": "👇 **Choose an option below:**",
         "contact": "⏳ **Please be patient.**\n\nThe owner is currently away and will get back to you as soon as possible. Thank you for your understanding!",
         "join_first": f"🚀 **Join our official group first to unlock the password:**\n\n🔗 {GROUP_LINK}\n\nAfter joining, tap the button below 👇",
-        "not_joined": f"❌ **You haven't joined yet!**\n\n🔗 {GROUP_LINK}\n\nJoin the group first, then tap '✅ I've Joined' again.",
-        "welcome": f"🎉 **WELCOME@TO@CLN** 🎉\n\n✅ You are now verified!\n\n🔐 **Your secret password is:** `WELCOME@TO@CLN`\n\nKeep it safe!"
+        "not_joined": f"❌ **You haven't joined yet!**\n\n🔗 {GROUP_LINK}\n\nJoin first, then tap '✅ I've Joined' again.",
+        "welcome": "🎉 **WELCOME@TO@CLN** 🎉\n\n✅ You are now verified!\n\n🔐 **Your secret password is:** `WELCOME@TO@CLN`\n\nKeep it safe!"
     },
     "hi": {
         "prompt": "👇 **नीचे एक विकल्प चुनें:**",
-        "contact": "⏳ **कृपया धैर्य रखें।**\n\nमालिक अभी व्यस्त हैं और जल्द ही आपसे संपर्क करेंगे। आपकी समझ के लिए धन्यवाद!",
+        "contact": "⏳ **कृपया धैर्य रखें।**\n\nमालिक जल्द ही आपसे संपर्क करेंगे। आपकी समझ के लिए धन्यवाद!",
         "join_first": f"🚀 **पासवर्ड अनलॉक करने के लिए पहले हमारे आधिकारिक ग्रुप में शामिल हों:**\n\n🔗 {GROUP_LINK}\n\nजॉइन करने के बाद नीचे वाला बटन दबाएं 👇",
-        "not_joined": f"❌ **आपने अभी तक जॉइन नहीं किया!**\n\n🔗 {GROUP_LINK}\n\nपहले ग्रुप जॉइन करें, फिर '✅ I've Joined' दबाएं।",
-        "welcome": f"🎉 **WELCOME@TO@CLN** 🎉\n\n✅ आप वेरिफाइड हो गए हैं!\n\n🔐 **आपका सीक्रेट पासवर्ड है:** `WELCOME@TO@CLN`\n\nइसे संभाल कर रखें!"
+        "not_joined": f"❌ **आपने अभी तक जॉइन नहीं किया!**\n\n🔗 {GROUP_LINK}\n\nपहले जॉइन करें, फिर '✅ I've Joined' दबाएं।",
+        "welcome": "🎉 **WELCOME@TO@CLN** 🎉\n\n✅ आप वेरिफाइड हो गए हैं!\n\n🔐 **आपका सीक्रेट पासवर्ड है:** `WELCOME@TO@CLN`\n\nइसे संभाल कर रखें!"
     },
     "my": {
         "prompt": "👇 **အောက်တွင် ရွေးချယ်မှုတစ်ခုကို ရွေးပါ-**",
-        "contact": "⏳ **ခဏစောင့်ပါ။**\n\nပိုင်ရှင်က အခု အလုပ်များနေလို့ မကြာမီ ပြန်လည်ဆက်သွယ်ပါမယ်။ နားလည်ပေးတဲ့အတွက် ကျေးဇူးတင်ပါတယ်။",
+        "contact": "⏳ **ခဏစောင့်ပါ။**\n\nပိုင်ရှင်က အခု အလုပ်များနေလို့ မကြာမီ ပြန်လည်ဆက်သွယ်ပါမယ်။",
         "join_first": f"🚀 **စကားဝှက်ရရှိရန် ကျွန်ုပ်တို့၏ တရားဝင်အုပ်စုသို့ ဦးစွာဝင်ရောက်ပါ:**\n\n🔗 {GROUP_LINK}\n\nဝင်ရောက်ပြီးပါက အောက်ရှိခလုတ်ကို နှိပ်ပါ 👇",
-        "not_joined": f"❌ **သင်မဝင်ရောက်ရသေးပါ!**\n\n🔗 {GROUP_LINK}\n\nအုပ်စုသို့ ဦးစွာဝင်ရောက်ပါ၊ ပြီးနောက် '✅ I've Joined' ကို ထပ်နှိပ်ပါ။",
-        "welcome": f"🎉 **WELCOME@TO@CLN** 🎉\n\n✅ အတည်ပြုပြီးပါပြီ!\n\n🔐 **သင့်လျှို့ဝှက်စကားဝှက်:** `WELCOME@TO@CLN`\n\nလုံခြုံစွာ သိမ်းဆည်းထားပါ!"
+        "not_joined": f"❌ **သင်မဝင်ရောက်ရသေးပါ!**\n\n🔗 {GROUP_LINK}\n\nဦးစွာဝင်ရောက်ပါ၊ ပြီးနောက် '✅ I've Joined' ကို နှိပ်ပါ။",
+        "welcome": "🎉 **WELCOME@TO@CLN** 🎉\n\n✅ အတည်ပြုပြီးပါပြီ!\n\n🔐 **သင့်လျှို့ဝှက်စကားဝှက်:** `WELCOME@TO@CLN`"
     },
     "ar": {
         "prompt": "👇 **اختر أحد الخيارات أدناه:**",
-        "contact": "⏳ **يرجى التحلي بالصبر.**\n\nالمالك مشغول حالياً وسيتواصل معك في أقرب وقت ممكن. شكراً لتفهمك!",
+        "contact": "⏳ **يرجى التحلي بالصبر.**\n\nالمالك مشغول حالياً وسيتواصل معك في أقرب وقت ممكن.",
         "join_first": f"🚀 **انضم أولاً إلى مجموعتنا الرسمية لفتح كلمة المرور:**\n\n🔗 {GROUP_LINK}\n\nبعد الانضمام، اضغط على الزر أدناه 👇",
         "not_joined": f"❌ **لم تنضم بعد!**\n\n🔗 {GROUP_LINK}\n\nانضم أولاً، ثم اضغط على '✅ I've Joined' مرة أخرى.",
-        "welcome": f"🎉 **WELCOME@TO@CLN** 🎉\n\n✅ تم التحقق منك!\n\n🔐 **كلمة المرور السرية الخاصة بك:** `WELCOME@TO@CLN`\n\nاحتفظ بها بأمان!"
+        "welcome": "🎉 **WELCOME@TO@CLN** 🎉\n\n✅ تم التحقق منك!\n\n🔐 **كلمة المرور السرية الخاصة بك:** `WELCOME@TO@CLN`"
     }
 }
 
 user_langs = {}
-
-# 🗑️ Har user ke bot ke bheje messages ka record (delete karne ke liye)
-bot_messages = {}   # {user_id: [message_id1, message_id2, ...]}
+bot_messages = {}
 
 # ==========================================
 # TELEGRAM CLIENT
@@ -138,10 +136,9 @@ async def is_user_in_group(user_id):
         return False
 
 # ==========================================
-# 🗑️ DELETE ALL BOT MESSAGES FUNCTION
+# 🗑️ DELETE BOT MESSAGES
 # ==========================================
 async def delete_bot_messages(user_id):
-    """User ke chat se bot ke saare messages delete karo"""
     try:
         if user_id in bot_messages:
             for msg_id in bot_messages[user_id]:
@@ -150,18 +147,17 @@ async def delete_bot_messages(user_id):
                 except Exception:
                     pass
             bot_messages[user_id] = []
-            print(f"🗑️ Deleted bot messages for {user_id}")
+            print(f"🗑️ Deleted messages for {user_id}")
     except Exception as e:
         print(f"⚠️ Delete error: {e}")
 
 def track_message(user_id, message):
-    """Bot ke bheje message ko track karo"""
     if user_id not in bot_messages:
         bot_messages[user_id] = []
     bot_messages[user_id].append(message.id)
 
 # ==========================================
-# 🎯 INCOMING MESSAGE HANDLER (From User)
+# 🎯 INCOMING MESSAGE HANDLER
 # ==========================================
 @client.on(events.NewMessage(incoming=True))
 async def auto_reply_handler(event):
@@ -169,14 +165,12 @@ async def auto_reply_handler(event):
     try:
         if not event.is_private:
             return
-
         me = await client.get_me()
         if event.sender_id == me.id:
             return
-
         user_id = event.sender_id
 
-        # Language select
+        # Language selection
         if user_id not in user_langs:
             buttons = [
                 [Button.inline("🇬🇧 English", b"lang_en")],
@@ -204,7 +198,7 @@ async def auto_reply_handler(event):
                 caption=OFFLINE_MESSAGES.get(user_lang, OFFLINE_MESSAGES["en"])
             )
             track_message(user_id, msg1)
-            
+
             action_buttons = [
                 [Button.inline("📞 Contact with Owner", b"action_contact")],
                 [Button.inline("🚀 HACK", b"action_hack")]
@@ -215,9 +209,9 @@ async def auto_reply_handler(event):
                 buttons=action_buttons
             )
             track_message(user_id, msg2)
-            print(f"📩 Auto-reply + Choices sent ({user_lang})")
+            print(f"📩 Auto-reply sent ({user_lang})")
 
-        # Translate
+        # Translate to English
         if event.text and user_lang != "en":
             try:
                 translated = GoogleTranslator(source='auto', target='en').translate(event.text)
@@ -230,34 +224,24 @@ async def auto_reply_handler(event):
                 )
             except Exception as e:
                 print(f"⚠️ Translation error: {e}")
-
     except Exception as e:
         print(f"⚠️ Error: {e}")
 
 # ==========================================
-# 🎯 OUTGOING MESSAGE HANDLER (From YOU - Owner)
+# 🎯 OUTGOING (Owner reply → delete bot msgs)
 # ==========================================
 @client.on(events.NewMessage(outgoing=True))
 async def outgoing_handler(event):
     global last_activity
     try:
-        # Activity update karo
         last_activity = time.time()
-
-        # Sirf private chats me
         if not event.is_private:
             return
-
-        # Command messages skip karo
         if event.text and event.text.startswith("/"):
             return
-
         user_id = event.chat_id
-
-        # 🗑️ Agar tumne user ko reply kiya → bot ke saare messages delete karo
         if user_id in bot_messages and bot_messages[user_id]:
             await delete_bot_messages(user_id)
-
     except Exception as e:
         print(f"⚠️ Outgoing Error: {e}")
 
@@ -267,24 +251,21 @@ async def outgoing_handler(event):
 @client.on(events.CallbackQuery(data=lambda d: d.startswith(b"lang_")))
 async def lang_callback(event):
     try:
-        data = event.data.decode()
+        lang = event.data.decode().replace("lang_", "")
         user_id = event.sender_id
-        lang = data.replace("lang_", "")
-
         if lang in OFFLINE_MESSAGES:
             user_langs[user_id] = lang
             await event.delete()
-
-            confirm_msg = {
+            confirm = {
                 "en": "✅ Language set to **English**.\n\nNow send me your message.",
                 "hi": "✅ भाषा **हिन्दी** सेट हो गई।\n\nअब अपना संदेश भेजें।",
                 "my": "✅ ဘာသာစကား **မြန်မာ** သတ်မှတ်ပြီးပါပြီ။\n\nအခု သင့်စာ ပို့ပါ။",
                 "ar": "✅ تم تعيين اللغة إلى **العربية**.\n\nالآن أرسل رسالتك."
             }
-            msg = await client.send_message(event.chat_id, confirm_msg[lang])
+            msg = await client.send_message(event.chat_id, confirm[lang])
             track_message(user_id, msg)
     except Exception as e:
-        print(f"⚠️ Callback Error: {e}")
+        print(f"⚠️ Lang Error: {e}")
 
 # ==========================================
 # 🎯 ACTION BUTTONS HANDLER
@@ -295,26 +276,21 @@ async def action_callback(event):
         data = event.data.decode()
         user_id = event.sender_id
         user_lang = user_langs.get(user_id, "en")
+        await event.delete()
 
         if data == "action_contact":
-            await event.delete()
             msg = await client.send_file(
                 event.chat_id,
                 CONTACT_GIF_URL,
                 caption=ACTION_MESSAGES[user_lang]["contact"]
             )
             track_message(user_id, msg)
-            print(f"📞 Contact owner clicked by {user_id}")
+            print(f"📞 Contact clicked by {user_id}")
 
         elif data == "action_hack":
-            await event.delete()
             joined = await is_user_in_group(user_id)
-
             if joined:
-                msg = await client.send_message(
-                    event.chat_id,
-                    ACTION_MESSAGES[user_lang]["welcome"]
-                )
+                msg = await client.send_message(event.chat_id, ACTION_MESSAGES[user_lang]["welcome"])
                 track_message(user_id, msg)
                 print(f"🎉 Password given to {user_id}")
             else:
@@ -329,7 +305,6 @@ async def action_callback(event):
                 )
                 track_message(user_id, msg)
                 print(f"🔗 Group link sent to {user_id}")
-
     except Exception as e:
         print(f"⚠️ Action Error: {e}")
 
@@ -337,26 +312,18 @@ async def action_callback(event):
 # 🎯 VERIFY JOIN HANDLER
 # ==========================================
 @client.on(events.CallbackQuery(data=b"verify_join"))
-async def verify_join_handler(event):
+async def verify_handler(event):
     try:
         user_id = event.sender_id
         user_lang = user_langs.get(user_id, "en")
-
         joined = await is_user_in_group(user_id)
-
         if joined:
             await event.delete()
-            msg = await client.send_message(
-                event.chat_id,
-                ACTION_MESSAGES[user_lang]["welcome"]
-            )
+            msg = await client.send_message(event.chat_id, ACTION_MESSAGES[user_lang]["welcome"])
             track_message(user_id, msg)
             print(f"🎉 Verified & password given to {user_id}")
         else:
-            await event.answer(
-                "❌ You haven't joined the group yet!",
-                alert=True
-            )
+            await event.answer("❌ You haven't joined the group yet!", alert=True)
             verify_buttons = [
                 [Button.url("🔗 Join Group", GROUP_LINK)],
                 [Button.inline("✅ I've Joined", b"verify_join")]
@@ -368,7 +335,6 @@ async def verify_join_handler(event):
             )
             track_message(user_id, msg)
             print(f"❌ User {user_id} not joined yet")
-
     except Exception as e:
         print(f"⚠️ Verify Error: {e}")
 
@@ -411,7 +377,7 @@ async def main():
     await client.start()
     me = await client.get_me()
     print("=" * 55)
-    print("✅ VERIFY BOT RUNNING!")
+    print("✅ BOT RUNNING!")
     print(f"👤 {me.first_name}")
     print(f"⏱️  Inactivity: {INACTIVITY_MINUTES} min")
     print(f"🔗 Group: {GROUP_LINK}")

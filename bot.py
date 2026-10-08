@@ -6,31 +6,37 @@ import os
 import threading
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
+# ==========================================
+# RENDER ENVIRONMENT VARIABLES
+# ==========================================
 API_ID = int(os.environ.get("API_ID"))
 API_HASH = os.environ.get("API_HASH")
 SESSION_STRING = os.environ.get("SESSION_STRING")
 
-INACTIVITY_MINUTES = 2
+# ==========================================
+# SETTINGS
+# ==========================================
+# 2 minute ki jagah 15 minute kar diya hai (taaki online hote waqt galti se reply na jaye)
+INACTIVITY_MINUTES = 15   
 is_away = True
 last_activity = time.time()
 
-AWAY_MESSAGE = """╔══════════════════════╗
-   💤  OFFLINE MODE  💤
-╚══════════════════════╝
+# ==========================================
+# 🎬 GIF KA DIRECT LINK (Tumhara Will Smith wala GIF)
+# ==========================================
+GIF_URL = "https://media.giphy.com/media/OQS9HFAZuLvJEoUdR1/giphy.gif"
 
-Hey there! 👋
+# ==========================================
+# 💼 BUSINESS PROFESSIONAL MESSAGE
+# ==========================================
+AWAY_MESSAGE = """Hello,
 
-I'm currently **offline** right now —
-away from my phone, busy with something. 😅
+Thank you for reaching out. I am currently away from my desk and unable to respond right away.
 
-Your message has been received,
-and I'll reply as soon as I'm back online. ✅
+I have received your message and will get back to you at the earliest opportunity.
 
-━━━━━━━━━━━━━━━━━━━━━━
-⏳ *Please wait a little while*
-━━━━━━━━━━━━━━━━━━━━━━
-
-— Sent automatically 🤖"""
+Best regards,
+[ROBIXBY ULTI]"""
 
 client = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
 
@@ -44,8 +50,13 @@ async def auto_reply_handler(event):
                 return
             minutes_inactive = (time.time() - last_activity) / 60
             if minutes_inactive >= INACTIVITY_MINUTES:
-                await event.reply(AWAY_MESSAGE)
-                print(f"📩 Reply sent")
+                # 🎬 GIF ke saath professional message bhejo
+                await client.send_file(
+                    event.chat_id,
+                    GIF_URL,
+                    caption=AWAY_MESSAGE
+                )
+                print(f"📩 Reply sent with GIF")
     except Exception as e:
         print(f"⚠️ Error: {e}")
 

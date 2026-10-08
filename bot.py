@@ -21,72 +21,422 @@ CONTACT_GIF_URL = "https://media.giphy.com/media/z4lwT4QTkK3sYITR7Z/giphy.gif"
 
 GROUP_LINK = "https://t.me/rovixbyultimate"
 GROUP_USERNAME = "rovixbyultimate"
+OWNER_CONTACT = "@MG1SHWE"
 
+# ==========================================
+# 🌍 OFFLINE MESSAGES — Professional
+# ==========================================
 OFFLINE_MESSAGES = {
-    "en": """Hello,
+    "en": """╔══════════════════════╗
+   💼  AWAY MESSAGE
+╚══════════════════════╝
 
-Thank you for reaching out. I am currently away from my desk and unable to respond right away.
+Dear Sender,
 
-I have received your message and will get back to you at the earliest opportunity.
+Thank you for reaching out. I am currently **away from my desk** and unable to respond right away.
+
+Your message has been received and will be reviewed as soon as I return.
+
+━━━━━━━━━━━━━━━━━━━━━━
+📌 Response will be provided at the earliest opportunity.
+━━━━━━━━━━━━━━━━━━━━━━
 
 Best regards,
 [Your Name]""",
-    "hi": """नमस्ते,
 
-संपर्क करने के लिए धन्यवाद। मैं अभी अपने डेस्क से दूर हूँ और तुरंत जवाब नहीं दे सकता।
+    "hi": """╔══════════════════════╗
+   💼  अनुपस्थित संदेश
+╚══════════════════════╝
 
-मुझे आपका संदेश मिल गया है और मैं जल्द से जल्द जवाब दूँगा।
+प्रिय भेजने वाले,
+
+संपर्क करने के लिए धन्यवाद। मैं वर्तमान में **अपने डेस्क से दूर** हूँ और तुरंत उत्तर देने में असमर्थ हूँ।
+
+आपका संदेश प्राप्त हो गया है और मेरे लौटते ही इसकी समीक्षा की जाएगी।
+
+━━━━━━━━━━━━━━━━━━━━━━
+📌 जल्द से जल्द उत्तर दिया जाएगा।
+━━━━━━━━━━━━━━━━━━━━━━
 
 सादर,
 [आपका नाम]""",
-    "my": """မင်္ဂလာပါ၊
 
-ဆက်သွယ်ပေးတဲ့အတွက် ကျေးဇူးတင်ပါတယ်။ ကျွန်တော် အခု စားပွဲကနေ ဝေးနေတာမို့ ချက်ချင်း ပြန်လည်ဖြေကြားနိုင်မှာ မဟုတ်ပါဘူး။
+    "my": """╔══════════════════════╗
+   💼  မရှိချိန် အသိပေးစာ
+╚══════════════════════╝
 
-သင့်စာ ရောက်ပါပြီ၊ အတတ်နိုင်ဆုံး အမြန်ဆုံး ပြန်လည်ဖြေကြားပါမယ်။
+ချစ်ခင်ရပါသော ပေးပို့သူ၊
+
+ဆက်သွယ်ပေးတဲ့အတွက် ကျေးဇူးတင်ပါတယ်။ ကျွန်တော်သည် **စားပွဲမှ ဝေးနေပါသည်**၊ ချက်ချင်းပြန်လည်ဖြေကြားနိုင်မည် မဟုတ်ပါ။
+
+သင့်စာ လက်ခံရရှိပါပြီ၊ ပြန်ရောက်သည်နှင့် စစ်ဆေးပါမည်။
+
+━━━━━━━━━━━━━━━━━━━━━━
+📌 အမြန်ဆုံး ပြန်လည်ဖြေကြားပါမည်။
+━━━━━━━━━━━━━━━━━━━━━━
 
 လေးစားစွာဖြင့်၊
 [သင့်နာမည်]""",
-    "ar": """مرحباً،
 
-شكراً لتواصلك معي. أنا حالياً بعيد عن مكتبي ولا أستطيع الرد فوراً.
+    "ar": """╔══════════════════════╗
+   💼  رسالة الغياب
+╚══════════════════════╝
 
-لقد استلمت رسالتك وسأرد عليك في أقرب فرصة ممكنة.
+عزيزي المرسل،
+
+شكراً لتواصلك معي. أنا حالياً **بعيد عن مكتبي** ولا أستطيع الرد فوراً.
+
+لقد تم استلام رسالتك وسيتم مراجعتها فور عودتي.
+
+━━━━━━━━━━━━━━━━━━━━━━
+📌 سيتم الرد في أقرب فرصة ممكنة.
+━━━━━━━━━━━━━━━━━━━━━━
 
 مع خالص التحية،
-[اسمك]"""
+[اسمك]""",
+
+    "ur": """╔══════════════════════╗
+   💼  غیر حاضری کا پیغام
+╚══════════════════════╝
+
+محترم بھیجنے والے،
+
+رابطہ کرنے کا شکریہ۔ میں اس وقت **اپنے ڈیسک سے دور** ہوں اور فوری جواب دینے سے قاصر ہوں۔
+
+آپ کا پیغام موصول ہو گیا ہے اور واپسی پر اس کا جائزہ لیا جائے گا۔
+
+━━━━━━━━━━━━━━━━━━━━━━
+📌 جلد از جلد جواب دیا جائے گا۔
+━━━━━━━━━━━━━━━━━━━━━━
+
+بہترین احترام کے ساتھ،
+[آپ کا نام]"""
 }
 
-LANG_MENU = "🌐 **Please select your language:**\n\n1️⃣ English\n2️⃣ हिन्दी\n3️⃣ မြန်မာ\n4️⃣ العربية\n\n**Reply with 1, 2, 3, or 4**"
+# ==========================================
+# 🌐 LANGUAGE MENU (English Alphabet)
+# ==========================================
+LANG_MENU = """╔══════════════════════╗
+   🌐  LANGUAGE SELECTION
+╚══════════════════════╝
 
+Welcome! Please select your preferred language below.
+
+━━━━━━━━━━━━━━━━━━━━━━
+   1️⃣  English
+   2️⃣  Hindi
+   3️⃣  Burmese
+   4️⃣  Arabic
+   5️⃣  Urdu
+━━━━━━━━━━━━━━━━━━━━━━
+
+📩 **Reply with a number (1-5)** to continue.
+
+_Your messages will be auto-translated to English._"""
+
+# ==========================================
+# 🎯 ACTION MESSAGES
+# ==========================================
 ACTION_MESSAGES = {
     "en": {
-        "prompt": "👇 **Reply with:**\n\n1️⃣ Contact with Owner\n2️⃣ HACK",
-        "contact": "⏳ **Please be patient.**\n\nThe owner is currently away and will get back to you as soon as possible. Thank you for your understanding!",
-        "join_first": f"🚀 **Join our official group first to unlock the password:**\n\n🔗 {GROUP_LINK}\n\nAfter joining, reply with **YES** to get the password.",
-        "not_joined": f"❌ **You haven't joined yet!**\n\n🔗 {GROUP_LINK}\n\nJoin first, then reply **YES** again.",
-        "welcome": "🎉 **WELCOME@TO@CLN** 🎉\n\n✅ You are now verified!\n\n🔐 **Your secret password is:** `WELCOME@TO@CLN`\n\nKeep it safe!"
+        "prompt": """╔══════════════════════╗
+   📋  CHOOSE AN OPTION
+╚══════════════════════╝
+
+   1️⃣  📞  Contact with Owner
+   2️⃣  🚀  HACK
+
+━━━━━━━━━━━━━━━━━━━━━━
+📩 **Reply with 1 or 2**""",
+        "contact": f"""╔══════════════════════╗
+   ⏳  PLEASE BE PATIENT
+╚══════════════════════╝
+
+Thank you for your patience.
+
+The owner is currently **unavailable** and will get back to you as soon as possible.
+
+━━━━━━━━━━━━━━━━━━━━━━
+📞  **Alternative Contact:**
+   👤 {OWNER_CONTACT}
+
+Feel free to message for urgent matters.
+━━━━━━━━━━━━━━━━━━━━━━""",
+        "join_first": f"""╔══════════════════════╗
+   🚀  UNLOCK PASSWORD
+╚══════════════════════╝
+
+To receive the secret password, please join our official group first.
+
+━━━━━━━━━━━━━━━━━━━━━━
+🔗 {GROUP_LINK}
+━━━━━━━━━━━━━━━━━━━━━━
+
+✅ After joining, reply with **YES** to verify.""",
+        "not_joined": f"""╔══════════════════════╗
+   ❌  NOT VERIFIED
+╚══════════════════════╝
+
+You haven't joined our group yet.
+
+━━━━━━━━━━━━━━━━━━━━━━
+🔗 {GROUP_LINK}
+━━━━━━━━━━━━━━━━━━━━━━
+
+Please join first, then reply with **YES** again.""",
+        "welcome": """╔══════════════════════╗
+   🎉  ACCESS GRANTED
+╚══════════════════════╝
+
+✅ You are now **verified**!
+
+━━━━━━━━━━━━━━━━━━━━━━
+🔐  YOUR SECRET PASSWORD:
+
+   `WELCOME@TO@CLN`
+━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️ Keep it safe. Do not share."""
     },
     "hi": {
-        "prompt": "👇 **Reply karo:**\n\n1️⃣ Contact with Owner\n2️⃣ HACK",
-        "contact": "⏳ **कृपया धैर्य रखें।**\n\nमालिक जल्द ही आपसे संपर्क करेंगे।",
-        "join_first": f"🚀 **पहले हमारे ग्रुप में शामिल हों:**\n\n🔗 {GROUP_LINK}\n\nजॉइन करने के बाद **YES** reply करें।",
-        "not_joined": f"❌ **आपने जॉइन नहीं किया!**\n\n🔗 {GROUP_LINK}\n\nपहले जॉइन करें, फिर **YES** reply करें।",
-        "welcome": "🎉 **WELCOME@TO@CLN** 🎉\n\n✅ आप वेरिफाइड हो गए!\n\n🔐 **पासवर्ड:** `WELCOME@TO@CLN`"
+        "prompt": """╔══════════════════════╗
+   📋  विकल्प चुनें
+╚══════════════════════╝
+
+   1️⃣  📞  मालिक से संपर्क
+   2️⃣  🚀  HACK
+
+━━━━━━━━━━━━━━━━━━━━━━
+📩 **1 या 2 लिखकर जवाब दें**""",
+        "contact": f"""╔══════════════════════╗
+   ⏳  कृपया धैर्य रखें
+╚══════════════════════╝
+
+आपके धैर्य के लिए धन्यवाद।
+
+मालिक अभी **अनुपलब्ध** हैं और जल्द ही आपसे संपर्क करेंगे।
+
+━━━━━━━━━━━━━━━━━━━━━━
+📞  **वैकल्पिक संपर्क:**
+   👤 {OWNER_CONTACT}
+
+ज़रूरी मामलों के लिए संपर्क करें।
+━━━━━━━━━━━━━━━━━━━━━━""",
+        "join_first": f"""╔══════════════════════╗
+   🚀  पासवर्ड अनलॉक करें
+╚══════════════════════╝
+
+गुप्त पासवर्ड प्राप्त करने के लिए पहले हमारे आधिकारिक ग्रुप में शामिल हों।
+
+━━━━━━━━━━━━━━━━━━━━━━
+🔗 {GROUP_LINK}
+━━━━━━━━━━━━━━━━━━━━━━
+
+✅ जॉइन करने के बाद **YES** लिखकर भेजें।""",
+        "not_joined": f"""╔══════════════════════╗
+   ❌  वेरिफाई नहीं हुआ
+╚══════════════════════╝
+
+आपने अभी तक ग्रुप जॉइन नहीं किया।
+
+━━━━━━━━━━━━━━━━━━━━━━
+🔗 {GROUP_LINK}
+━━━━━━━━━━━━━━━━━━━━━━
+
+पहले जॉइन करें, फिर **YES** लिखकर भेजें।""",
+        "welcome": """╔══════════════════════╗
+   🎉  एक्सेस मिल गया
+╚══════════════════════╝
+
+✅ आप **वेरिफाइड** हो गए हैं!
+
+━━━━━━━━━━━━━━━━━━━━━━
+🔐  आपका सीक्रेट पासवर्ड:
+
+   `WELCOME@TO@CLN`
+━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️ इसे संभाल कर रखें। किसी को न दें।"""
     },
     "my": {
-        "prompt": "👇 **Reply လုပ်ပါ:**\n\n1️⃣ Contact with Owner\n2️⃣ HACK",
-        "contact": "⏳ **ခဏစောင့်ပါ။**",
-        "join_first": f"🚀 **အုပ်စုသို့ ဦးစွာဝင်ပါ:**\n\n🔗 {GROUP_LINK}\n\nဝင်ပြီးပါက **YES** reply လုပ်ပါ။",
-        "not_joined": f"❌ **မဝင်ရသေးပါ!**\n\n🔗 {GROUP_LINK}\n\nဦးစွာဝင်ပါ၊ ပြီးနောက် **YES** reply လုပ်ပါ။",
-        "welcome": "🎉 **WELCOME@TO@CLN** 🎉\n\n✅ အတည်ပြုပြီးပါပြီ!\n\n🔐 **စကားဝှက်:** `WELCOME@TO@CLN`"
+        "prompt": """╔══════════════════════╗
+   📋  ရွေးချယ်ပါ
+╚══════════════════════╝
+
+   1️⃣  📞  ပိုင်ရှင်နှင့် ဆက်သွယ်
+   2️⃣  🚀  HACK
+
+━━━━━━━━━━━━━━━━━━━━━━
+📩 **1 သို့မဟုတ် 2 လို့ ပြန်ပို့ပါ**""",
+        "contact": f"""╔══════════════════════╗
+   ⏳  ခဏစောင့်ပါ
+╚══════════════════════╝
+
+စောင့်ဆိုင်းပေးတဲ့အတွက် ကျေးဇူးတင်ပါတယ်။
+
+ပိုင်ရှင်က **မရှိပါ**၊ မကြာမီ ပြန်လည်ဆက်သွယ်ပါမယ်။
+
+━━━━━━━━━━━━━━━━━━━━━━
+📞  **အခြားဆက်သွယ်ရန်:**
+   👤 {OWNER_CONTACT}
+
+အရေးကြီးကိစ္စများအတွက် ဆက်သွယ်ပါ။
+━━━━━━━━━━━━━━━━━━━━━━""",
+        "join_first": f"""╔══════════════════════╗
+   🚀  စကားဝှက် ဖွင့်ပါ
+╚══════════════════════╝
+
+လျှို့ဝှက်စကားဝှက် ရရှိရန် ကျွန်ုပ်တို့၏ တရားဝင်အုပ်စုသို့ ဦးစွာဝင်ပါ။
+
+━━━━━━━━━━━━━━━━━━━━━━
+🔗 {GROUP_LINK}
+━━━━━━━━━━━━━━━━━━━━━━
+
+✅ ဝင်ပြီးပါက **YES** လို့ ပြန်ပို့ပါ။""",
+        "not_joined": f"""╔══════════════════════╗
+   ❌  အတည်ပြုမရသေးပါ
+╚══════════════════════╝
+
+သင်သည် အုပ်စုသို့ မဝင်ရောက်ရသေးပါ။
+
+━━━━━━━━━━━━━━━━━━━━━━
+🔗 {GROUP_LINK}
+━━━━━━━━━━━━━━━━━━━━━━
+
+ဦးစွာဝင်ပါ၊ ပြီးနောက် **YES** လို့ ပြန်ပို့ပါ။""",
+        "welcome": """╔══════════════════════╗
+   🎉  ဝင်ရောက်ခွင့် ရပါပြီ
+╚══════════════════════╝
+
+✅ အတည်ပြုပြီးပါပြီ!
+
+━━━━━━━━━━━━━━━━━━━━━━
+🔐  သင့်လျှို့ဝှက်စကားဝှက်:
+
+   `WELCOME@TO@CLN`
+━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️ လုံခြုံစွာ သိမ်းထားပါ။ မမျှဝေပါနှင့်။"""
     },
     "ar": {
-        "prompt": "👇 **الرد على:**\n\n1️⃣ Contact with Owner\n2️⃣ HACK",
-        "contact": "⏳ **يرجى التحلي بالصبر.**",
-        "join_first": f"🚀 **انضم للمجموعة أولاً:**\n\n🔗 {GROUP_LINK}\n\nثم الرد بـ **YES**.",
-        "not_joined": f"❌ **لم تنضم بعد!**\n\n🔗 {GROUP_LINK}\n\nانضم أولاً، ثم الرد بـ **YES**.",
-        "welcome": "🎉 **WELCOME@TO@CLN** 🎉\n\n✅ تم التحقق!\n\n🔐 **كلمة المرور:** `WELCOME@TO@CLN`"
+        "prompt": """╔══════════════════════╗
+   📋  اختر خياراً
+╚══════════════════════╝
+
+   1️⃣  📞  التواصل مع المالك
+   2️⃣  🚀  HACK
+
+━━━━━━━━━━━━━━━━━━━━━━
+📩 **الرد بـ 1 أو 2**""",
+        "contact": f"""╔══════════════════════╗
+   ⏳  يرجى الانتظار
+╚══════════════════════╝
+
+شكراً لصبرك.
+
+المالك **غير متوفر** حالياً وسيتواصل معك في أقرب وقت ممكن.
+
+━━━━━━━━━━━━━━━━━━━━━━
+📞  **جهة اتصال بديلة:**
+   👤 {OWNER_CONTACT}
+
+تواصل معنا للأمور العاجلة.
+━━━━━━━━━━━━━━━━━━━━━━""",
+        "join_first": f"""╔══════════════════════╗
+   🚀  فتح كلمة المرور
+╚══════════════════════╝
+
+للحصول على كلمة المرور السرية، يرجى الانضمام إلى مجموعتنا الرسمية أولاً.
+
+━━━━━━━━━━━━━━━━━━━━━━
+🔗 {GROUP_LINK}
+━━━━━━━━━━━━━━━━━━━━━━
+
+✅ بعد الانضمام، أرسل **YES** للتحقق.""",
+        "not_joined": f"""╔══════════════════════╗
+   ❌  لم يتم التحقق
+╚══════════════════════╝
+
+لم تنضم إلى مجموعتنا بعد.
+
+━━━━━━━━━━━━━━━━━━━━━━
+🔗 {GROUP_LINK}
+━━━━━━━━━━━━━━━━━━━━━━
+
+انضم أولاً، ثم أرسل **YES** مرة أخرى.""",
+        "welcome": """╔══════════════════════╗
+   🎉  تم منح الوصول
+╚══════════════════════╝
+
+✅ تم التحقق منك!
+
+━━━━━━━━━━━━━━━━━━━━━━
+🔐  كلمة المرور السرية:
+
+   `WELCOME@TO@CLN`
+━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️ احتفظ بها بأمان. لا تشاركها."""
+    },
+    "ur": {
+        "prompt": """╔══════════════════════╗
+   📋  ایک آپشن منتخب کریں
+╚══════════════════════╝
+
+   1️⃣  📞  مالک سے رابطہ
+   2️⃣  🚀  HACK
+
+━━━━━━━━━━━━━━━━━━━━━━
+📩 **1 یا 2 لکھ کر جواب دیں**""",
+        "contact": f"""╔══════════════════════╗
+   ⏳  براہ کرم صبر کریں
+╚══════════════════════╝
+
+آپ کے صبر کا شکریہ۔
+
+مالک اس وقت **دستیاب نہیں** ہیں اور جلد از جلد آپ سے رابطہ کریں گے۔
+
+━━━━━━━━━━━━━━━━━━━━━━
+📞  **متبادل رابطہ:**
+   👤 {OWNER_CONTACT}
+
+اہم معاملات کے لیے رابطہ کریں۔
+━━━━━━━━━━━━━━━━━━━━━━""",
+        "join_first": f"""╔══════════════════════╗
+   🚀  پاس ورڈ حاصل کریں
+╚══════════════════════╝
+
+خفیہ پاس ورڈ حاصل کرنے کے لیے پہلے ہمارے آفیشل گروپ میں شامل ہوں۔
+
+━━━━━━━━━━━━━━━━━━━━━━
+🔗 {GROUP_LINK}
+━━━━━━━━━━━━━━━━━━━━━━
+
+✅ شامل ہونے کے بعد **YES** لکھ کر بھیجیں۔""",
+        "not_joined": f"""╔══════════════════════╗
+   ❌  تصدیق نہیں ہوئی
+╚══════════════════════╝
+
+آپ نے ابھی تک گروپ میں شمولیت نہیں کی۔
+
+━━━━━━━━━━━━━━━━━━━━━━
+🔗 {GROUP_LINK}
+━━━━━━━━━━━━━━━━━━━━━━
+
+پہلے شامل ہوں، پھر **YES** لکھ کر بھیجیں۔""",
+        "welcome": """╔══════════════════════╗
+   🎉  رسائی مل گئی
+╚══════════════════════╝
+
+✅ آپ کی تصدیق ہو گئی ہے!
+
+━━━━━━━━━━━━━━━━━━━━━━
+🔐  آپ کا خفیہ پاس ورڈ:
+
+   `WELCOME@TO@CLN`
+━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️ اسے محفوظ رکھیں۔ کسی کو نہ بتائیں۔"""
     }
 }
 
@@ -141,21 +491,22 @@ async def auto_reply_handler(event):
 
         # === LANGUAGE SELECTION ===
         if user_id in waiting_for_lang:
-            lang_map = {"1": "en", "2": "hi", "3": "my", "4": "ar"}
+            lang_map = {"1": "en", "2": "hi", "3": "my", "4": "ar", "5": "ur"}
             if text in lang_map:
                 user_langs[user_id] = lang_map[text]
                 waiting_for_lang.discard(user_id)
+                user_lang = lang_map[text]
+
                 confirm = {
-                    "en": "✅ Language set to **English**.",
-                    "hi": "✅ भाषा **हिन्दी** सेट हो गई।",
-                    "my": "✅ ဘာသာစကား **မြန်မာ** သတ်မှတ်ပြီးပါပြီ။",
-                    "ar": "✅ تم تعيين اللغة إلى **العربية**."
+                    "en": "✅ Language set to **English**",
+                    "hi": "✅ भाषा **हिन्दी** सेट हो गई",
+                    "my": "✅ ဘာသာစကား **မြန်မာ** သတ်မှတ်ပြီးပါပြီ",
+                    "ar": "✅ تم تعيين اللغة إلى **العربية**",
+                    "ur": "✅ زبان **اردو** منتخب ہو گئی"
                 }
-                msg = await client.send_message(event.chat_id, confirm[lang_map[text]])
+                msg = await client.send_message(event.chat_id, confirm[user_lang])
                 track_message(user_id, msg)
 
-                # 🔥 INSTANT: Turant offline message + contact/hack options
-                user_lang = lang_map[text]
                 await asyncio.sleep(0.5)
                 msg1 = await client.send_file(event.chat_id, GIF_URL, caption=OFFLINE_MESSAGES[user_lang])
                 track_message(user_id, msg1)
@@ -165,7 +516,7 @@ async def auto_reply_handler(event):
                 track_message(user_id, msg2)
                 return
             else:
-                await client.send_message(event.chat_id, "❌ Please reply with **1, 2, 3, or 4**")
+                await client.send_message(event.chat_id, "❌ Invalid. Reply with **1-5**")
                 return
 
         # === ACTION CHOICE ===
@@ -191,7 +542,7 @@ async def auto_reply_handler(event):
                 await client.send_message(event.chat_id, "❌ Reply with **1 or 2**")
                 return
 
-        # === YES (after joining) ===
+        # === YES ===
         if user_id in waiting_for_yes:
             user_lang = user_langs.get(user_id, "en")
             if text == "YES":
@@ -212,7 +563,7 @@ async def auto_reply_handler(event):
             track_message(user_id, msg)
             return
 
-        # === NORMAL USER MESSAGE (after setup) ===
+        # === NORMAL USER MESSAGE ===
         user_lang = user_langs[user_id]
         waiting_for_choice.add(user_id)
         msg = await client.send_message(event.chat_id, ACTION_MESSAGES[user_lang]["prompt"])
@@ -277,6 +628,8 @@ async def main():
     print("=" * 55)
     print("✅ BOT RUNNING!")
     print(f"👤 {me.first_name}")
+    print("🌍 Languages: English, Hindi, Burmese, Arabic, Urdu")
+    print(f"📞 Contact: {OWNER_CONTACT}")
     print("=" * 55)
     await client.run_until_disconnected()
 

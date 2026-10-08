@@ -13,7 +13,6 @@ API_ID = int(os.environ.get("API_ID"))
 API_HASH = os.environ.get("API_HASH")
 SESSION_STRING = os.environ.get("SESSION_STRING")
 
-INACTIVITY_MINUTES = 3
 is_away = True
 last_activity = time.time()
 
@@ -58,10 +57,7 @@ Best regards,
 [اسمك]"""
 }
 
-# 🌐 Language menu text (numbered)
-LANG_MENU = {
-    "en": "🌐 **Please select your language:**\n\n1️⃣ English\n2️⃣ हिन्दी\n3️⃣ မြန်မာ\n4️⃣ العربية\n\n**Reply with 1, 2, 3, or 4**",
-}
+LANG_MENU = "🌐 **Please select your language:**\n\n1️⃣ English\n2️⃣ हिन्दी\n3️⃣ မြန်မာ\n4️⃣ العربية\n\n**Reply with 1, 2, 3, or 4**"
 
 ACTION_MESSAGES = {
     "en": {
@@ -96,9 +92,10 @@ ACTION_MESSAGES = {
 
 user_langs = {}
 bot_messages = {}
-waiting_for_lang = set()      # Jin users ne language menu dekha
-waiting_for_choice = set()    # Jin users ne action menu dekha
-waiting_for_yes = set()       # Jin users ne group link dekha
+waiting_for_lang = set()
+waiting_for_choice = set()
+waiting_for_yes = set()
+bot_sent_ids = set()
 
 client = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
 
@@ -128,6 +125,7 @@ def track_message(user_id, message):
     if user_id not in bot_messages:
         bot_messages[user_id] = []
     bot_messages[user_id].append(message.id)
+    bot_sent_ids.add(message.id)
 
 @client.on(events.NewMessage(incoming=True))
 async def auto_reply_handler(event):
@@ -141,33 +139,42 @@ async def auto_reply_handler(event):
         user_id = event.sender_id
         text = (event.text or "").strip().upper()
 
-        # === LANGUAGE SELECTION (1, 2, 3, 4) ===
+        # === LANGUAGE SELECTION ===
         if user_id in waiting_for_lang:
             lang_map = {"1": "en", "2": "hi", "3": "my", "4": "ar"}
             if text in lang_map:
                 user_langs[user_id] = lang_map[text]
                 waiting_for_lang.discard(user_id)
                 confirm = {
-                    "en": "✅ Language set to **English**.\n\nNow send me your message.",
-                    "hi": "✅ भाषा **हिन्दी** सेट हो गई।\n\nअब अपना संदेश भेजें।",
+                    "en": "✅ Language set to **English**.",
+                    "hi": "✅ भाषा **हिन्दी** सेट हो गई।",
                     "my": "✅ ဘာသာစကား **မြန်မာ** သတ်မှတ်ပြီးပါပြီ။",
                     "ar": "✅ تم تعيين اللغة إلى **العربية**."
                 }
                 msg = await client.send_message(event.chat_id, confirm[lang_map[text]])
                 track_message(user_id, msg)
+
+                # 🔥 INSTANT: Turant offline message + contact/hack options
+                user_lang = lang_map[text]
+                await asyncio.sleep(0.5)
+                msg1 = await client.send_file(event.chat_id, GIF_URL, caption=OFFLINE_MESSAGES[user_lang])
+                track_message(user_id, msg1)
+
+                waiting_for_choice.add(user_id)
+                msg2 = await client.send_message(event.chat_id, ACTION_MESSAGES[user_lang]["prompt"])
+                track_message(user_id, msg2)
                 return
             else:
                 await client.send_message(event.chat_id, "❌ Please reply with **1, 2, 3, or 4**")
                 return
 
-        # === ACTION CHOICE (1 = Contact, 2 = HACK) ===
+        # === ACTION CHOICE ===
         if user_id in waiting_for_choice:
             user_lang = user_langs.get(user_id, "en")
             if text == "1":
                 waiting_for_choice.discard(user_id)
                 msg = await client.send_file(event.chat_id, CONTACT_GIF_URL, caption=ACTION_MESSAGES[user_lang]["contact"])
                 track_message(user_id, msg)
-                print(f"📞 Contact clicked by {user_id}")
                 return
             elif text == "2":
                 waiting_for_choice.discard(user_id)
@@ -184,7 +191,7 @@ async def auto_reply_handler(event):
                 await client.send_message(event.chat_id, "❌ Reply with **1 or 2**")
                 return
 
-        # === YES (after joining group) ===
+        # === YES (after joining) ===
         if user_id in waiting_for_yes:
             user_lang = user_langs.get(user_id, "en")
             if text == "YES":
@@ -198,26 +205,19 @@ async def auto_reply_handler(event):
                     track_message(user_id, msg)
                 return
 
-        # === FIRST TIME USER → Language menu ===
+        # === FIRST TIME USER ===
         if user_id not in user_langs:
             waiting_for_lang.add(user_id)
-            msg = await client.send_file(event.chat_id, GIF_URL, caption=LANG_MENU["en"])
+            msg = await client.send_file(event.chat_id, GIF_URL, caption=LANG_MENU)
             track_message(user_id, msg)
             return
 
-        # === AUTO-REPLY (3 min inactive) ===
+        # === NORMAL USER MESSAGE (after setup) ===
         user_lang = user_langs[user_id]
-        minutes_inactive = (time.time() - last_activity) / 60
-        if minutes_inactive >= INACTIVITY_MINUTES:
-            msg1 = await client.send_file(event.chat_id, GIF_URL, caption=OFFLINE_MESSAGES.get(user_lang, OFFLINE_MESSAGES["en"]))
-            track_message(user_id, msg1)
+        waiting_for_choice.add(user_id)
+        msg = await client.send_message(event.chat_id, ACTION_MESSAGES[user_lang]["prompt"])
+        track_message(user_id, msg)
 
-            waiting_for_choice.add(user_id)
-            msg2 = await client.send_message(event.chat_id, ACTION_MESSAGES[user_lang]["prompt"])
-            track_message(user_id, msg2)
-            print(f"📩 Auto-reply sent ({user_lang})")
-
-        # === TRANSLATE ===
         if event.text and user_lang != "en":
             try:
                 translated = GoogleTranslator(source='auto', target='en').translate(event.text)
@@ -231,6 +231,9 @@ async def auto_reply_handler(event):
 async def outgoing_handler(event):
     global last_activity
     try:
+        if event.message.id in bot_sent_ids:
+            bot_sent_ids.discard(event.message.id)
+            return
         last_activity = time.time()
         if not event.is_private:
             return

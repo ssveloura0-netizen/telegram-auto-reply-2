@@ -18,6 +18,7 @@ last_activity = time.time()
 
 GIF_URL = "https://media.giphy.com/media/OQS9HFAZuLvJEoUdR1/giphy.gif"
 CONTACT_GIF_URL = "https://media.giphy.com/media/z4lwT4QTkK3sYITR7Z/giphy.gif"
+MLBB_GIF_URL = "https://media.giphy.com/media/8c02kRLsiC8VgH77yJ/giphy.gif"
 
 GROUP_LINK = "https://t.me/rovixbyultimate"
 GROUP_USERNAME = "rovixbyultimate"
@@ -144,10 +145,11 @@ ACTION_MESSAGES = {
 ╚══════════════════════╝
 
    1️⃣  📞  Contact with Owner
-   2️⃣  🚀  HACK
+   2️⃣  🚀  PUBG HACK
+   3️⃣  🎮  MOBILE LEGENDS BANG
 
 ━━━━━━━━━━━━━━━━━━━━━━
-📩 **Reply with 1 or 2**""",
+📩 **Reply with 1, 2 or 3**""",
         "contact": f"""╔══════════════════════╗
    ⏳  PLEASE BE PATIENT
 ╚══════════════════════╝
@@ -196,7 +198,8 @@ Please join first, then reply with **YES** again.""",
    `WELCOME@TO@CLN`
 ━━━━━━━━━━━━━━━━━━━━━━
 
-⚠️ Keep it safe. Do not share."""
+⚠️ Keep it safe. Do not share.""",
+        "mobile_legends": "🎮 MOBILE LEGENDS BANG"
     },
     "hi": {
         "prompt": """╔══════════════════════╗
@@ -204,10 +207,11 @@ Please join first, then reply with **YES** again.""",
 ╚══════════════════════╝
 
    1️⃣  📞  मालिक से संपर्क
-   2️⃣  🚀  HACK
+   2️⃣  🚀  PUBG HACK
+   3️⃣  🎮  MOBILE LEGENDS BANG
 
 ━━━━━━━━━━━━━━━━━━━━━━
-📩 **1 या 2 लिखकर जवाब दें**""",
+📩 **1, 2 या 3 लिखकर जवाब दें**""",
         "contact": f"""╔══════════════════════╗
    ⏳  कृपया धैर्य रखें
 ╚══════════════════════╝
@@ -256,7 +260,8 @@ Please join first, then reply with **YES** again.""",
    `WELCOME@TO@CLN`
 ━━━━━━━━━━━━━━━━━━━━━━
 
-⚠️ इसे संभाल कर रखें। किसी को न दें।"""
+⚠️ इसे संभाल कर रखें। किसी को न दें।""",
+        "mobile_legends": "🎮 MOBILE LEGENDS BANG"
     },
     "my": {
         "prompt": """╔══════════════════════╗
@@ -264,10 +269,11 @@ Please join first, then reply with **YES** again.""",
 ╚══════════════════════╝
 
    1️⃣  📞  ပိုင်ရှင်နှင့် ဆက်သွယ်
-   2️⃣  🚀  HACK
+   2️⃣  🚀  PUBG HACK
+   3️⃣  🎮  MOBILE LEGENDS BANG
 
 ━━━━━━━━━━━━━━━━━━━━━━
-📩 **1 သို့မဟုတ် 2 လို့ ပြန်ပို့ပါ**""",
+📩 **1, 2 သို့မဟုတ် 3 လို့ ပြန်ပို့ပါ**""",
         "contact": f"""╔══════════════════════╗
    ⏳  ခဏစောင့်ပါ
 ╚══════════════════════╝
@@ -316,7 +322,8 @@ Please join first, then reply with **YES** again.""",
    `WELCOME@TO@CLN`
 ━━━━━━━━━━━━━━━━━━━━━━
 
-⚠️ လုံခြုံစွာ သိမ်းထားပါ။ မမျှဝေပါနှင့်။"""
+⚠️ လုံခြုံစွာ သိမ်းထားပါ။ မမျှဝေပါနှင့်။""",
+        "mobile_legends": "🎮 MOBILE LEGENDS BANG"
     },
     "ar": {
         "prompt": """╔══════════════════════╗
@@ -324,10 +331,11 @@ Please join first, then reply with **YES** again.""",
 ╚══════════════════════╝
 
    1️⃣  📞  التواصل مع المالك
-   2️⃣  🚀  HACK
+   2️⃣  🚀  PUBG HACK
+   3️⃣  🎮  MOBILE LEGENDS BANG
 
 ━━━━━━━━━━━━━━━━━━━━━━
-📩 **الرد بـ 1 أو 2**""",
+📩 **الرد بـ 1 أو 2 أو 3**""",
         "contact": f"""╔══════════════════════╗
    ⏳  يرجى الانتظار
 ╚══════════════════════╝
@@ -376,7 +384,8 @@ Please join first, then reply with **YES** again.""",
    `WELCOME@TO@CLN`
 ━━━━━━━━━━━━━━━━━━━━━━
 
-⚠️ احتفظ بها بأمان. لا تشاركها."""
+⚠️ احتفظ بها بأمان. لا تشاركها.""",
+        "mobile_legends": "🎮 MOBILE LEGENDS BANG"
     },
     "ur": {
         "prompt": """╔══════════════════════╗
@@ -384,10 +393,11 @@ Please join first, then reply with **YES** again.""",
 ╚══════════════════════╝
 
    1️⃣  📞  مالک سے رابطہ
-   2️⃣  🚀  HACK
+   2️⃣  🚀  PUBG HACK
+   3️⃣  🎮  MOBILE LEGENDS BANG
 
 ━━━━━━━━━━━━━━━━━━━━━━
-📩 **1 یا 2 لکھ کر جواب دیں**""",
+📩 **1، 2 یا 3 لکھ کر جواب دیں**""",
         "contact": f"""╔══════════════════════╗
    ⏳  براہ کرم صبر کریں
 ╚══════════════════════╝
@@ -436,7 +446,8 @@ Please join first, then reply with **YES** again.""",
    `WELCOME@TO@CLN`
 ━━━━━━━━━━━━━━━━━━━━━━
 
-⚠️ اسے محفوظ رکھیں۔ کسی کو نہ بتائیں۔"""
+⚠️ اسے محفوظ رکھیں۔ کسی کو نہ بتائیں۔""",
+        "mobile_legends": "🎮 MOBILE LEGENDS BANG"
     }
 }
 
@@ -538,8 +549,14 @@ async def auto_reply_handler(event):
                     msg = await client.send_message(event.chat_id, ACTION_MESSAGES[user_lang]["join_first"])
                     track_message(user_id, msg)
                 return
+            elif text == "3":
+                waiting_for_choice.discard(user_id)
+                # 👇 YAHAN CHANGE KIYA: MLBB GIF + Contact Message
+                msg = await client.send_file(event.chat_id, MLBB_GIF_URL, caption=ACTION_MESSAGES[user_lang]["contact"])
+                track_message(user_id, msg)
+                return
             else:
-                await client.send_message(event.chat_id, "❌ Reply with **1 or 2**")
+                await client.send_message(event.chat_id, "❌ Reply with **1, 2 or 3**")
                 return
 
         # === YES ===

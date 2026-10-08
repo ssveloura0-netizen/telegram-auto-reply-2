@@ -1,4 +1,4 @@
-from telethon import TelegramClient, events, Button
+from telethon import TelegramClient, events
 from telethon.sessions import StringSession
 from telethon.tl.functions.channels import GetParticipantRequest
 from telethon.errors import UserNotParticipantError
@@ -9,36 +9,20 @@ import os
 import threading
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
-# ==========================================
-# RENDER ENVIRONMENT VARIABLES
-# ==========================================
 API_ID = int(os.environ.get("API_ID"))
 API_HASH = os.environ.get("API_HASH")
 SESSION_STRING = os.environ.get("SESSION_STRING")
 
-# ==========================================
-# ⏱️ SETTINGS
-# ==========================================
 INACTIVITY_MINUTES = 3
 is_away = True
 last_activity = time.time()
 
-# ==========================================
-# 🎬 GIF LINKS
-# ==========================================
 GIF_URL = "https://media.giphy.com/media/OQS9HFAZuLvJEoUdR1/giphy.gif"
 CONTACT_GIF_URL = "https://media.giphy.com/media/z4lwT4QTkK3sYITR7Z/giphy.gif"
 
-# ==========================================
-# 🔗 GROUP LINK + 🎁 SECRET PASSWORD
-# ==========================================
 GROUP_LINK = "https://t.me/rovixbyultimate"
 GROUP_USERNAME = "rovixbyultimate"
-SECRET_PASSWORD = "WELCOME@TO@CLN"
 
-# ==========================================
-# 🌍 OFFLINE MESSAGES (4 LANGUAGES)
-# ==========================================
 OFFLINE_MESSAGES = {
     "en": """Hello,
 
@@ -48,7 +32,6 @@ I have received your message and will get back to you at the earliest opportunit
 
 Best regards,
 [Your Name]""",
-
     "hi": """नमस्ते,
 
 संपर्क करने के लिए धन्यवाद। मैं अभी अपने डेस्क से दूर हूँ और तुरंत जवाब नहीं दे सकता।
@@ -57,7 +40,6 @@ Best regards,
 
 सादर,
 [आपका नाम]""",
-
     "my": """မင်္ဂလာပါ၊
 
 ဆက်သွယ်ပေးတဲ့အတွက် ကျေးဇူးတင်ပါတယ်။ ကျွန်တော် အခု စားပွဲကနေ ဝေးနေတာမို့ ချက်ချင်း ပြန်လည်ဖြေကြားနိုင်မှာ မဟုတ်ပါဘူး။
@@ -66,7 +48,6 @@ Best regards,
 
 လေးစားစွာဖြင့်၊
 [သင့်နာမည်]""",
-
     "ar": """مرحباً،
 
 شكراً لتواصلك معي. أنا حالياً بعيد عن مكتبي ولا أستطيع الرد فوراً.
@@ -77,57 +58,53 @@ Best regards,
 [اسمك]"""
 }
 
-# ==========================================
-# 🎯 ACTION MESSAGES (Prompt + Contact + Join + Welcome)
-# ==========================================
+# 🌐 Language menu text (numbered)
+LANG_MENU = {
+    "en": "🌐 **Please select your language:**\n\n1️⃣ English\n2️⃣ हिन्दी\n3️⃣ မြန်မာ\n4️⃣ العربية\n\n**Reply with 1, 2, 3, or 4**",
+}
+
 ACTION_MESSAGES = {
     "en": {
-        "prompt": "👇 **Choose an option below:**",
+        "prompt": "👇 **Reply with:**\n\n1️⃣ Contact with Owner\n2️⃣ HACK",
         "contact": "⏳ **Please be patient.**\n\nThe owner is currently away and will get back to you as soon as possible. Thank you for your understanding!",
-        "join_first": f"🚀 **Join our official group first to unlock the password:**\n\n🔗 {GROUP_LINK}\n\nAfter joining, tap the button below 👇",
-        "not_joined": f"❌ **You haven't joined yet!**\n\n🔗 {GROUP_LINK}\n\nJoin first, then tap '✅ I've Joined' again.",
+        "join_first": f"🚀 **Join our official group first to unlock the password:**\n\n🔗 {GROUP_LINK}\n\nAfter joining, reply with **YES** to get the password.",
+        "not_joined": f"❌ **You haven't joined yet!**\n\n🔗 {GROUP_LINK}\n\nJoin first, then reply **YES** again.",
         "welcome": "🎉 **WELCOME@TO@CLN** 🎉\n\n✅ You are now verified!\n\n🔐 **Your secret password is:** `WELCOME@TO@CLN`\n\nKeep it safe!"
     },
     "hi": {
-        "prompt": "👇 **नीचे एक विकल्प चुनें:**",
-        "contact": "⏳ **कृपया धैर्य रखें।**\n\nमालिक जल्द ही आपसे संपर्क करेंगे। आपकी समझ के लिए धन्यवाद!",
-        "join_first": f"🚀 **पासवर्ड अनलॉक करने के लिए पहले हमारे आधिकारिक ग्रुप में शामिल हों:**\n\n🔗 {GROUP_LINK}\n\nजॉइन करने के बाद नीचे वाला बटन दबाएं 👇",
-        "not_joined": f"❌ **आपने अभी तक जॉइन नहीं किया!**\n\n🔗 {GROUP_LINK}\n\nपहले जॉइन करें, फिर '✅ I've Joined' दबाएं।",
-        "welcome": "🎉 **WELCOME@TO@CLN** 🎉\n\n✅ आप वेरिफाइड हो गए हैं!\n\n🔐 **आपका सीक्रेट पासवर्ड है:** `WELCOME@TO@CLN`\n\nइसे संभाल कर रखें!"
+        "prompt": "👇 **Reply karo:**\n\n1️⃣ Contact with Owner\n2️⃣ HACK",
+        "contact": "⏳ **कृपया धैर्य रखें।**\n\nमालिक जल्द ही आपसे संपर्क करेंगे।",
+        "join_first": f"🚀 **पहले हमारे ग्रुप में शामिल हों:**\n\n🔗 {GROUP_LINK}\n\nजॉइन करने के बाद **YES** reply करें।",
+        "not_joined": f"❌ **आपने जॉइन नहीं किया!**\n\n🔗 {GROUP_LINK}\n\nपहले जॉइन करें, फिर **YES** reply करें।",
+        "welcome": "🎉 **WELCOME@TO@CLN** 🎉\n\n✅ आप वेरिफाइड हो गए!\n\n🔐 **पासवर्ड:** `WELCOME@TO@CLN`"
     },
     "my": {
-        "prompt": "👇 **အောက်တွင် ရွေးချယ်မှုတစ်ခုကို ရွေးပါ-**",
-        "contact": "⏳ **ခဏစောင့်ပါ။**\n\nပိုင်ရှင်က အခု အလုပ်များနေလို့ မကြာမီ ပြန်လည်ဆက်သွယ်ပါမယ်။",
-        "join_first": f"🚀 **စကားဝှက်ရရှိရန် ကျွန်ုပ်တို့၏ တရားဝင်အုပ်စုသို့ ဦးစွာဝင်ရောက်ပါ:**\n\n🔗 {GROUP_LINK}\n\nဝင်ရောက်ပြီးပါက အောက်ရှိခလုတ်ကို နှိပ်ပါ 👇",
-        "not_joined": f"❌ **သင်မဝင်ရောက်ရသေးပါ!**\n\n🔗 {GROUP_LINK}\n\nဦးစွာဝင်ရောက်ပါ၊ ပြီးနောက် '✅ I've Joined' ကို နှိပ်ပါ။",
-        "welcome": "🎉 **WELCOME@TO@CLN** 🎉\n\n✅ အတည်ပြုပြီးပါပြီ!\n\n🔐 **သင့်လျှို့ဝှက်စကားဝှက်:** `WELCOME@TO@CLN`"
+        "prompt": "👇 **Reply လုပ်ပါ:**\n\n1️⃣ Contact with Owner\n2️⃣ HACK",
+        "contact": "⏳ **ခဏစောင့်ပါ။**",
+        "join_first": f"🚀 **အုပ်စုသို့ ဦးစွာဝင်ပါ:**\n\n🔗 {GROUP_LINK}\n\nဝင်ပြီးပါက **YES** reply လုပ်ပါ။",
+        "not_joined": f"❌ **မဝင်ရသေးပါ!**\n\n🔗 {GROUP_LINK}\n\nဦးစွာဝင်ပါ၊ ပြီးနောက် **YES** reply လုပ်ပါ။",
+        "welcome": "🎉 **WELCOME@TO@CLN** 🎉\n\n✅ အတည်ပြုပြီးပါပြီ!\n\n🔐 **စကားဝှက်:** `WELCOME@TO@CLN`"
     },
     "ar": {
-        "prompt": "👇 **اختر أحد الخيارات أدناه:**",
-        "contact": "⏳ **يرجى التحلي بالصبر.**\n\nالمالك مشغول حالياً وسيتواصل معك في أقرب وقت ممكن.",
-        "join_first": f"🚀 **انضم أولاً إلى مجموعتنا الرسمية لفتح كلمة المرور:**\n\n🔗 {GROUP_LINK}\n\nبعد الانضمام، اضغط على الزر أدناه 👇",
-        "not_joined": f"❌ **لم تنضم بعد!**\n\n🔗 {GROUP_LINK}\n\nانضم أولاً، ثم اضغط على '✅ I've Joined' مرة أخرى.",
-        "welcome": "🎉 **WELCOME@TO@CLN** 🎉\n\n✅ تم التحقق منك!\n\n🔐 **كلمة المرور السرية الخاصة بك:** `WELCOME@TO@CLN`"
+        "prompt": "👇 **الرد على:**\n\n1️⃣ Contact with Owner\n2️⃣ HACK",
+        "contact": "⏳ **يرجى التحلي بالصبر.**",
+        "join_first": f"🚀 **انضم للمجموعة أولاً:**\n\n🔗 {GROUP_LINK}\n\nثم الرد بـ **YES**.",
+        "not_joined": f"❌ **لم تنضم بعد!**\n\n🔗 {GROUP_LINK}\n\nانضم أولاً، ثم الرد بـ **YES**.",
+        "welcome": "🎉 **WELCOME@TO@CLN** 🎉\n\n✅ تم التحقق!\n\n🔐 **كلمة المرور:** `WELCOME@TO@CLN`"
     }
 }
 
 user_langs = {}
 bot_messages = {}
+waiting_for_lang = set()      # Jin users ne language menu dekha
+waiting_for_choice = set()    # Jin users ne action menu dekha
+waiting_for_yes = set()       # Jin users ne group link dekha
 
-# ==========================================
-# TELEGRAM CLIENT
-# ==========================================
 client = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
 
-# ==========================================
-# 🔍 GROUP MEMBERSHIP CHECK
-# ==========================================
 async def is_user_in_group(user_id):
     try:
-        await client(GetParticipantRequest(
-            channel=GROUP_USERNAME,
-            participant=user_id
-        ))
+        await client(GetParticipantRequest(channel=GROUP_USERNAME, participant=user_id))
         return True
     except UserNotParticipantError:
         return False
@@ -135,9 +112,6 @@ async def is_user_in_group(user_id):
         print(f"⚠️ Group check error: {e}")
         return False
 
-# ==========================================
-# 🗑️ DELETE BOT MESSAGES
-# ==========================================
 async def delete_bot_messages(user_id):
     try:
         if user_id in bot_messages:
@@ -147,7 +121,6 @@ async def delete_bot_messages(user_id):
                 except Exception:
                     pass
             bot_messages[user_id] = []
-            print(f"🗑️ Deleted messages for {user_id}")
     except Exception as e:
         print(f"⚠️ Delete error: {e}")
 
@@ -156,9 +129,6 @@ def track_message(user_id, message):
         bot_messages[user_id] = []
     bot_messages[user_id].append(message.id)
 
-# ==========================================
-# 🎯 INCOMING MESSAGE HANDLER
-# ==========================================
 @client.on(events.NewMessage(incoming=True))
 async def auto_reply_handler(event):
     global last_activity
@@ -169,67 +139,94 @@ async def auto_reply_handler(event):
         if event.sender_id == me.id:
             return
         user_id = event.sender_id
+        text = (event.text or "").strip().upper()
 
-        # Language selection
+        # === LANGUAGE SELECTION (1, 2, 3, 4) ===
+        if user_id in waiting_for_lang:
+            lang_map = {"1": "en", "2": "hi", "3": "my", "4": "ar"}
+            if text in lang_map:
+                user_langs[user_id] = lang_map[text]
+                waiting_for_lang.discard(user_id)
+                confirm = {
+                    "en": "✅ Language set to **English**.\n\nNow send me your message.",
+                    "hi": "✅ भाषा **हिन्दी** सेट हो गई।\n\nअब अपना संदेश भेजें।",
+                    "my": "✅ ဘာသာစကား **မြန်မာ** သတ်မှတ်ပြီးပါပြီ။",
+                    "ar": "✅ تم تعيين اللغة إلى **العربية**."
+                }
+                msg = await client.send_message(event.chat_id, confirm[lang_map[text]])
+                track_message(user_id, msg)
+                return
+            else:
+                await client.send_message(event.chat_id, "❌ Please reply with **1, 2, 3, or 4**")
+                return
+
+        # === ACTION CHOICE (1 = Contact, 2 = HACK) ===
+        if user_id in waiting_for_choice:
+            user_lang = user_langs.get(user_id, "en")
+            if text == "1":
+                waiting_for_choice.discard(user_id)
+                msg = await client.send_file(event.chat_id, CONTACT_GIF_URL, caption=ACTION_MESSAGES[user_lang]["contact"])
+                track_message(user_id, msg)
+                print(f"📞 Contact clicked by {user_id}")
+                return
+            elif text == "2":
+                waiting_for_choice.discard(user_id)
+                joined = await is_user_in_group(user_id)
+                if joined:
+                    msg = await client.send_message(event.chat_id, ACTION_MESSAGES[user_lang]["welcome"])
+                    track_message(user_id, msg)
+                else:
+                    waiting_for_yes.add(user_id)
+                    msg = await client.send_message(event.chat_id, ACTION_MESSAGES[user_lang]["join_first"])
+                    track_message(user_id, msg)
+                return
+            else:
+                await client.send_message(event.chat_id, "❌ Reply with **1 or 2**")
+                return
+
+        # === YES (after joining group) ===
+        if user_id in waiting_for_yes:
+            user_lang = user_langs.get(user_id, "en")
+            if text == "YES":
+                joined = await is_user_in_group(user_id)
+                if joined:
+                    waiting_for_yes.discard(user_id)
+                    msg = await client.send_message(event.chat_id, ACTION_MESSAGES[user_lang]["welcome"])
+                    track_message(user_id, msg)
+                else:
+                    msg = await client.send_message(event.chat_id, ACTION_MESSAGES[user_lang]["not_joined"])
+                    track_message(user_id, msg)
+                return
+
+        # === FIRST TIME USER → Language menu ===
         if user_id not in user_langs:
-            buttons = [
-                [Button.inline("🇬🇧 English", b"lang_en")],
-                [Button.inline("🇮🇳 हिन्दी", b"lang_hi")],
-                [Button.inline("🇲🇲 မြန်မာ", b"lang_my")],
-                [Button.inline("🇸🇦 العربية", b"lang_ar")],
-            ]
-            msg = await client.send_file(
-                event.chat_id,
-                GIF_URL,
-                caption="🌐 **Please select your language:**\n\n_Choose the language you speak. Your messages will be translated to English for me._",
-                buttons=buttons
-            )
+            waiting_for_lang.add(user_id)
+            msg = await client.send_file(event.chat_id, GIF_URL, caption=LANG_MENU["en"])
             track_message(user_id, msg)
             return
 
+        # === AUTO-REPLY (3 min inactive) ===
         user_lang = user_langs[user_id]
-
-        # Auto-reply (3 min inactive)
         minutes_inactive = (time.time() - last_activity) / 60
         if minutes_inactive >= INACTIVITY_MINUTES:
-            msg1 = await client.send_file(
-                event.chat_id,
-                GIF_URL,
-                caption=OFFLINE_MESSAGES.get(user_lang, OFFLINE_MESSAGES["en"])
-            )
+            msg1 = await client.send_file(event.chat_id, GIF_URL, caption=OFFLINE_MESSAGES.get(user_lang, OFFLINE_MESSAGES["en"]))
             track_message(user_id, msg1)
 
-            action_buttons = [
-                [Button.inline("📞 Contact with Owner", b"action_contact")],
-                [Button.inline("🚀 HACK", b"action_hack")]
-            ]
-            msg2 = await client.send_message(
-                event.chat_id,
-                ACTION_MESSAGES[user_lang]["prompt"],
-                buttons=action_buttons
-            )
+            waiting_for_choice.add(user_id)
+            msg2 = await client.send_message(event.chat_id, ACTION_MESSAGES[user_lang]["prompt"])
             track_message(user_id, msg2)
             print(f"📩 Auto-reply sent ({user_lang})")
 
-        # Translate to English
+        # === TRANSLATE ===
         if event.text and user_lang != "en":
             try:
                 translated = GoogleTranslator(source='auto', target='en').translate(event.text)
-                await client.send_message(
-                    "me",
-                    f"📩 **New message from** `{user_id}`\n"
-                    f"**Language:** {user_lang.upper()}\n"
-                    f"**Original:** {event.text}\n"
-                    f"**English:** {translated}"
-                )
+                await client.send_message("me", f"📩 **From** `{user_id}` [{user_lang.upper()}]\n\n**Original:** {event.text}\n**English:** {translated}")
             except Exception as e:
                 print(f"⚠️ Translation error: {e}")
     except Exception as e:
         print(f"⚠️ Error: {e}")
 
-# ==========================================
-# 🎯 OUTGOING (Owner reply → delete bot msgs)
-# ==========================================
 @client.on(events.NewMessage(outgoing=True))
 async def outgoing_handler(event):
     global last_activity
@@ -245,102 +242,6 @@ async def outgoing_handler(event):
     except Exception as e:
         print(f"⚠️ Outgoing Error: {e}")
 
-# ==========================================
-# 🎯 LANGUAGE SELECTION HANDLER
-# ==========================================
-@client.on(events.CallbackQuery(data=lambda d: d.startswith(b"lang_")))
-async def lang_callback(event):
-    try:
-        lang = event.data.decode().replace("lang_", "")
-        user_id = event.sender_id
-        if lang in OFFLINE_MESSAGES:
-            user_langs[user_id] = lang
-            await event.delete()
-            confirm = {
-                "en": "✅ Language set to **English**.\n\nNow send me your message.",
-                "hi": "✅ भाषा **हिन्दी** सेट हो गई।\n\nअब अपना संदेश भेजें।",
-                "my": "✅ ဘာသာစကား **မြန်မာ** သတ်မှတ်ပြီးပါပြီ။\n\nအခု သင့်စာ ပို့ပါ။",
-                "ar": "✅ تم تعيين اللغة إلى **العربية**.\n\nالآن أرسل رسالتك."
-            }
-            msg = await client.send_message(event.chat_id, confirm[lang])
-            track_message(user_id, msg)
-    except Exception as e:
-        print(f"⚠️ Lang Error: {e}")
-
-# ==========================================
-# 🎯 ACTION BUTTONS HANDLER
-# ==========================================
-@client.on(events.CallbackQuery(data=lambda d: d.startswith(b"action_")))
-async def action_callback(event):
-    try:
-        data = event.data.decode()
-        user_id = event.sender_id
-        user_lang = user_langs.get(user_id, "en")
-        await event.delete()
-
-        if data == "action_contact":
-            msg = await client.send_file(
-                event.chat_id,
-                CONTACT_GIF_URL,
-                caption=ACTION_MESSAGES[user_lang]["contact"]
-            )
-            track_message(user_id, msg)
-            print(f"📞 Contact clicked by {user_id}")
-
-        elif data == "action_hack":
-            joined = await is_user_in_group(user_id)
-            if joined:
-                msg = await client.send_message(event.chat_id, ACTION_MESSAGES[user_lang]["welcome"])
-                track_message(user_id, msg)
-                print(f"🎉 Password given to {user_id}")
-            else:
-                verify_buttons = [
-                    [Button.url("🔗 Join Group", GROUP_LINK)],
-                    [Button.inline("✅ I've Joined", b"verify_join")]
-                ]
-                msg = await client.send_message(
-                    event.chat_id,
-                    ACTION_MESSAGES[user_lang]["join_first"],
-                    buttons=verify_buttons
-                )
-                track_message(user_id, msg)
-                print(f"🔗 Group link sent to {user_id}")
-    except Exception as e:
-        print(f"⚠️ Action Error: {e}")
-
-# ==========================================
-# 🎯 VERIFY JOIN HANDLER
-# ==========================================
-@client.on(events.CallbackQuery(data=b"verify_join"))
-async def verify_handler(event):
-    try:
-        user_id = event.sender_id
-        user_lang = user_langs.get(user_id, "en")
-        joined = await is_user_in_group(user_id)
-        if joined:
-            await event.delete()
-            msg = await client.send_message(event.chat_id, ACTION_MESSAGES[user_lang]["welcome"])
-            track_message(user_id, msg)
-            print(f"🎉 Verified & password given to {user_id}")
-        else:
-            await event.answer("❌ You haven't joined the group yet!", alert=True)
-            verify_buttons = [
-                [Button.url("🔗 Join Group", GROUP_LINK)],
-                [Button.inline("✅ I've Joined", b"verify_join")]
-            ]
-            msg = await client.send_message(
-                event.chat_id,
-                ACTION_MESSAGES[user_lang]["not_joined"],
-                buttons=verify_buttons
-            )
-            track_message(user_id, msg)
-            print(f"❌ User {user_id} not joined yet")
-    except Exception as e:
-        print(f"⚠️ Verify Error: {e}")
-
-# ==========================================
-# COMMANDS
-# ==========================================
 @client.on(events.NewMessage(pattern=r'^/stop$'))
 async def stop_handler(event):
     global is_away
@@ -355,9 +256,6 @@ async def start_handler(event):
         is_away = True
         await event.reply("🤖 Auto-reply ON")
 
-# ==========================================
-# 🌐 WEB SERVER (Render ke liye)
-# ==========================================
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         self.send_response(200)
@@ -370,18 +268,12 @@ def run_web_server():
     print(f"🌐 Web server started on port {port}")
     server.serve_forever()
 
-# ==========================================
-# MAIN
-# ==========================================
 async def main():
     await client.start()
     me = await client.get_me()
     print("=" * 55)
     print("✅ BOT RUNNING!")
     print(f"👤 {me.first_name}")
-    print(f"⏱️  Inactivity: {INACTIVITY_MINUTES} min")
-    print(f"🔗 Group: {GROUP_LINK}")
-    print(f"🗑️  Auto-delete on owner reply: ON")
     print("=" * 55)
     await client.run_until_disconnected()
 

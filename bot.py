@@ -19,22 +19,18 @@ OWNER_ID = int(os.environ.get("OWNER_ID", 0))
 # ==========================================
 # ⚙️ APNI DETAILS YAHAN SET KARO
 # ==========================================
-BOT_LINK = "https://t.me/Vixby_bot"
+BOT_LINK = "https://t.me/Vixby_bot"       # 👈 Tumhara naya bot ka link
 CHANNEL_USERNAME = "rovixbyultimate"
 CHANNEL_LINK = "https://t.me/rovixbyultimate"
-PUBG_PASSWORD = "WELCOME@TO@CLN"  # 👈 Apna PUBG password yahan daalo
+OWNER_CONTACT = "@she_Shutara"              # 👈 Yahan apna naya contact daala
+PUBG_PASSWORD = "PUBG_IS_HERE"              # 👈 Apna PUBG file password yahan daalo
 
 # ==========================================
 # 🎬 GIF LINKS
 # ==========================================
-# Language Selection wala GIF (Kala Chazma / Will Smith)
-GIF_URL = "https://media.giphy.com/media/OQS9HFAZuLvJEoUdR1/giphy.gif"
-
-# PUBG HACK prompt wala GIF (Mr. Bean)
-MR_BEAN_GIF = "https://media.giphy.com/media/3o7abKhOpu0NwenH3O/giphy.gif"
-
-# 👇 Userbot ke liye naya GIF (Office wala)
-USERBOT_GIF = "https://media.giphy.com/media/10fxZavhBFXsUE/giphy.gif"
+GIF_URL = "https://media.giphy.com/media/OQS9HFAZuLvJEoUdR1/giphy.gif"     # Kala Chazma
+MR_BEAN_GIF = "https://media.giphy.com/media/3o7abKhOpu0NwenH3O/giphy.gif" # Mr. Bean
+USERBOT_GIF = "https://media.giphy.com/media/10fxZavhBFXsUE/giphy.gif"     # Office
 
 # ==========================================
 # 🌍 MESSAGES
@@ -52,10 +48,26 @@ Welcome! Please select your preferred language.
 MESSAGES = {
     "en": {
         "offline": "I am currently offline. Please leave a message and I will get back to you.",
-        "prompt": f"""👋 **Hello!**\n\nPlease choose an option below:""",
-        "join_first": f"""🚀 **PUBG HACK UNLOCK**\n\nTo get the PUBG Password, you need to join our official channel first.\n\n🔗 {CHANNEL_LINK}\n\nAfter joining, click the button below 👇""",
+        "prompt": "👋 **Hello!**\n\nPlease choose an option below:",
+        "join_first": f"""🚀 **PUBG FILE PASSWORD UNLOCK**
+
+To get the PUBG File Password, you need to join our official channel first.
+
+🔗 {CHANNEL_LINK}
+
+After joining, click the button below 👇""",
         "not_joined": "❌ You haven't joined the channel yet! Please join first.",
-        "pubg_pass": f"""🎉 **ACCESS GRANTED**\n\n✅ You are now verified!\n\n🔐 **Your PUBG Password:**\n`{PUBG_PASSWORD}`\n\n⚠️ Keep it safe. Do not share."""
+        "pubg_pass": f"""🎉 **ACCESS GRANTED**
+
+✅ You are now verified!
+
+🔐 **Your PUBG File Password:**
+`{PUBG_PASSWORD}`
+
+⚠️ Keep it safe. Do not share.""",
+        "contact": f"""📞 **Contact the Owner:**
+
+Please message here: {OWNER_CONTACT}"""
     }
 }
 
@@ -78,10 +90,9 @@ async def userbot_handler(event):
         if event.sender_id == me.id:
             return
         
-        # 👇 YAHAN CHANGE KIYA: Ab Userbot naye GIF ke saath reply karega
         await userbot.send_file(
             event.chat_id,
-            USERBOT_GIF, # 👈 Naya office wala GIF
+            USERBOT_GIF,
             caption=f"I am currently offline. Please contact me here 👉 {BOT_LINK}"
         )
         print(f"📩 Userbot GIF + Link sent to {event.sender_id}")
@@ -136,7 +147,7 @@ async def lang_callback(event):
         await event.delete()
 
         option_buttons = [
-            [Button.inline("🚀 PUBG HACK", b"opt_pubg")],
+            [Button.inline("🔐 PUBG FILE PASSWORD", b"opt_pubg")],
             [Button.inline("📞 Contact with Owner", b"opt_contact")],
         ]
         await bot.send_message(event.chat_id, MESSAGES[lang]["prompt"], buttons=option_buttons)
@@ -183,8 +194,9 @@ async def verify_handler(event):
 async def contact_handler(event):
     try:
         user_id = event.sender_id
+        lang = user_langs.get(user_id, "en")
         await event.delete()
-        await bot.send_message(event.chat_id, f"📞 **Contact the Owner:**\n\nPlease message here: @MG1SHWE")
+        await bot.send_message(event.chat_id, MESSAGES[lang]["contact"])
     except Exception as e:
         print(f"⚠️ Contact Error: {e}")
 

@@ -23,14 +23,14 @@ BOT_LINK = "https://t.me/Vixby_bot"
 CHANNEL_USERNAME = "rovixbyultimate"
 CHANNEL_LINK = "https://t.me/rovixbyultimate"
 OWNER_CONTACT = "@she_Shutara"
-PUBG_PASSWORD = "WELCOME@TO@CLN"  # 👈 Apna PUBG password yahan daalo
+PUBG_PASSWORD = "WELCOME@TO@CLN"  # 👈 Apna password yahan daalo
 
 # ==========================================
 # 🎬 GIF LINKS
 # ==========================================
-GIF_URL = "https://media.giphy.com/media/OQS9HFAZuLvJEoUdR1/giphy.gif"     # Kala Chazma
-MR_BEAN_GIF = "https://media.giphy.com/media/3o7abKhOpu0NwenH3O/giphy.gif" # Mr. Bean
-USERBOT_GIF = "https://media.giphy.com/media/10fxZavhBFXsUE/giphy.gif"     # Office
+GIF_URL = "https://media.giphy.com/media/OQS9HFAZuLvJEoUdR1/giphy.gif"
+MR_BEAN_GIF = "https://media.giphy.com/media/3o7abKhOpu0NwenH3O/giphy.gif"
+USERBOT_GIF = "https://media.giphy.com/media/10fxZavhBFXsUE/giphy.gif"
 
 # ==========================================
 # 🌍 MESSAGES
@@ -75,30 +75,42 @@ for lang in ["hi", "my", "ar", "ur"]:
 
 user_langs = {}
 
-# 🗑️ SIRF BOT KE MESSAGES TRACK KARO (Owner ke nahi)
-bot_messages = {}   # {user_id: [msg_id1, msg_id2, ...]}
+# ==========================================
+# 🗑️ MESSAGE TRACKING (Delete ke liye)
+# ==========================================
+# Har user ke liye, bot aur userbot ke messages ki IDs alag-alag save karo
+tracked_bot_msgs = {}      # {user_id: [msg_id1, ...]}  -> Bot ke messages
+tracked_userbot_msgs = {}  # {user_id: [msg_id1, ...]}  -> Userbot ke messages
 
-def track_bot_message(user_id, message):
-    """Bot ke bheje message ko track karo (delete ke liye)"""
-    if user_id not in bot_messages:
-        bot_messages[user_id] = []
-    bot_messages[user_id].append(message.id)
+
+def track_bot_msg(user_id, msg_id):
+    if user_id not in tracked_bot_msgs:
+        tracked_bot_msgs[user_id] = []
+    tracked_bot_msgs[user_id].append(msg_id)
+
+
+def track_userbot_msg(user_id, msg_id):
+    if user_id not in tracked_userbot_msgs:
+        tracked_userbot_msgs[user_id] = []
+    tracked_userbot_msgs[user_id].append(msg_id)
+
 
 # ==========================================
 # 1️⃣ USERBOT (Personal Account)
 # ==========================================
 userbot = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
 
+
 @userbot.on(events.NewMessage(incoming=True))
-async def userbot_handler(event):
+async def userbot_incoming(event):
     try:
         if not event.is_private:
             return
         me = await userbot.get_me()
         if event.sender_id == me.id:
             return
-        
-        away_caption = f"""╔═════════════════════════╗
+
+        away_text = f"""╔═════════════════════════╗
        💤  OFFLINE MODE
 ╚═════════════════════════╝
 
@@ -117,40 +129,19 @@ Thank you for contacting me. I am currently **offline** right now and will get b
 ━━━━━━━━━━━━━━━━━━━━━━━
 ⏳ Please wait for my reply. Thank you!"""
 
-        msg = await userbot.send_file(event.chat_id, USERBOT_GIF, caption=away_caption)
-        track_bot_message(event.sender_id, msg)
-        print(f"📩 Professional reply sent to {event.sender_id}")
+        sent = await userbot.send_file(event.chat_id, USERBOT_GIF, caption=away_text)
+        # Userbot ke bheje message ko track karo
+        track_userbot_msg(event.sender_id, sent.id)
+        print(f"📩 Userbot reply sent to {event.sender_id}")
     except Exception as e:
         print(f"⚠️ Userbot Error: {e}")
 
-# 🗑️ USERBOT OUTGOING: Jab OWNER reply kare, SIRF bot ke messages delete karo
-@userbot.on(events.NewMessage(outgoing=True))
-async def owner_reply_handler(event):
-    try:
-        if not event.is_private:
-            return
-        if event.text and event.text.startswith("/"):
-            return
-        
-        user_id = event.chat_id
-        print(f"👤 Owner replied to {user_id}, deleting bot messages...")
-
-        # 👇 SIRF bot ke tracked messages delete karo, owner ke nahi
-        if user_id in bot_messages and bot_messages[user_id]:
-            for msg_id in list(bot_messages[user_id]):
-                try:
-                    await bot.delete_messages(user_id, msg_id)
-                except Exception:
-                    pass
-            bot_messages[user_id] = []
-            print(f"🗑️ Deleted bot messages for {user_id}")
-    except Exception as e:
-        print(f"⚠️ Owner Reply Error: {e}")
 
 # ==========================================
 # 2️⃣ BOTFATHER BOT
 # ==========================================
 bot = TelegramClient('bot_session', API_ID, API_HASH)
+
 
 async def is_user_joined(user_id):
     try:
@@ -165,8 +156,9 @@ async def is_user_joined(user_id):
         print(f"⚠️ Group check error: {e}")
         return False
 
+
 @bot.on(events.NewMessage(pattern=r'^/start$'))
-async def start_handler(event):
+async def bot_start(event):
     try:
         if not event.is_private:
             return
@@ -181,12 +173,13 @@ async def start_handler(event):
                 [Button.inline("🇵🇰 اردو (Urdu)", b"lang_ur")],
             ]
             msg = await bot.send_file(event.chat_id, GIF_URL, caption=LANG_MENU, buttons=buttons)
-            track_bot_message(user_id, msg)
+            track_bot_msg(user_id, msg.id)
     except Exception as e:
         print(f"⚠️ Start Error: {e}")
 
+
 @bot.on(events.CallbackQuery(data=lambda d: d.startswith(b"lang_")))
-async def lang_callback(event):
+async def bot_lang(event):
     try:
         lang = event.data.decode().replace("lang_", "")
         user_id = event.sender_id
@@ -195,17 +188,18 @@ async def lang_callback(event):
         user_langs[user_id] = lang
         await event.delete()
 
-        option_buttons = [
+        buttons = [
             [Button.inline("🔐 PUBG FILE PASSWORD", b"opt_pubg")],
             [Button.inline("📞 Contact with Owner", b"opt_contact")],
         ]
-        msg = await bot.send_message(event.chat_id, MESSAGES[lang]["prompt"], buttons=option_buttons)
-        track_bot_message(user_id, msg)
+        msg = await bot.send_message(event.chat_id, MESSAGES[lang]["prompt"], buttons=buttons)
+        track_bot_msg(user_id, msg.id)
     except Exception as e:
         print(f"⚠️ Lang Error: {e}")
 
+
 @bot.on(events.CallbackQuery(data=b"opt_pubg"))
-async def pubg_handler(event):
+async def bot_pubg(event):
     try:
         user_id = event.sender_id
         lang = user_langs.get(user_id, "en")
@@ -215,57 +209,100 @@ async def pubg_handler(event):
 
         if joined:
             msg = await bot.send_message(event.chat_id, MESSAGES[lang]["pubg_pass"])
-            track_bot_message(user_id, msg)
+            track_bot_msg(user_id, msg.id)
         else:
-            verify_buttons = [
+            buttons = [
                 [Button.url("🔗 Join Channel", CHANNEL_LINK)],
                 [Button.inline("✅ I've Joined", b"verify_join")]
             ]
-            msg = await bot.send_file(event.chat_id, MR_BEAN_GIF, caption=MESSAGES[lang]["join_first"], buttons=verify_buttons)
-            track_bot_message(user_id, msg)
+            msg = await bot.send_file(event.chat_id, MR_BEAN_GIF, caption=MESSAGES[lang]["join_first"], buttons=buttons)
+            track_bot_msg(user_id, msg.id)
     except Exception as e:
         print(f"⚠️ PUBG Error: {e}")
 
+
 @bot.on(events.CallbackQuery(data=b"verify_join"))
-async def verify_handler(event):
+async def bot_verify(event):
     try:
         user_id = event.sender_id
         lang = user_langs.get(user_id, "en")
 
         joined = await is_user_joined(user_id)
-
         if joined:
             await event.delete()
             msg = await bot.send_message(event.chat_id, MESSAGES[lang]["pubg_pass"])
-            track_bot_message(user_id, msg)
+            track_bot_msg(user_id, msg.id)
         else:
             await event.answer(MESSAGES[lang]["not_joined"], alert=True)
     except Exception as e:
         print(f"⚠️ Verify Error: {e}")
 
+
 @bot.on(events.CallbackQuery(data=b"opt_contact"))
-async def contact_handler(event):
+async def bot_contact(event):
     try:
         user_id = event.sender_id
         lang = user_langs.get(user_id, "en")
         await event.delete()
         msg = await bot.send_message(event.chat_id, MESSAGES[lang]["contact"])
-        track_bot_message(user_id, msg)
+        track_bot_msg(user_id, msg.id)
     except Exception as e:
         print(f"⚠️ Contact Error: {e}")
+
+
+# ==========================================
+# 🗑️ AUTO-DELETE: Jab OWNER manually reply kare
+# ==========================================
+@userbot.on(events.NewMessage(outgoing=True))
+async def owner_reply(event):
+    try:
+        if not event.is_private:
+            return
+        if event.text and event.text.startswith("/"):
+            return
+
+        user_id = event.chat_id
+        print(f"👤 Owner replied to {user_id} — cleaning up...")
+
+        # 1️⃣ Bot ke messages delete karo (bot khud delete karega)
+        if user_id in tracked_bot_msgs and tracked_bot_msgs[user_id]:
+            for msg_id in list(tracked_bot_msgs[user_id]):
+                try:
+                    await bot.delete_messages(user_id, msg_id)
+                except Exception as e:
+                    print(f"⚠️ Bot delete skip: {e}")
+            tracked_bot_msgs[user_id] = []
+            print(f"🗑️ Bot messages cleared for {user_id}")
+
+        # 2️⃣ Userbot ke messages delete karo (userbot khud delete karega)
+        if user_id in tracked_userbot_msgs and tracked_userbot_msgs[user_id]:
+            for msg_id in list(tracked_userbot_msgs[user_id]):
+                try:
+                    await userbot.delete_messages(user_id, msg_id)
+                except Exception as e:
+                    print(f"⚠️ Userbot delete skip: {e}")
+            tracked_userbot_msgs[user_id] = []
+            print(f"🗑️ Userbot messages cleared for {user_id}")
+
+    except Exception as e:
+        print(f"⚠️ Owner Reply Error: {e}")
+
 
 # ==========================================
 # 🌐 WEB SERVER
 # ==========================================
 app = Flask(__name__)
 
+
 @app.route('/')
 def home():
     return "Bot is running!"
 
+
 def run_web_server():
     port = int(os.environ.get("PORT", 8080))
     app.run(host='0.0.0.0', port=port)
+
 
 # ==========================================
 # MAIN
@@ -289,6 +326,7 @@ async def main():
         userbot.run_until_disconnected(),
         bot.run_until_disconnected()
     )
+
 
 if __name__ == "__main__":
     threading.Thread(target=run_web_server, daemon=True).start()

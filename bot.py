@@ -19,11 +19,11 @@ OWNER_ID = int(os.environ.get("OWNER_ID", 0))
 # ==========================================
 # ⚙️ APNI DETAILS YAHAN SET KARO
 # ==========================================
-BOT_LINK = "https://t.me/Vixby_bot"       # 👈 Tumhara naya bot ka link
+BOT_LINK = "https://t.me/Vixby_bot"
 CHANNEL_USERNAME = "rovixbyultimate"
 CHANNEL_LINK = "https://t.me/rovixbyultimate"
-OWNER_CONTACT = "@she_Shutara"              # 👈 Tumhara contact
-PUBG_PASSWORD = "WELCOME@TO@CLN"      # 👈 Apna PUBG file password yahan daalo
+OWNER_CONTACT = "@she_Shutara"
+PUBG_PASSWORD = "PUBG_IS_HERE"  # 👈 Apna PUBG password yahan daalo
 
 # ==========================================
 # 🎬 GIF LINKS
@@ -76,6 +76,14 @@ for lang in ["hi", "my", "ar", "ur"]:
 
 user_langs = {}
 
+# 🗑️ Bot ke messages track karne ke liye (Auto-delete feature)
+bot_messages = {}   # {user_id: [message_id1, message_id2, ...]}
+
+def track_bot_message(user_id, message):
+    if user_id not in bot_messages:
+        bot_messages[user_id] = []
+    bot_messages[user_id].append(message.id)
+
 # ==========================================
 # 1️⃣ USERBOT (Personal Account) - PROFESSIONAL REPLY
 # ==========================================
@@ -90,7 +98,6 @@ async def userbot_handler(event):
         if event.sender_id == me.id:
             return
         
-        # 👇 YEH HAI NAYA PROFESSIONAL MESSAGE
         away_caption = f"""╔═════════════════════════╗
        💤  OFFLINE MODE
 ╚═════════════════════════╝
@@ -110,14 +117,31 @@ Thank you for contacting me. I am currently **offline** right now and will get b
 ━━━━━━━━━━━━━━━━━━━━━━━
 ⏳ Please wait for my reply. Thank you!"""
 
-        await userbot.send_file(
-            event.chat_id,
-            USERBOT_GIF,
-            caption=away_caption
-        )
+        await userbot.send_file(event.chat_id, USERBOT_GIF, caption=away_caption)
         print(f"📩 Professional reply sent to {event.sender_id}")
     except Exception as e:
         print(f"⚠️ Userbot Error: {e}")
+
+# 🗑️ USERBOT OUTGOING HANDLER: Jab owner reply karega to bot ke messages delete karo
+@userbot.on(events.NewMessage(outgoing=True))
+async def owner_reply_handler(event):
+    global bot_messages
+    try:
+        if not event.is_private:
+            return
+        user_id = event.chat_id  # Jis user ko owner reply kar raha hai
+
+        # Agar bot ne us user ko messages bheje hain, unhe delete karo
+        if user_id in bot_messages and bot_messages[user_id]:
+            for msg_id in bot_messages[user_id]:
+                try:
+                    await bot.delete_messages(user_id, msg_id)
+                except Exception as e:
+                    print(f"⚠️ Delete error: {e}")
+            bot_messages[user_id] = []
+            print(f"🗑️ Deleted bot messages for user {user_id}")
+    except Exception as e:
+        print(f"⚠️ Owner Reply Error: {e}")
 
 # ==========================================
 # 2️⃣ BOTFATHER BOT
@@ -152,7 +176,8 @@ async def start_handler(event):
                 [Button.inline("🇸🇦 العربية (Arabic)", b"lang_ar")],
                 [Button.inline("🇵🇰 اردو (Urdu)", b"lang_ur")],
             ]
-            await bot.send_file(event.chat_id, GIF_URL, caption=LANG_MENU, buttons=buttons)
+            msg = await bot.send_file(event.chat_id, GIF_URL, caption=LANG_MENU, buttons=buttons)
+            track_bot_message(user_id, msg)
     except Exception as e:
         print(f"⚠️ Start Error: {e}")
 
@@ -170,7 +195,8 @@ async def lang_callback(event):
             [Button.inline("🔐 PUBG FILE PASSWORD", b"opt_pubg")],
             [Button.inline("📞 Contact with Owner", b"opt_contact")],
         ]
-        await bot.send_message(event.chat_id, MESSAGES[lang]["prompt"], buttons=option_buttons)
+        msg = await bot.send_message(event.chat_id, MESSAGES[lang]["prompt"], buttons=option_buttons)
+        track_bot_message(user_id, msg)
     except Exception as e:
         print(f"⚠️ Lang Error: {e}")
 
@@ -184,13 +210,15 @@ async def pubg_handler(event):
         joined = await is_user_joined(user_id)
 
         if joined:
-            await bot.send_message(event.chat_id, MESSAGES[lang]["pubg_pass"])
+            msg = await bot.send_message(event.chat_id, MESSAGES[lang]["pubg_pass"])
+            track_bot_message(user_id, msg)
         else:
             verify_buttons = [
                 [Button.url("🔗 Join Channel", CHANNEL_LINK)],
                 [Button.inline("✅ I've Joined", b"verify_join")]
             ]
-            await bot.send_file(event.chat_id, MR_BEAN_GIF, caption=MESSAGES[lang]["join_first"], buttons=verify_buttons)
+            msg = await bot.send_file(event.chat_id, MR_BEAN_GIF, caption=MESSAGES[lang]["join_first"], buttons=verify_buttons)
+            track_bot_message(user_id, msg)
     except Exception as e:
         print(f"⚠️ PUBG Error: {e}")
 
@@ -204,7 +232,8 @@ async def verify_handler(event):
 
         if joined:
             await event.delete()
-            await bot.send_message(event.chat_id, MESSAGES[lang]["pubg_pass"])
+            msg = await bot.send_message(event.chat_id, MESSAGES[lang]["pubg_pass"])
+            track_bot_message(user_id, msg)
         else:
             await event.answer(MESSAGES[lang]["not_joined"], alert=True)
     except Exception as e:
@@ -216,7 +245,8 @@ async def contact_handler(event):
         user_id = event.sender_id
         lang = user_langs.get(user_id, "en")
         await event.delete()
-        await bot.send_message(event.chat_id, MESSAGES[lang]["contact"])
+        msg = await bot.send_message(event.chat_id, MESSAGES[lang]["contact"])
+        track_bot_message(user_id, msg)
     except Exception as e:
         print(f"⚠️ Contact Error: {e}")
 

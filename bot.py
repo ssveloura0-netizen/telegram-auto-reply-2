@@ -1,4 +1,5 @@
 from telethon import TelegramClient, events, Button
+from telethon.sessions import StringSession
 from telethon.tl.functions.channels import GetParticipantRequest
 from telethon.errors import UserNotParticipantError
 from deep_translator import GoogleTranslator
@@ -7,11 +8,17 @@ import os
 import threading
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
+# ==========================================
+# RENDER ENVIRONMENT VARIABLES
+# ==========================================
 API_ID = int(os.environ.get("API_ID", 0))
 API_HASH = os.environ.get("API_HASH", "")
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
-OWNER_ID = int(os.environ.get("OWNER_ID"))
+OWNER_ID = int(os.environ.get("OWNER_ID", 0))
 
+# ==========================================
+# 🎬 GIF LINKS
+# ==========================================
 GIF_URL = "https://media.giphy.com/media/OQS9HFAZuLvJEoUdR1/giphy.gif"
 CONTACT_GIF_URL = "https://media.giphy.com/media/z4lwT4QTkK3sYITR7Z/giphy.gif"
 MLBB_GIF_URL = "https://media.giphy.com/media/8c02kRLsiC8VgH77yJ/giphy.gif"
@@ -106,9 +113,6 @@ Best regards,
 [آپ کا نام]"""
 }
 
-# ==========================================
-# 🌐 LANGUAGE MENU
-# ==========================================
 LANG_MENU = """╔══════════════════════╗
    🌐  LANGUAGE SELECTION
 ╚══════════════════════╝
@@ -121,9 +125,6 @@ Welcome! Please select your preferred language.
 
 _Your messages will be auto-translated to English._"""
 
-# ==========================================
-# 🎯 ACTION MESSAGES
-# ==========================================
 ACTION_MESSAGES = {
     "en": {
         "prompt": "👇 **Choose an option below:**",
@@ -380,6 +381,9 @@ Please join first, then tap **"I've Joined"** again.""",
 }
 
 user_langs = {}
+waiting_for_lang = set()
+waiting_for_choice = set()
+waiting_for_yes = set()
 
 # ==========================================
 # TELEGRAM BOT CLIENT
@@ -459,7 +463,6 @@ async def lang_callback(event):
 
         user_langs[user_id] = lang
 
-        # Purana message delete
         await event.delete()
 
         confirm = {
@@ -471,7 +474,6 @@ async def lang_callback(event):
         }
         await client.send_message(event.chat_id, confirm[lang])
 
-        # Turant offline message + buttons
         await asyncio.sleep(0.5)
         await client.send_file(event.chat_id, GIF_URL, caption=OFFLINE_MESSAGES[lang])
         option_buttons = [
@@ -535,7 +537,7 @@ async def verify_handler(event):
         print(f"⚠️ Verify Error: {e}")
 
 # ==========================================
-# 🌐 WEB SERVER
+# 🌐 WEB SERVER (Render ke liye — FIXED)
 # ==========================================
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):

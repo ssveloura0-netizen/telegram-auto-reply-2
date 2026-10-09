@@ -19,7 +19,7 @@ OWNER_ID = int(os.environ.get("OWNER_ID", 0))
 # ==========================================
 # ⚙️ APNI DETAILS YAHAN SET KARO
 # ==========================================
-BOT_LINK = "https://t.me/Vixbyulti_bot"
+BOT_LINK = "https://t.me/Vixby_bot"
 CHANNEL_USERNAME = "rovixbyultimate"
 CHANNEL_LINK = "https://t.me/rovixbyultimate"
 PUBG_PASSWORD = "WELCOME@TO@CLN"  # 👈 Apna PUBG password yahan daalo

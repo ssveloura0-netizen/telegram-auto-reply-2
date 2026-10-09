@@ -28,9 +28,9 @@ PUBG_PASSWORD = "PUBG_IS_HERE"  # 👈 Apna PUBG password yahan daalo
 # ==========================================
 # 🎬 GIF LINKS
 # ==========================================
-GIF_URL = "https://media.giphy.com/media/OQS9HFAZuLvJEoUdR1/giphy.gif"     # Kala Chazma
-MR_BEAN_GIF = "https://media.giphy.com/media/3o7abKhOpu0NwenH3O/giphy.gif" # Mr. Bean
-USERBOT_GIF = "https://media.giphy.com/media/10fxZavhBFXsUE/giphy.gif"     # Office
+GIF_URL = "https://media.giphy.com/media/OQS9HFAZuLvJEoUdR1/giphy.gif"
+MR_BEAN_GIF = "https://media.giphy.com/media/3o7abKhOpu0NwenH3O/giphy.gif"
+USERBOT_GIF = "https://media.giphy.com/media/10fxZavhBFXsUE/giphy.gif"
 
 # ==========================================
 # 🌍 MESSAGES
@@ -47,7 +47,6 @@ Welcome! Please select your preferred language.
 
 MESSAGES = {
     "en": {
-        "offline": "I am currently offline. Please leave a message and I will get back to you.",
         "prompt": "👋 **Hello!**\n\nPlease choose an option below:",
         "join_first": f"""🚀 **PUBG FILE PASSWORD UNLOCK**
 
@@ -76,8 +75,8 @@ for lang in ["hi", "my", "ar", "ur"]:
 
 user_langs = {}
 
-# 🗑️ Bot ke messages track karne ke liye (Auto-delete feature)
-bot_messages = {}   # {user_id: [message_id1, message_id2, ...]}
+# 🗑️ TRACK BOT KE MESSAGES (Global memory)
+bot_messages = {}   # {user_id: [msg_id1, msg_id2, ...]}
 
 def track_bot_message(user_id, message):
     if user_id not in bot_messages:
@@ -85,7 +84,7 @@ def track_bot_message(user_id, message):
     bot_messages[user_id].append(message.id)
 
 # ==========================================
-# 1️⃣ USERBOT (Personal Account) - PROFESSIONAL REPLY
+# 1️⃣ USERBOT (Personal Account)
 # ==========================================
 userbot = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
 
@@ -117,29 +116,46 @@ Thank you for contacting me. I am currently **offline** right now and will get b
 ━━━━━━━━━━━━━━━━━━━━━━━
 ⏳ Please wait for my reply. Thank you!"""
 
-        await userbot.send_file(event.chat_id, USERBOT_GIF, caption=away_caption)
+        msg = await userbot.send_file(event.chat_id, USERBOT_GIF, caption=away_caption)
+        track_bot_message(event.sender_id, msg)  # 👈 Track karo
         print(f"📩 Professional reply sent to {event.sender_id}")
     except Exception as e:
         print(f"⚠️ Userbot Error: {e}")
 
-# 🗑️ USERBOT OUTGOING HANDLER: Jab owner reply karega to bot ke messages delete karo
+# 🗑️ USERBOT OUTGOING: Jab owner reply kare, sab messages delete karo
 @userbot.on(events.NewMessage(outgoing=True))
 async def owner_reply_handler(event):
-    global bot_messages
     try:
         if not event.is_private:
             return
-        user_id = event.chat_id  # Jis user ko owner reply kar raha hai
+        if event.text and event.text.startswith("/"):
+            return
+        
+        user_id = event.chat_id
+        print(f"👤 Owner replied to {user_id}, deleting bot messages...")
 
-        # Agar bot ne us user ko messages bheje hain, unhe delete karo
+        # Bot ke messages delete karo
         if user_id in bot_messages and bot_messages[user_id]:
-            for msg_id in bot_messages[user_id]:
+            for msg_id in list(bot_messages[user_id]):
                 try:
                     await bot.delete_messages(user_id, msg_id)
-                except Exception as e:
-                    print(f"⚠️ Delete error: {e}")
+                except Exception:
+                    pass
             bot_messages[user_id] = []
-            print(f"🗑️ Deleted bot messages for user {user_id}")
+            print(f"🗑️ Deleted bot messages for {user_id}")
+
+        # Userbot ke messages delete karo
+        try:
+            # Last 20 messages delete karo (userbot ke bheje hue)
+            async for message in userbot.iter_messages(user_id, limit=20):
+                if message.out and not message.text.startswith("/"):
+                    try:
+                        await userbot.delete_messages(user_id, message.id)
+                    except Exception:
+                        pass
+            print(f"🗑️ Deleted userbot messages for {user_id}")
+        except Exception as e:
+            print(f"⚠️ Userbot delete error: {e}")
     except Exception as e:
         print(f"⚠️ Owner Reply Error: {e}")
 

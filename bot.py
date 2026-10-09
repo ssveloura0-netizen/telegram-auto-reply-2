@@ -78,38 +78,37 @@ user_langs = {}
 # ==========================================
 # 🗑️ MESSAGE TRACKING (Delete ke liye)
 # ==========================================
-# Har user ke liye, bot aur userbot ke messages ki IDs alag-alag save karo
-tracked_bot_msgs = {}      # {user_id: [msg_id1, ...]}  -> Bot ke messages
-tracked_userbot_msgs = {}  # {user_id: [msg_id1, ...]}  -> Userbot ke messages
-
+tracked_bot_msgs = {}      # Bot ke messages
+tracked_userbot_msgs = {}  # Userbot ke messages
 
 def track_bot_msg(user_id, msg_id):
     if user_id not in tracked_bot_msgs:
         tracked_bot_msgs[user_id] = []
     tracked_bot_msgs[user_id].append(msg_id)
 
-
 def track_userbot_msg(user_id, msg_id):
     if user_id not in tracked_userbot_msgs:
         tracked_userbot_msgs[user_id] = []
     tracked_userbot_msgs[user_id].append(msg_id)
-
 
 # ==========================================
 # 1️⃣ USERBOT (Personal Account)
 # ==========================================
 userbot = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
 
-
 @userbot.on(events.NewMessage(incoming=True))
 async def userbot_incoming(event):
     try:
+        # Sirf private chats (known ya unknown dono)
         if not event.is_private:
             return
+
+        # Khud ke messages skip karo
         me = await userbot.get_me()
         if event.sender_id == me.id:
             return
 
+        # 👇 YE HAI FIX: Koi restriction nahi, sabko reply karega
         away_text = f"""╔═════════════════════════╗
        💤  OFFLINE MODE
 ╚═════════════════════════╝
@@ -130,18 +129,16 @@ Thank you for contacting me. I am currently **offline** right now and will get b
 ⏳ Please wait for my reply. Thank you!"""
 
         sent = await userbot.send_file(event.chat_id, USERBOT_GIF, caption=away_text)
-        # Userbot ke bheje message ko track karo
         track_userbot_msg(event.sender_id, sent.id)
         print(f"📩 Userbot reply sent to {event.sender_id}")
+
     except Exception as e:
         print(f"⚠️ Userbot Error: {e}")
-
 
 # ==========================================
 # 2️⃣ BOTFATHER BOT
 # ==========================================
 bot = TelegramClient('bot_session', API_ID, API_HASH)
-
 
 async def is_user_joined(user_id):
     try:
@@ -155,7 +152,6 @@ async def is_user_joined(user_id):
     except Exception as e:
         print(f"⚠️ Group check error: {e}")
         return False
-
 
 @bot.on(events.NewMessage(pattern=r'^/start$'))
 async def bot_start(event):
@@ -177,7 +173,6 @@ async def bot_start(event):
     except Exception as e:
         print(f"⚠️ Start Error: {e}")
 
-
 @bot.on(events.CallbackQuery(data=lambda d: d.startswith(b"lang_")))
 async def bot_lang(event):
     try:
@@ -196,7 +191,6 @@ async def bot_lang(event):
         track_bot_msg(user_id, msg.id)
     except Exception as e:
         print(f"⚠️ Lang Error: {e}")
-
 
 @bot.on(events.CallbackQuery(data=b"opt_pubg"))
 async def bot_pubg(event):
@@ -220,7 +214,6 @@ async def bot_pubg(event):
     except Exception as e:
         print(f"⚠️ PUBG Error: {e}")
 
-
 @bot.on(events.CallbackQuery(data=b"verify_join"))
 async def bot_verify(event):
     try:
@@ -237,7 +230,6 @@ async def bot_verify(event):
     except Exception as e:
         print(f"⚠️ Verify Error: {e}")
 
-
 @bot.on(events.CallbackQuery(data=b"opt_contact"))
 async def bot_contact(event):
     try:
@@ -249,9 +241,8 @@ async def bot_contact(event):
     except Exception as e:
         print(f"⚠️ Contact Error: {e}")
 
-
 # ==========================================
-# 🗑️ AUTO-DELETE: Jab OWNER manually reply kare
+# 🗑️ AUTO-DELETE (Owner Reply Pe)
 # ==========================================
 @userbot.on(events.NewMessage(outgoing=True))
 async def owner_reply(event):
@@ -264,45 +255,40 @@ async def owner_reply(event):
         user_id = event.chat_id
         print(f"👤 Owner replied to {user_id} — cleaning up...")
 
-        # 1️⃣ Bot ke messages delete karo (bot khud delete karega)
+        # Bot ke messages delete karo
         if user_id in tracked_bot_msgs and tracked_bot_msgs[user_id]:
             for msg_id in list(tracked_bot_msgs[user_id]):
                 try:
                     await bot.delete_messages(user_id, msg_id)
-                except Exception as e:
-                    print(f"⚠️ Bot delete skip: {e}")
+                except Exception:
+                    pass
             tracked_bot_msgs[user_id] = []
-            print(f"🗑️ Bot messages cleared for {user_id}")
 
-        # 2️⃣ Userbot ke messages delete karo (userbot khud delete karega)
+        # Userbot ke messages delete karo
         if user_id in tracked_userbot_msgs and tracked_userbot_msgs[user_id]:
             for msg_id in list(tracked_userbot_msgs[user_id]):
                 try:
                     await userbot.delete_messages(user_id, msg_id)
-                except Exception as e:
-                    print(f"⚠️ Userbot delete skip: {e}")
+                except Exception:
+                    pass
             tracked_userbot_msgs[user_id] = []
-            print(f"🗑️ Userbot messages cleared for {user_id}")
 
+        print(f"🗑️ Messages cleared for {user_id}")
     except Exception as e:
         print(f"⚠️ Owner Reply Error: {e}")
-
 
 # ==========================================
 # 🌐 WEB SERVER
 # ==========================================
 app = Flask(__name__)
 
-
 @app.route('/')
 def home():
     return "Bot is running!"
 
-
 def run_web_server():
     port = int(os.environ.get("PORT", 8080))
     app.run(host='0.0.0.0', port=port)
-
 
 # ==========================================
 # MAIN
@@ -326,7 +312,6 @@ async def main():
         userbot.run_until_disconnected(),
         bot.run_until_disconnected()
     )
-
 
 if __name__ == "__main__":
     threading.Thread(target=run_web_server, daemon=True).start()

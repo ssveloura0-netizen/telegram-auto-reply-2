@@ -23,14 +23,14 @@ BOT_LINK = "https://t.me/Vixby_bot"
 CHANNEL_USERNAME = "rovixbyultimate"
 CHANNEL_LINK = "https://t.me/rovixbyultimate"
 OWNER_CONTACT = "@she_Shutara"
-PUBG_PASSWORD = "PUBG_IS_HERE"  # 👈 Apna PUBG password yahan daalo
+PUBG_PASSWORD = "WELCOME@TO@CLN"  # 👈 Apna PUBG password yahan daalo
 
 # ==========================================
 # 🎬 GIF LINKS
 # ==========================================
-GIF_URL = "https://media.giphy.com/media/OQS9HFAZuLvJEoUdR1/giphy.gif"
-MR_BEAN_GIF = "https://media.giphy.com/media/3o7abKhOpu0NwenH3O/giphy.gif"
-USERBOT_GIF = "https://media.giphy.com/media/10fxZavhBFXsUE/giphy.gif"
+GIF_URL = "https://media.giphy.com/media/OQS9HFAZuLvJEoUdR1/giphy.gif"     # Kala Chazma
+MR_BEAN_GIF = "https://media.giphy.com/media/3o7abKhOpu0NwenH3O/giphy.gif" # Mr. Bean
+USERBOT_GIF = "https://media.giphy.com/media/10fxZavhBFXsUE/giphy.gif"     # Office
 
 # ==========================================
 # 🌍 MESSAGES
@@ -75,10 +75,11 @@ for lang in ["hi", "my", "ar", "ur"]:
 
 user_langs = {}
 
-# 🗑️ TRACK BOT KE MESSAGES (Global memory)
+# 🗑️ SIRF BOT KE MESSAGES TRACK KARO (Owner ke nahi)
 bot_messages = {}   # {user_id: [msg_id1, msg_id2, ...]}
 
 def track_bot_message(user_id, message):
+    """Bot ke bheje message ko track karo (delete ke liye)"""
     if user_id not in bot_messages:
         bot_messages[user_id] = []
     bot_messages[user_id].append(message.id)
@@ -117,12 +118,12 @@ Thank you for contacting me. I am currently **offline** right now and will get b
 ⏳ Please wait for my reply. Thank you!"""
 
         msg = await userbot.send_file(event.chat_id, USERBOT_GIF, caption=away_caption)
-        track_bot_message(event.sender_id, msg)  # 👈 Track karo
+        track_bot_message(event.sender_id, msg)
         print(f"📩 Professional reply sent to {event.sender_id}")
     except Exception as e:
         print(f"⚠️ Userbot Error: {e}")
 
-# 🗑️ USERBOT OUTGOING: Jab owner reply kare, sab messages delete karo
+# 🗑️ USERBOT OUTGOING: Jab OWNER reply kare, SIRF bot ke messages delete karo
 @userbot.on(events.NewMessage(outgoing=True))
 async def owner_reply_handler(event):
     try:
@@ -134,7 +135,7 @@ async def owner_reply_handler(event):
         user_id = event.chat_id
         print(f"👤 Owner replied to {user_id}, deleting bot messages...")
 
-        # Bot ke messages delete karo
+        # 👇 SIRF bot ke tracked messages delete karo, owner ke nahi
         if user_id in bot_messages and bot_messages[user_id]:
             for msg_id in list(bot_messages[user_id]):
                 try:
@@ -143,19 +144,6 @@ async def owner_reply_handler(event):
                     pass
             bot_messages[user_id] = []
             print(f"🗑️ Deleted bot messages for {user_id}")
-
-        # Userbot ke messages delete karo
-        try:
-            # Last 20 messages delete karo (userbot ke bheje hue)
-            async for message in userbot.iter_messages(user_id, limit=20):
-                if message.out and not message.text.startswith("/"):
-                    try:
-                        await userbot.delete_messages(user_id, message.id)
-                    except Exception:
-                        pass
-            print(f"🗑️ Deleted userbot messages for {user_id}")
-        except Exception as e:
-            print(f"⚠️ Userbot delete error: {e}")
     except Exception as e:
         print(f"⚠️ Owner Reply Error: {e}")
 

@@ -22,8 +22,8 @@ OWNER_ID = int(os.environ.get("OWNER_ID", 0))
 BOT_LINK = "https://t.me/Vixby_bot"       # 👈 Tumhara naya bot ka link
 CHANNEL_USERNAME = "rovixbyultimate"
 CHANNEL_LINK = "https://t.me/rovixbyultimate"
-OWNER_CONTACT = "@she_Shutara"              # 👈 Yahan apna naya contact daala
-PUBG_PASSWORD = "PUBG_IS_HERE"              # 👈 Apna PUBG file password yahan daalo
+OWNER_CONTACT = "@she_Shutara"              # 👈 Tumhara contact
+PUBG_PASSWORD = "WELCOME@TO@CLN"      # 👈 Apna PUBG file password yahan daalo
 
 # ==========================================
 # 🎬 GIF LINKS
@@ -77,7 +77,7 @@ for lang in ["hi", "my", "ar", "ur"]:
 user_langs = {}
 
 # ==========================================
-# 1️⃣ USERBOT (Personal Account)
+# 1️⃣ USERBOT (Personal Account) - PROFESSIONAL REPLY
 # ==========================================
 userbot = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
 
@@ -90,12 +90,32 @@ async def userbot_handler(event):
         if event.sender_id == me.id:
             return
         
+        # 👇 YEH HAI NAYA PROFESSIONAL MESSAGE
+        away_caption = f"""╔═════════════════════════╗
+       💤  OFFLINE MODE
+╚═════════════════════════╝
+
+Hello,
+
+Thank you for contacting me. I am currently **offline** right now and will get back to you as soon as possible.
+
+📢 **JOIN OUR OFFICIAL CHANNEL**
+🔗 https://t.me/rovixbyultimate
+
+📂 **HACK FILE PINNED** in the channel! Join now to grab it.
+
+🤖 **Contact My Assistant Bot:**
+👉 {BOT_LINK}
+
+━━━━━━━━━━━━━━━━━━━━━━━
+⏳ Please wait for my reply. Thank you!"""
+
         await userbot.send_file(
             event.chat_id,
             USERBOT_GIF,
-            caption=f"I am currently offline. Please contact me here 👉 {BOT_LINK}"
+            caption=away_caption
         )
-        print(f"📩 Userbot GIF + Link sent to {event.sender_id}")
+        print(f"📩 Professional reply sent to {event.sender_id}")
     except Exception as e:
         print(f"⚠️ Userbot Error: {e}")
 

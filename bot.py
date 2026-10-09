@@ -3,10 +3,10 @@ from telethon.sessions import StringSession
 from telethon.tl.functions.channels import GetParticipantRequest
 from telethon.errors import UserNotParticipantError
 from deep_translator import GoogleTranslator
+from flask import Flask
 import asyncio
 import os
 import threading
-from http.server import BaseHTTPRequestHandler, HTTPServer
 
 # ==========================================
 # RENDER ENVIRONMENT VARIABLES
@@ -28,7 +28,7 @@ GROUP_USERNAME = "rovixbyultimate"
 OWNER_CONTACT = "@MG1SHWE"
 
 # ==========================================
-# 🌍 OFFLINE MESSAGES
+# 🌍 OFFLINE MESSAGES (5 LANGUAGES)
 # ==========================================
 OFFLINE_MESSAGES = {
     "en": """╔══════════════════════╗
@@ -113,6 +113,9 @@ Best regards,
 [آپ کا نام]"""
 }
 
+# ==========================================
+# 🌐 LANGUAGE MENU
+# ==========================================
 LANG_MENU = """╔══════════════════════╗
    🌐  LANGUAGE SELECTION
 ╚══════════════════════╝
@@ -125,6 +128,9 @@ Welcome! Please select your preferred language.
 
 _Your messages will be auto-translated to English._"""
 
+# ==========================================
+# 🎯 ACTION MESSAGES
+# ==========================================
 ACTION_MESSAGES = {
     "en": {
         "prompt": "👇 **Choose an option below:**",
@@ -381,9 +387,6 @@ Please join first, then tap **"I've Joined"** again.""",
 }
 
 user_langs = {}
-waiting_for_lang = set()
-waiting_for_choice = set()
-waiting_for_yes = set()
 
 # ==========================================
 # TELEGRAM BOT CLIENT
@@ -410,11 +413,9 @@ async def auto_reply_handler(event):
             return
         user_id = event.sender_id
 
-        # Owner ke messages ignore
         if user_id == OWNER_ID:
             return
 
-        # Pehli baar → Language buttons
         if user_id not in user_langs:
             buttons = [
                 [Button.inline("🇬🇧 English", b"lang_en")],
@@ -426,7 +427,6 @@ async def auto_reply_handler(event):
             await client.send_file(event.chat_id, GIF_URL, caption=LANG_MENU, buttons=buttons)
             return
 
-        # User ka message aaya → translation owner ko bhejo
         user_lang = user_langs[user_id]
         if event.text and user_lang != "en":
             try:
@@ -438,7 +438,6 @@ async def auto_reply_handler(event):
             except Exception as e:
                 print(f"⚠️ Translation error: {e}")
 
-        # Auto reply with buttons
         await client.send_file(event.chat_id, GIF_URL, caption=OFFLINE_MESSAGES[user_lang])
         option_buttons = [
             [Button.inline("📞 Contact with Owner", b"opt_contact")],
@@ -462,7 +461,6 @@ async def lang_callback(event):
             return
 
         user_langs[user_id] = lang
-
         await event.delete()
 
         confirm = {
@@ -496,11 +494,9 @@ async def option_callback(event):
         user_lang = user_langs.get(user_id, "en")
         await event.delete()
 
-        # === CONTACT ===
         if data == "opt_contact":
             await client.send_file(event.chat_id, CONTACT_GIF_URL, caption=ACTION_MESSAGES[user_lang]["contact"])
 
-        # === PUBG HACK ===
         elif data == "opt_pubg":
             joined = await is_user_in_group(user_id)
             if joined:
@@ -512,7 +508,6 @@ async def option_callback(event):
                 ]
                 await client.send_message(event.chat_id, ACTION_MESSAGES[user_lang]["join_first"], buttons=verify_buttons)
 
-        # === MOBILE LEGENDS BANG ===
         elif data == "opt_mlbb":
             await client.send_file(event.chat_id, MLBB_GIF_URL, caption=ACTION_MESSAGES[user_lang]["contact"])
     except Exception as e:
@@ -537,22 +532,17 @@ async def verify_handler(event):
         print(f"⚠️ Verify Error: {e}")
 
 # ==========================================
-# 🌐 WEB SERVER (Render ke liye — FIXED)
+# 🌐 WEB SERVER (Flask — Render ke liye best)
 # ==========================================
-class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(200)
-        self.end_headers()
-        self.wfile.write(b"Bot is running!")
-    def do_HEAD(self):
-        self.send_response(200)
-        self.end_headers()
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Bot is running!"
 
 def run_web_server():
     port = int(os.environ.get("PORT", 8080))
-    server = HTTPServer(("0.0.0.0", port), SimpleHTTPRequestHandler)
-    print(f"🌐 Web server started on port {port}")
-    server.serve_forever()
+    app.run(host='0.0.0.0', port=port)
 
 # ==========================================
 # MAIN

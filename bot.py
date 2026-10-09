@@ -8,24 +8,36 @@ import os
 import threading
 
 # ==========================================
-# RENDER ENVIRONMENT VARIABLES (5 chahiye)
+# RENDER ENVIRONMENT VARIABLES
 # ==========================================
 API_ID = int(os.environ.get("API_ID", 0))
 API_HASH = os.environ.get("API_HASH", "")
-SESSION_STRING = os.environ.get("SESSION_STRING", "")  # Userbot ke liye
-BOT_TOKEN = os.environ.get("BOT_TOKEN")                # BotFather bot ke liye
+SESSION_STRING = os.environ.get("SESSION_STRING", "")
+BOT_TOKEN = os.environ.get("BOT_TOKEN")
 OWNER_ID = int(os.environ.get("OWNER_ID", 0))
 
 # ==========================================
-# ⚙️ APNI DETAILS
+# ⚙️ APNI DETAILS YAHAN SET KARO
 # ==========================================
-BOT_LINK = "https://t.me/Vixbyulti_bot"  # Userbot yeh link bhejega
+BOT_LINK = "https://t.me/Vixbyulti_bot"
 CHANNEL_USERNAME = "rovixbyultimate"
 CHANNEL_LINK = "https://t.me/rovixbyultimate"
-SECRET_PASSWORD = "WELCOME@TO@CLN"
+PUBG_PASSWORD = "WELCOME@TO@CLN"  # 👈 Apna PUBG password yahan daalo
 
 # ==========================================
-# 🌍 LANGUAGE MESSAGES
+# 🎬 GIF LINKS
+# ==========================================
+# Language Selection wala GIF (Kala Chazma / Will Smith)
+GIF_URL = "https://media.giphy.com/media/OQS9HFAZuLvJEoUdR1/giphy.gif"
+
+# PUBG HACK prompt wala GIF (Mr. Bean)
+MR_BEAN_GIF = "https://media.giphy.com/media/3o7abKhOpu0NwenH3O/giphy.gif"
+
+# 👇 Userbot ke liye naya GIF (Office wala)
+USERBOT_GIF = "https://media.giphy.com/media/10fxZavhBFXsUE/giphy.gif"
+
+# ==========================================
+# 🌍 MESSAGES
 # ==========================================
 LANG_MENU = """╔══════════════════════╗
    🌐  LANGUAGE SELECTION
@@ -39,101 +51,21 @@ Welcome! Please select your preferred language.
 
 MESSAGES = {
     "en": {
-        "prompt": f"""👋 **Hello!**
-
-To get the secret password, you need to join our official channel first.
-
-🔗 {CHANNEL_LINK}
-
-After joining, click the button below 👇""",
+        "offline": "I am currently offline. Please leave a message and I will get back to you.",
+        "prompt": f"""👋 **Hello!**\n\nPlease choose an option below:""",
+        "join_first": f"""🚀 **PUBG HACK UNLOCK**\n\nTo get the PUBG Password, you need to join our official channel first.\n\n🔗 {CHANNEL_LINK}\n\nAfter joining, click the button below 👇""",
         "not_joined": "❌ You haven't joined the channel yet! Please join first.",
-        "password": f"""🎉 **Welcome!**
-
-✅ You are now verified!
-
-🔐 **Your Secret Password:**
-`{SECRET_PASSWORD}`
-
-⚠️ Keep it safe. Do not share."""
-    },
-    "hi": {
-        "prompt": f"""👋 **नमस्ते!**
-
-गुप्त पासवर्ड पाने के लिए आपको पहले हमारे आधिकारिक चैनल से जुड़ना होगा।
-
-🔗 {CHANNEL_LINK}
-
-जुड़ने के बाद नीचे वाले बटन पर क्लिक करें 👇""",
-        "not_joined": "❌ आपने अभी तक चैनल जॉइन नहीं किया है! कृपया पहले जॉइन करें।",
-        "password": f"""🎉 **स्वागत है!**
-
-✅ आप वेरिफाइड हो गए हैं!
-
-🔐 **आपका सीक्रेट पासवर्ड:**
-`{SECRET_PASSWORD}`
-
-⚠️ इसे संभाल कर रखें। किसी को न दें।"""
-    },
-    "my": {
-        "prompt": f"""👋 **မင်္ဂလာပါ!**
-
-လျှို့ဝှက်စကားဝှက် ရရှိရန် ကျွန်ုပ်တို့၏ တရားဝင်ချန်နယ်သို့ ဦးစွာဝင်ရောက်ရန် လိုအပ်ပါသည်။
-
-🔗 {CHANNEL_LINK}
-
-ဝင်ရောက်ပြီးပါက အောက်ရှိခလုတ်ကို နှိပ်ပါ 👇""",
-        "not_joined": "❌ သင်သည် ချန်နယ်သို့ မဝင်ရောက်ရသေးပါ။ ဦးစွာဝင်ရောက်ပါ။",
-        "password": f"""🎉 **ကြိုဆိုပါတယ်!**
-
-✅ အတည်ပြုပြီးပါပြီ!
-
-🔐 **သင့်လျှို့ဝှက်စကားဝှက်:**
-`{SECRET_PASSWORD}`
-
-⚠️ လုံခြုံစွာ သိမ်းထားပါ။ မမျှဝေပါနှင့်။"""
-    },
-    "ar": {
-        "prompt": f"""👋 **مرحباً!**
-
-للحصول على كلمة المرور السرية، عليك الانضمام إلى قناتنا الرسمية أولاً.
-
-🔗 {CHANNEL_LINK}
-
-بعد الانضمام، اضغط على الزر أدناه 👇""",
-        "not_joined": "❌ لم تنضم إلى القناة بعد! يرجى الانضمام أولاً.",
-        "password": f"""🎉 **أهلاً بك!**
-
-✅ تم التحقق منك!
-
-🔐 **كلمة المرور السرية الخاصة بك:**
-`{SECRET_PASSWORD}`
-
-⚠️ احتفظ بها بأمان. لا تشاركها."""
-    },
-    "ur": {
-        "prompt": f"""👋 **السلام علیکم!**
-
-خفیہ پاس ورڈ حاصل کرنے کے لیے آپ کو پہلے ہمارے آفیشل چینل میں شامل ہونا ہوگا۔
-
-🔗 {CHANNEL_LINK}
-
-شامل ہونے کے بعد نیچے والے بٹن پر کلک کریں 👇""",
-        "not_joined": "❌ آپ نے ابھی تک چینل جوائن نہیں کیا! پہلے جوائن کریں۔",
-        "password": f"""🎉 **خوش آمدید!**
-
-✅ آپ کی تصدیق ہو گئی ہے!
-
-🔐 **آپ کا خفیہ پاس ورڈ:**
-`{SECRET_PASSWORD}`
-
-⚠️ اسے محفوظ رکھیں۔ کسی کو نہ بتائیں۔"""
+        "pubg_pass": f"""🎉 **ACCESS GRANTED**\n\n✅ You are now verified!\n\n🔐 **Your PUBG Password:**\n`{PUBG_PASSWORD}`\n\n⚠️ Keep it safe. Do not share."""
     }
 }
+
+for lang in ["hi", "my", "ar", "ur"]:
+    MESSAGES[lang] = MESSAGES["en"].copy()
 
 user_langs = {}
 
 # ==========================================
-# 1️⃣ USERBOT (Personal Account @ROVIXU1ti)
+# 1️⃣ USERBOT (Personal Account)
 # ==========================================
 userbot = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
 
@@ -146,14 +78,18 @@ async def userbot_handler(event):
         if event.sender_id == me.id:
             return
         
-        # Sirf bot ka link bhejega
-        await event.reply(f"Main abhi offline hoon. Please contact me here 👉 {BOT_LINK}")
-        print(f"📩 Link sent to {event.sender_id} (Userbot)")
+        # 👇 YAHAN CHANGE KIYA: Ab Userbot naye GIF ke saath reply karega
+        await userbot.send_file(
+            event.chat_id,
+            USERBOT_GIF, # 👈 Naya office wala GIF
+            caption=f"I am currently offline. Please contact me here 👉 {BOT_LINK}"
+        )
+        print(f"📩 Userbot GIF + Link sent to {event.sender_id}")
     except Exception as e:
         print(f"⚠️ Userbot Error: {e}")
 
 # ==========================================
-# 2️⃣ BOTFATHER BOT (@Vixbyulti_bot)
+# 2️⃣ BOTFATHER BOT
 # ==========================================
 bot = TelegramClient('bot_session', API_ID, API_HASH)
 
@@ -185,20 +121,7 @@ async def start_handler(event):
                 [Button.inline("🇸🇦 العربية (Arabic)", b"lang_ar")],
                 [Button.inline("🇵🇰 اردو (Urdu)", b"lang_ur")],
             ]
-            await event.reply(LANG_MENU, buttons=buttons)
-            return
-
-        lang = user_langs[user_id]
-        joined = await is_user_joined(user_id)
-
-        if joined:
-            await event.reply(MESSAGES[lang]["password"])
-        else:
-            verify_buttons = [
-                [Button.url("🔗 Join Channel", CHANNEL_LINK)],
-                [Button.inline("✅ I've Joined", b"verify_join")]
-            ]
-            await event.reply(MESSAGES[lang]["prompt"], buttons=verify_buttons)
+            await bot.send_file(event.chat_id, GIF_URL, caption=LANG_MENU, buttons=buttons)
     except Exception as e:
         print(f"⚠️ Start Error: {e}")
 
@@ -211,33 +134,62 @@ async def lang_callback(event):
             return
         user_langs[user_id] = lang
         await event.delete()
+
+        option_buttons = [
+            [Button.inline("🚀 PUBG HACK", b"opt_pubg")],
+            [Button.inline("📞 Contact with Owner", b"opt_contact")],
+        ]
+        await bot.send_message(event.chat_id, MESSAGES[lang]["prompt"], buttons=option_buttons)
+    except Exception as e:
+        print(f"⚠️ Lang Error: {e}")
+
+@bot.on(events.CallbackQuery(data=b"opt_pubg"))
+async def pubg_handler(event):
+    try:
+        user_id = event.sender_id
+        lang = user_langs.get(user_id, "en")
+        await event.delete()
+
         joined = await is_user_joined(user_id)
+
         if joined:
-            await bot.send_message(event.chat_id, MESSAGES[lang]["password"])
+            await bot.send_message(event.chat_id, MESSAGES[lang]["pubg_pass"])
         else:
             verify_buttons = [
                 [Button.url("🔗 Join Channel", CHANNEL_LINK)],
                 [Button.inline("✅ I've Joined", b"verify_join")]
             ]
-            await bot.send_message(event.chat_id, MESSAGES[lang]["prompt"], buttons=verify_buttons)
+            await bot.send_file(event.chat_id, MR_BEAN_GIF, caption=MESSAGES[lang]["join_first"], buttons=verify_buttons)
     except Exception as e:
-        print(f"⚠️ Lang Error: {e}")
+        print(f"⚠️ PUBG Error: {e}")
 
 @bot.on(events.CallbackQuery(data=b"verify_join"))
 async def verify_handler(event):
     try:
         user_id = event.sender_id
         lang = user_langs.get(user_id, "en")
+
         joined = await is_user_joined(user_id)
+
         if joined:
-            await event.edit(MESSAGES[lang]["password"])
+            await event.delete()
+            await bot.send_message(event.chat_id, MESSAGES[lang]["pubg_pass"])
         else:
             await event.answer(MESSAGES[lang]["not_joined"], alert=True)
     except Exception as e:
         print(f"⚠️ Verify Error: {e}")
 
+@bot.on(events.CallbackQuery(data=b"opt_contact"))
+async def contact_handler(event):
+    try:
+        user_id = event.sender_id
+        await event.delete()
+        await bot.send_message(event.chat_id, f"📞 **Contact the Owner:**\n\nPlease message here: @MG1SHWE")
+    except Exception as e:
+        print(f"⚠️ Contact Error: {e}")
+
 # ==========================================
-# 🌐 WEB SERVER (Render ke liye)
+# 🌐 WEB SERVER
 # ==========================================
 app = Flask(__name__)
 
@@ -250,28 +202,23 @@ def run_web_server():
     app.run(host='0.0.0.0', port=port)
 
 # ==========================================
-# MAIN - Dono Bots Ek Saath Chalao
+# MAIN
 # ==========================================
 async def main():
-    # Userbot start karo
     await userbot.start()
     me_user = await userbot.get_me()
     print("=" * 55)
     print("✅ USERBOT RUNNING!")
     print(f"👤 Personal: {me_user.first_name}")
-    print(f"🔗 Sends: {BOT_LINK}")
     print("=" * 55)
 
-    # Bot start karo
     await bot.start(bot_token=BOT_TOKEN)
     me_bot = await bot.get_me()
     print("=" * 55)
     print("✅ BOT RUNNING!")
     print(f"🤖 Bot: @{me_bot.username}")
-    print(f"🔗 Channel: {CHANNEL_USERNAME}")
     print("=" * 55)
 
-    # Dono ko ek saath chalao
     await asyncio.gather(
         userbot.run_until_disconnected(),
         bot.run_until_disconnected()

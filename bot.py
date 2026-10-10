@@ -5,6 +5,7 @@ from telethon.errors import UserNotParticipantError, ChatAdminRequiredError
 from flask import Flask
 import asyncio
 import os
+import json
 import threading
 
 # ==========================================
@@ -12,8 +13,8 @@ import threading
 # ==========================================
 API_ID = int(os.environ.get("API_ID", 0))
 API_HASH = os.environ.get("API_HASH", "")
-SESSION_STRING = os.environ.get("SESSION_STRING", "")  # Userbot ke liye
-BOT_TOKEN = os.environ.get("BOT_TOKEN")                # BotFather bot ke liye
+SESSION_STRING = os.environ.get("SESSION_STRING", "")
+BOT_TOKEN = os.environ.get("BOT_TOKEN")
 
 # ==========================================
 # ⚙️ APNI DETAILS YAHAN SET KARO
@@ -21,14 +22,14 @@ BOT_TOKEN = os.environ.get("BOT_TOKEN")                # BotFather bot ke liye
 BOT_LINK = "https://t.me/Vixby_bot"
 CHANNEL_USERNAME = "rovixbyultimate"
 CHANNEL_LINK = "https://t.me/rovixbyultimate"
-PUBG_PASSWORD = "WELCOME@TO@CLN"  # 👈 Apna password daalo
+PUBG_PASSWORD = "file is not available yet stay tuned 😐"  # 👈 Apna password daalo
 
 # ==========================================
 # 🎬 GIF LINKS
 # ==========================================
-GIF_URL = "https://media.giphy.com/media/OQS9HFAZuLvJEoUdR1/giphy.gif"     # Kala Chazma
-MR_BEAN_GIF = "https://media.giphy.com/media/3o7abKhOpu0NwenH3O/giphy.gif" # Mr. Bean
-USERBOT_GIF = "https://media.giphy.com/media/10fxZavhBFXsUE/giphy.gif"     # Office
+GIF_URL = "https://media.giphy.com/media/OQS9HFAZuLvJEoUdR1/giphy.gif"
+MR_BEAN_GIF = "https://media.giphy.com/media/3o7abKhOpu0NwenH3O/giphy.gif"
+USERBOT_GIF = "https://media.giphy.com/media/10fxZavhBFXsUE/giphy.gif"
 
 # ==========================================
 # 🌍 MESSAGES
@@ -74,6 +75,44 @@ PUBG_PASSWORD_MSG = f"""🎉 **ACCESS GRANTED!**
 ⚠️ Keep it safe. Do not share with anyone."""
 
 # ==========================================
+# 💾 FILE-BASED TRACKING (Render restart ke liye)
+# ==========================================
+TRACK_FILE = "tracked_messages.json"
+
+def load_tracking():
+    try:
+        if os.path.exists(TRACK_FILE):
+            with open(TRACK_FILE, "r") as f:
+                return json.load(f)
+    except Exception as e:
+        print(f"⚠️ Load error: {e}")
+    return {"bot": {}, "userbot": {}}
+
+def save_tracking():
+    try:
+        with open(TRACK_FILE, "w") as f:
+            json.dump(tracked_msgs, f)
+    except Exception as e:
+        print(f"⚠️ Save error: {e}")
+
+tracked_msgs = load_tracking()
+# tracked_msgs = {"bot": {user_id: [msg_ids]}, "userbot": {user_id: [msg_ids]}}
+
+def track_bot(user_id, msg_id):
+    uid = str(user_id)
+    if uid not in tracked_msgs["bot"]:
+        tracked_msgs["bot"][uid] = []
+    tracked_msgs["bot"][uid].append(msg_id)
+    save_tracking()
+
+def track_userbot(user_id, msg_id):
+    uid = str(user_id)
+    if uid not in tracked_msgs["userbot"]:
+        tracked_msgs["userbot"][uid] = []
+    tracked_msgs["userbot"][uid].append(msg_id)
+    save_tracking()
+
+# ==========================================
 # 1️⃣ USERBOT (Personal Account)
 # ==========================================
 userbot = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
@@ -106,10 +145,50 @@ Thank you for contacting me. I am currently **offline** right now and will get b
 ━━━━━━━━━━━━━━━━━━━━━━━
 ⏳ Please wait for my reply. Thank you!"""
 
-        await userbot.send_file(event.chat_id, USERBOT_GIF, caption=away_text)
+        msg = await userbot.send_file(event.chat_id, USERBOT_GIF, caption=away_text)
+        track_userbot(event.sender_id, msg.id)
         print(f"📩 Userbot reply sent to {event.sender_id}")
     except Exception as e:
         print(f"⚠️ Userbot Error: {e}")
+
+# 🗑️ Jab owner reply kare — DONO ke messages delete karo
+@userbot.on(events.NewMessage(outgoing=True))
+async def owner_cleanup(event):
+    try:
+        if not event.is_private:
+            return
+        if event.text and event.text.startswith("/"):
+            return
+
+        user_id = str(event.chat_id)
+        print(f"👤 Owner replied to {user_id} — cleaning up...")
+
+        deleted = 0
+
+        # 1️⃣ Bot ke messages delete karo
+        if user_id in tracked_msgs["bot"]:
+            for msg_id in list(tracked_msgs["bot"][user_id]):
+                try:
+                    await bot.delete_messages(int(user_id), msg_id)
+                    deleted += 1
+                except Exception:
+                    pass
+            tracked_msgs["bot"][user_id] = []
+
+        # 2️⃣ Userbot ke messages delete karo
+        if user_id in tracked_msgs["userbot"]:
+            for msg_id in list(tracked_msgs["userbot"][user_id]):
+                try:
+                    await userbot.delete_messages(int(user_id), msg_id)
+                    deleted += 1
+                except Exception:
+                    pass
+            tracked_msgs["userbot"][user_id] = []
+
+        save_tracking()
+        print(f"🗑️ {deleted} messages deleted for {user_id}")
+    except Exception as e:
+        print(f"⚠️ Owner Cleanup Error: {e}")
 
 # ==========================================
 # 2️⃣ BOTFATHER BOT
@@ -134,11 +213,13 @@ async def start_handler(event):
     try:
         if not event.is_private:
             return
+        user_id = event.sender_id
         buttons = [
             [Button.inline("🔐 Get PUBG File Password", b"get_pubg")],
             [Button.url("📢 Join Our Channel", CHANNEL_LINK)],
         ]
-        await bot.send_file(event.chat_id, GIF_URL, caption=WELCOME, buttons=buttons)
+        msg = await bot.send_file(event.chat_id, GIF_URL, caption=WELCOME, buttons=buttons)
+        track_bot(user_id, msg.id)
     except Exception as e:
         print(f"⚠️ Start Error: {e}")
 
@@ -151,13 +232,15 @@ async def get_pubg_handler(event):
         joined = await is_user_joined(user_id)
 
         if joined:
-            await bot.send_message(event.chat_id, PUBG_PASSWORD_MSG)
+            msg = await bot.send_message(event.chat_id, PUBG_PASSWORD_MSG)
+            track_bot(user_id, msg.id)
         else:
             verify_buttons = [
                 [Button.url("📢 Join Channel", CHANNEL_LINK)],
                 [Button.inline("✅ I've Joined", b"verify_join")],
             ]
-            await bot.send_file(event.chat_id, MR_BEAN_GIF, caption=PUBG_NOT_JOINED, buttons=verify_buttons)
+            msg = await bot.send_file(event.chat_id, MR_BEAN_GIF, caption=PUBG_NOT_JOINED, buttons=verify_buttons)
+            track_bot(user_id, msg.id)
     except Exception as e:
         print(f"⚠️ PUBG Error: {e}")
 
@@ -169,7 +252,8 @@ async def verify_handler(event):
 
         if joined:
             await event.delete()
-            await bot.send_message(event.chat_id, PUBG_PASSWORD_MSG)
+            msg = await bot.send_message(event.chat_id, PUBG_PASSWORD_MSG)
+            track_bot(user_id, msg.id)
         else:
             await event.answer("❌ You haven't joined the channel yet! Please join first.", alert=True)
     except Exception as e:
@@ -192,7 +276,6 @@ def run_web_server():
 # MAIN
 # ==========================================
 async def main():
-    # Userbot start karo
     await userbot.start()
     me_user = await userbot.get_me()
     print("=" * 55)
@@ -200,7 +283,6 @@ async def main():
     print(f"👤 Personal: {me_user.first_name}")
     print("=" * 55)
 
-    # Bot start karo
     await bot.start(bot_token=BOT_TOKEN)
     me_bot = await bot.get_me()
     print("=" * 55)
@@ -208,7 +290,6 @@ async def main():
     print(f"🤖 Bot: @{me_bot.username}")
     print("=" * 55)
 
-    # Dono ko ek saath chalao
     await asyncio.gather(
         userbot.run_until_disconnected(),
         bot.run_until_disconnected()

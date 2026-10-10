@@ -22,7 +22,7 @@ BOT_TOKEN = os.environ.get("BOT_TOKEN")
 BOT_LINK = "https://t.me/Vixby_bot"
 CHANNEL_USERNAME = "rovixbyultimate"
 CHANNEL_LINK = "https://t.me/rovixbyultimate"
-PUBG_PASSWORD = "file is not available yet stay tuned 😐"  # 👈 Apna password daalo
+PUBG_PASSWORD = "WELCOME@TO@CLN"  # 👈 Apna password daalo
 
 # ==========================================
 # 🎬 GIF LINKS

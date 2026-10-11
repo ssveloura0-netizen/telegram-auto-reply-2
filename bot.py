@@ -41,7 +41,7 @@ DM_ADMIN_2 = "@she_Shutara"
 # ==========================================
 # FILE PASSWORD
 # ==========================================
-FILE_PASSWORD = "FEEDxBACKxPLZ"
+FILE_PASSWORD = "buyViP@79o"
 
 # ==========================================
 # AI CLIENTS
@@ -80,7 +80,7 @@ ai_mode = {}
 # ==========================================
 last_owner_activity = {}
 user_auto_reply_count = {}
-AWAY_TIMEOUT = 300  # 5 minute
+AWAY_TIMEOUT = 300
 MAX_AUTO_REPLIES = 3
 
 # ==========================================
@@ -159,7 +159,6 @@ def create_backup():
 # 🕐 LIVE CHAT
 # ==========================================
 live_chat_mode = {}
-admin_reply_mode = {}
 
 # ==========================================
 # MESSAGES
@@ -183,7 +182,7 @@ PUBG_MENU_MSG = """🎮 **PUBG** 🎮
 
 **What do you need?**"""
 
-PUBG_FREE_MSG = f"""🎮 **PUBG FREE MODS**
+PUBG_FREE_MSG = f"""🎁 **PUBG FREE FILE**
 
 ━━━━━━━━━━━━━━━━━━━━━━
 
@@ -222,13 +221,47 @@ PUBG_SHARE_MSG = f"""📤 **SHARE REQUIRED**
 
 ━━━━━━━━━━━━━━━━━━━━━━
 
-📸 **Step 2: After sharing, click "I Shared" below**"""
+📸 **Step 2: After sharing, click "✅ I Shared"**
+
+⚠️ If you haven't shared, click "❌ I Haven't Shared"."""
+
+PUBG_NOT_SHARED_MSG = f"""❌ **You haven't shared yet!**
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+📋 Please share the channel link with **5 people** first.
+
+🔗 **Channel Link:**
+{CHANNEL_LINK}
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+After sharing, come back and click **"✅ I Shared"**."""
 
 PUBG_ENTER_KEY_MSG = f"""✅ **SHARE VERIFIED!**
 
 ━━━━━━━━━━━━━━━━━━━━━━
 🔑 **ENTER YOUR LICENSE CODE**
 ━━━━━━━━━━━━━━━━━━━━━━
+
+📩 **Send your license code below:**
+
+Format: `ROVIX-XXXXX`
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️ **1 CODE = 1 USER (30 min valid)**
+📩 Don't have a code? DM: {DM_ADMIN_1}
+
+Type `/cancel` to exit."""
+
+PUBG_PASSWORD_MSG = f"""🔐 **PUBG FILE PASSWORD**
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+✅ You've joined the channel!
+
+🔑 **ENTER YOUR LICENSE CODE**
 
 📩 **Send your license code below:**
 
@@ -428,12 +461,6 @@ def pubg_purchase_keyboard():
         [Button.text("⬅️ BACK")],
     ]
 
-def dm_admin_keyboard():
-    return [
-        [Button.text("💬 DM ADMIN")],
-        [Button.text("⬅️ BACK")],
-    ]
-
 def mlbb_menu_keyboard():
     return [
         [Button.text("💳 MLBB PURCHASE")],
@@ -466,6 +493,7 @@ def share_keyboard():
     return [
         [Button.url("📤 Share Channel", share_url)],
         [Button.text("✅ I Shared")],
+        [Button.text("❌ I Haven't Shared")],
         [Button.text("⬅️ BACK")],
     ]
 
@@ -580,7 +608,7 @@ async def extract_pubg_kills(image_path):
             pass
 
 # ==========================================
-# PAYMENT OCR — Screenshot se info
+# PAYMENT OCR
 # ==========================================
 async def extract_payment_info(image_path):
     if not ocr_client:
@@ -842,13 +870,13 @@ async def userbot_handler(event):
         user_id = event.sender_id
         now = time.time()
 
-        # 🕐 AWAY MODE CHECK (5 min)
+        # 🕐 AWAY MODE
         last_activity = last_owner_activity.get(user_id, 0)
         if now - last_activity < AWAY_TIMEOUT:
             print(f"⏭️ Skipped (you're active with {user_id})")
             return
 
-        # 🛡️ ANTI-SPAM CHECK
+        # 🛡️ ANTI-SPAM
         if user_id in banned_users:
             return
         if user_id in muted_users:
@@ -876,7 +904,7 @@ async def userbot_handler(event):
                 await event.reply("⚠️ **Warning!** Don't spam.")
             return
 
-        # 📞 VOICE MESSAGE
+        # 🎤 VOICE
         if event.voice or event.audio:
             voice_path = await event.download_media()
             try:
@@ -898,7 +926,7 @@ async def userbot_handler(event):
                     pass
             return
 
-        # 🤖 AUTO-REPLY LIMIT (3 times)
+        # 🤖 AUTO-REPLY LIMIT
         count = user_auto_reply_count.get(user_id, 0)
         if count >= MAX_AUTO_REPLIES:
             print(f"⏭️ Skipped (already 3 replies to {user_id})")
@@ -951,7 +979,7 @@ async def owner_reply_handler(event):
         user_id = event.chat_id
         last_owner_activity[user_id] = time.time()
         user_auto_reply_count[user_id] = 0
-        print(f"🔄 Owner active with {user_id} — counter reset")
+        print(f"🔄 Owner active with {user_id}")
 
         text = event.text or ""
 
@@ -969,7 +997,6 @@ async def owner_reply_handler(event):
             except Exception as e:
                 print(f"⚠️ Translation error: {e}")
 
-        # 🎤 OWNER VOICE → USER KO TRANSLATED
         if event.voice or event.audio:
             voice_path = await event.download_media()
             try:
@@ -977,7 +1004,6 @@ async def owner_reply_handler(event):
                 if text_from_voice:
                     translated = await translate_to_user_lang(text_from_voice, user_id)
                     await userbot.send_message(user_id, f"🎤 **Voice Message:**\n\n{translated}")
-                    print(f"🎤 Voice translated & sent to {user_id}")
             except Exception as e:
                 print(f"⚠️ Owner Voice error: {e}")
             finally:
@@ -1052,7 +1078,7 @@ async def start_handler(event):
     except Exception as e:
         print(f"⚠️ Start Error: {e}")
 
-# === KEY GENERATION (Owner Only) ===
+# === KEY GENERATION ===
 @bot.on(events.NewMessage(pattern=r'^/newkey$'))
 async def newkey_handler(event):
     try:
@@ -1075,7 +1101,7 @@ async def newkey_multi_handler(event):
             count = 50
         keys = [create_key() for _ in range(count)]
         key_list = "\n".join([f"{i+1}. `{k}`" for i, k in enumerate(keys)])
-        await event.respond(f"✅ **{count} NEW KEYS GENERATED**\n\n{key_list}\n\n⏱️ Each key valid 30 min after activation.")
+        await event.respond(f"✅ **{count} NEW KEYS GENERATED**\n\n{key_list}")
     except Exception as e:
         print(f"⚠️ Newkey Multi Error: {e}")
 
@@ -1163,7 +1189,7 @@ async def ask_ai_handler(event):
     except Exception as e:
         print(f"⚠️ Ask AI Error: {e}")
 
-# === PUBG ===
+# === PUBG MENU ===
 @bot.on(events.NewMessage(pattern=r'^🎮 PUBG$'))
 async def pubg_handler(event):
     try:
@@ -1175,6 +1201,7 @@ async def pubg_handler(event):
     except Exception as e:
         print(f"⚠️ PUBG Error: {e}")
 
+# === 🎁 FREE (Share Required Flow) ===
 @bot.on(events.NewMessage(pattern=r'^🎁 FREE$'))
 async def pubg_free_handler(event):
     try:
@@ -1183,11 +1210,8 @@ async def pubg_free_handler(event):
         user_id = event.sender_id
         joined = await is_user_joined(user_id)
         if joined:
-            buttons = [
-                [Button.text("🔐 Get Password")],
-                [Button.text("⬅️ BACK")],
-            ]
-            msg = await bot.send_message(event.chat_id, PUBG_FREE_MSG, buttons=buttons)
+            # Share message
+            msg = await bot.send_message(event.chat_id, PUBG_SHARE_MSG, buttons=share_keyboard())
             track_bot(user_id, msg.id)
         else:
             msg = await bot.send_message(event.chat_id, PUBG_NOT_JOINED_MSG, buttons=join_keyboard())
@@ -1195,28 +1219,7 @@ async def pubg_free_handler(event):
     except Exception as e:
         print(f"⚠️ PUBG FREE Error: {e}")
 
-@bot.on(events.NewMessage(pattern=r'^🔐 Get Password$'))
-async def get_password_handler(event):
-    try:
-        if not event.is_private:
-            return
-        user_id = event.sender_id
-        joined = await is_user_joined(user_id)
-        if joined:
-            share_url = f"https://t.me/share/url?url={CHANNEL_LINK}&text=Check%20this%20channel!"
-            buttons = [
-                [Button.url("📤 Share Channel", share_url)],
-                [Button.text("✅ I Shared")],
-                [Button.text("⬅️ BACK")],
-            ]
-            msg = await bot.send_message(event.chat_id, PUBG_SHARE_MSG, buttons=buttons)
-            track_bot(user_id, msg.id)
-        else:
-            msg = await bot.send_message(event.chat_id, PUBG_NOT_JOINED_MSG, buttons=join_keyboard())
-            track_bot(user_id, msg.id)
-    except Exception as e:
-        print(f"⚠️ Get Password Error: {e}")
-
+# === ✅ I've Joined ===
 @bot.on(events.NewMessage(pattern=r'^✅ I\'ve Joined$'))
 async def joined_handler(event):
     try:
@@ -1225,13 +1228,7 @@ async def joined_handler(event):
         user_id = event.sender_id
         joined = await is_user_joined(user_id)
         if joined:
-            share_url = f"https://t.me/share/url?url={CHANNEL_LINK}&text=Check%20this%20channel!"
-            buttons = [
-                [Button.url("📤 Share Channel", share_url)],
-                [Button.text("✅ I Shared")],
-                [Button.text("⬅️ BACK")],
-            ]
-            msg = await bot.send_message(event.chat_id, PUBG_SHARE_MSG, buttons=buttons)
+            msg = await bot.send_message(event.chat_id, PUBG_SHARE_MSG, buttons=share_keyboard())
             track_bot(user_id, msg.id)
         else:
             msg = await bot.send_message(event.chat_id, "❌ You haven't joined yet. Please join first.", buttons=join_keyboard())
@@ -1239,7 +1236,7 @@ async def joined_handler(event):
     except Exception as e:
         print(f"⚠️ Joined Handler Error: {e}")
 
-# === FAKE SHARE VERIFICATION ===
+# === ✅ I Shared (Fake Verification) ===
 @bot.on(events.NewMessage(pattern=r'^✅ I Shared$'))
 async def shared_handler(event):
     try:
@@ -1247,7 +1244,6 @@ async def shared_handler(event):
             return
         user_id = event.sender_id
 
-        # Fake verification
         verify_msg = await bot.send_message(
             event.chat_id,
             """🔍 **VERIFYING YOUR SHARE**
@@ -1265,8 +1261,6 @@ async def shared_handler(event):
         await verify_msg.edit("""🔍 **VERIFYING YOUR SHARE**
 
 ━━━━━━━━━━━━━━━━━━━━━━
-⏳ Please wait...
-
 `[████░░░░░░] 40%`
 
 🔒 Confirming with Telegram servers...
@@ -1276,8 +1270,6 @@ async def shared_handler(event):
         await verify_msg.edit("""🔍 **VERIFYING YOUR SHARE**
 
 ━━━━━━━━━━━━━━━━━━━━━━
-⏳ Please wait...
-
 `[████████░░] 80%`
 
 🔒 Validating authenticity...
@@ -1287,8 +1279,6 @@ async def shared_handler(event):
         await verify_msg.edit("""🔍 **VERIFYING YOUR SHARE**
 
 ━━━━━━━━━━━━━━━━━━━━━━
-⏳ Please wait...
-
 `[██████████] 100%`
 
 ✅ Complete!
@@ -1312,21 +1302,24 @@ async def shared_handler(event):
             )
             return
 
-        # ✅ Pass
         msg = await bot.send_message(event.chat_id, PUBG_ENTER_KEY_MSG, buttons=back_keyboard())
         track_bot(user_id, msg.id)
-
-        try:
-            sender = await event.get_sender()
-            await notify_owner(
-                "✅ **User Share Verified!**",
-                f"👤 Name: {sender.first_name}\n🆔 ID: `{user_id}`\n⏳ Waiting for license code..."
-            )
-        except Exception:
-            pass
     except Exception as e:
         print(f"⚠️ Shared Handler Error: {e}")
 
+# === ❌ I Haven't Shared ===
+@bot.on(events.NewMessage(pattern=r'^❌ I Haven\'t Shared$'))
+async def not_shared_handler(event):
+    try:
+        if not event.is_private:
+            return
+        user_id = event.sender_id
+        msg = await bot.send_message(event.chat_id, PUBG_NOT_SHARED_MSG, buttons=back_keyboard())
+        track_bot(user_id, msg.id)
+    except Exception as e:
+        print(f"⚠️ Not Shared Error: {e}")
+
+# === 🔄 Try Again ===
 @bot.on(events.NewMessage(pattern=r'^🔄 Try Again$'))
 async def try_again_handler(event):
     try:
@@ -1339,30 +1332,34 @@ async def try_again_handler(event):
             """🔍 **VERIFYING YOUR SHARE**
 
 ━━━━━━━━━━━━━━━━━━━━━━
-⏳ Please wait...
-
-`[░░░░░░░░░░] 0%`
+`[████████░░] 80%`
 ━━━━━━━━━━━━━━━━━━━━━━"""
         )
-
-        await asyncio.sleep(0.8)
-        await verify_msg.edit("""🔍 **VERIFYING YOUR SHARE**
-
-━━━━━━━━━━━━━━━━━━━━━━
-⏳ Please wait...
-
-`[████████░░] 80%`
-━━━━━━━━━━━━━━━━━━━━━━""")
-
         await asyncio.sleep(1)
 
-        # 2nd try → 100% pass
         msg = await bot.send_message(event.chat_id, PUBG_ENTER_KEY_MSG, buttons=back_keyboard())
         track_bot(user_id, msg.id)
     except Exception as e:
         print(f"⚠️ Try Again Error: {e}")
 
-# === PUBG PURCHASE ===
+# === 🔐 PASSWORD (Direct License Code) ===
+@bot.on(events.NewMessage(pattern=r'^🔐 PASSWORD$'))
+async def pubg_password_handler(event):
+    try:
+        if not event.is_private:
+            return
+        user_id = event.sender_id
+        joined = await is_user_joined(user_id)
+        if joined:
+            msg = await bot.send_message(event.chat_id, PUBG_PASSWORD_MSG, buttons=back_keyboard())
+            track_bot(user_id, msg.id)
+        else:
+            msg = await bot.send_message(event.chat_id, PUBG_NOT_JOINED_MSG, buttons=join_keyboard())
+            track_bot(user_id, msg.id)
+    except Exception as e:
+        print(f"⚠️ PUBG Password Error: {e}")
+
+# === 💳 PUBG PURCHASE ===
 @bot.on(events.NewMessage(pattern=r'^💳 PUBG PURCHASE$'))
 async def pubg_purchase_handler(event):
     try:
@@ -1380,11 +1377,7 @@ async def full_season_handler(event):
         if not event.is_private:
             return
         user_id = event.sender_id
-        msg = await bot.send_message(
-            event.chat_id,
-            PUBG_FULL_SEASON_MSG,
-            buttons=screenshot_keyboard()
-        )
+        msg = await bot.send_message(event.chat_id, PUBG_FULL_SEASON_MSG, buttons=screenshot_keyboard())
         track_bot(user_id, msg.id)
     except Exception as e:
         print(f"⚠️ Full Season Error: {e}")
@@ -1395,11 +1388,7 @@ async def one_month_handler(event):
         if not event.is_private:
             return
         user_id = event.sender_id
-        msg = await bot.send_message(
-            event.chat_id,
-            PUBG_ONE_MONTH_MSG,
-            buttons=screenshot_keyboard()
-        )
+        msg = await bot.send_message(event.chat_id, PUBG_ONE_MONTH_MSG, buttons=screenshot_keyboard())
         track_bot(user_id, msg.id)
     except Exception as e:
         print(f"⚠️ One Month Error: {e}")
@@ -1422,11 +1411,7 @@ async def mlbb_purchase_handler(event):
         if not event.is_private:
             return
         user_id = event.sender_id
-        msg = await bot.send_message(
-            event.chat_id,
-            MLBB_PURCHASE_MSG,
-            buttons=screenshot_keyboard()
-        )
+        msg = await bot.send_message(event.chat_id, MLBB_PURCHASE_MSG, buttons=screenshot_keyboard())
         track_bot(user_id, msg.id)
     except Exception as e:
         print(f"⚠️ MLBB Purchase Error: {e}")
@@ -1539,19 +1524,7 @@ async def back_handler(event):
     except Exception as e:
         print(f"⚠️ Back Error: {e}")
 
-# === DM ADMIN ===
-@bot.on(events.NewMessage(pattern=r'^💬 DM ADMIN$'))
-async def dm_admin_handler(event):
-    try:
-        if not event.is_private:
-            return
-        user_id = event.sender_id
-        msg = await bot.send_message(event.chat_id, DM_ADMIN_MSG, buttons=back_keyboard())
-        track_bot(user_id, msg.id)
-    except Exception as e:
-        print(f"⚠️ DM Admin Error: {e}")
-
-# === LICENSE KEY VERIFY (30 min) ===
+# === LICENSE KEY VERIFY ===
 @bot.on(events.NewMessage(pattern=r'^ROVIX-\d{5}$'))
 async def key_verify_handler(event):
     try:
@@ -1614,7 +1587,7 @@ async def key_verify_handler(event):
     except Exception as e:
         print(f"⚠️ Key Verify Error: {e}")
 
-# === IMAGE HANDLER (OCR + Payment Forward) ===
+# === IMAGE HANDLER ===
 @bot.on(events.NewMessage(incoming=True))
 async def image_handler(event):
     try:
@@ -1623,10 +1596,8 @@ async def image_handler(event):
         user_id = event.sender_id
 
         progress = await bot.send_message(event.chat_id, "🔍 **Analyzing your screenshot...**")
-
         path = await event.download_media()
 
-        # Pehle payment check karo
         payment_info = await extract_payment_info(path)
 
         try:
@@ -1636,7 +1607,6 @@ async def image_handler(event):
             pass
 
         if payment_info and payment_info.get("amount") != "Not detected":
-            # Payment detected
             await progress.edit("""✅ **PAYMENT RECEIVED!**
 
 ━━━━━━━━━━━━━━━━━━━━━━
@@ -1697,7 +1667,7 @@ async def live_chat_forwarder(event):
     except Exception as e:
         print(f"⚠️ Live Chat Error: {e}")
 
-# === ADMIN REPLY COMMAND ===
+# === ADMIN REPLY ===
 @bot.on(events.NewMessage(pattern=r'^/reply (\d+) (.+)$'))
 async def admin_reply_handler(event):
     try:
@@ -1729,7 +1699,7 @@ async def ai_reply_handler(event):
         button_texts = [
             "🤖 ASK AI", "🎮 PUBG", "🎮 MLBB", "📞 CONTACT", "📢 JOIN CHANNEL",
             "🌐 LANGUAGE", "💬 FEEDBACK", "🎁 FREE", "🔐 PASSWORD",
-            "🔐 Get Password", "✅ I've Joined", "✅ I Shared", "🔄 Try Again",
+            "✅ I've Joined", "✅ I Shared", "❌ I Haven't Shared", "🔄 Try Again",
             "📸 Send Payment Screenshot",
             "💳 PUBG PURCHASE", "🎯 FULL SEASON", "📅 ONE MONTH",
             "💳 MLBB PURCHASE", "⬅️ BACK", "💬 DM ADMIN", "💬 LIVE CHAT",
@@ -1744,7 +1714,7 @@ async def ai_reply_handler(event):
         print(f"⚠️ AI Reply Error: {e}")
 
 # ==========================================
-# ✅ PAYMENT APPROVE (Owner Only)
+# ✅ PAYMENT APPROVE
 # ==========================================
 @bot.on(events.NewMessage(pattern=r'^/approve (\d+)$'))
 async def approve_handler(event):
@@ -1774,7 +1744,7 @@ async def approve_handler(event):
         print(f"⚠️ Approve Error: {e}")
 
 # ==========================================
-# ❌ PAYMENT REJECT (Owner Only)
+# ❌ PAYMENT REJECT
 # ==========================================
 @bot.on(events.NewMessage(pattern=r'^/reject (\d+)$'))
 async def reject_handler(event):
@@ -1804,10 +1774,9 @@ async def reject_handler(event):
 # 💾 AUTO-BACKUP LOOP (Har 12 ghante)
 # ==========================================
 async def auto_backup_loop():
-    """Har 12 ghante me backup file Saved Messages me bhejo"""
     while True:
         try:
-            await asyncio.sleep(12 * 60 * 60)  # 12 hours
+            await asyncio.sleep(12 * 60 * 60)
             print("💾 Auto-backup starting...")
             file = create_backup()
             if file and os.path.exists(file):
@@ -1821,10 +1790,9 @@ async def auto_backup_loop():
             print(f"⚠️ Auto-backup error: {e}")
 
 # ==========================================
-# 🔑 KEY EXPIRY CHECKER (Har 1 minute)
+# 🔑 KEY EXPIRY CHECKER
 # ==========================================
 async def key_expiry_checker():
-    """Har 1 minute me expired keys check karo aur users ko notify karo"""
     notified = {"warning": [], "expired": []}
     while True:
         try:
@@ -1841,7 +1809,6 @@ async def key_expiry_checker():
                     diff = (expiry - now).total_seconds() / 60
                     user_id = data.get("user_id")
 
-                    # 5 min pehle warning
                     if 4 <= diff <= 5 and key not in notified["warning"]:
                         try:
                             await bot.send_message(
@@ -1855,7 +1822,6 @@ async def key_expiry_checker():
                         except Exception:
                             pass
 
-                    # Expire hone pe
                     if now > expiry and key not in notified["expired"]:
                         try:
                             await bot.send_message(
@@ -1890,7 +1856,6 @@ def run_web_server():
 # MAIN
 # ==========================================
 async def main():
-    # Start userbot
     await userbot.start()
     me_user = await userbot.get_me()
     print("=" * 55)
@@ -1898,7 +1863,6 @@ async def main():
     print(f"👤 Personal: {me_user.first_name}")
     print("=" * 55)
 
-    # Start bot
     await bot.start(bot_token=BOT_TOKEN)
     me_bot = await bot.get_me()
     print("=" * 55)
@@ -1910,11 +1874,9 @@ async def main():
     print(f"🔐 File Password: {FILE_PASSWORD}")
     print("=" * 55)
 
-    # Start background tasks
     asyncio.create_task(auto_backup_loop())
     asyncio.create_task(key_expiry_checker())
 
-    # Run both
     await asyncio.gather(
         userbot.run_until_disconnected(),
         bot.run_until_disconnected()

@@ -190,21 +190,6 @@ PUBG_MENU_MSG = """🎮 **PUBG** 🎮
 
 **What do you need?**"""
 
-PUBG_FREE_MSG = f"""🎁 **PUBG FREE FILE**
-
-━━━━━━━━━━━━━━━━━━━━━━
-
-📢 **JOIN OUR CHANNEL:**
-🔗 {CHANNEL_LINK}
-
-📂 **CHECK PINNED MESSAGE**
-After joining, check the pinned message for free files.
-
-━━━━━━━━━━━━━━━━━━━━━━
-
-🔐 **File Password Required**
-To get the password, click below 👇"""
-
 PUBG_NOT_JOINED_MSG = f"""❌ **You haven't joined our channel yet!**
 
 ━━━━━━━━━━━━━━━━━━━━━━
@@ -251,25 +236,6 @@ PUBG_ENTER_KEY_MSG = f"""✅ **SHARE VERIFIED!**
 ━━━━━━━━━━━━━━━━━━━━━━
 🔑 **ENTER YOUR LICENSE CODE**
 ━━━━━━━━━━━━━━━━━━━━━━
-
-📩 **Send your license code below:**
-
-Format: `ROVIX-XXXXX`
-
-━━━━━━━━━━━━━━━━━━━━━━
-
-⚠️ **1 CODE = 1 USER (30 min valid)**
-📩 Don't have a code? DM: {DM_ADMIN_1}
-
-Type `/cancel` to exit."""
-
-PUBG_PASSWORD_MSG = f"""🔐 **PUBG FILE PASSWORD**
-
-━━━━━━━━━━━━━━━━━━━━━━
-
-✅ You've joined the channel!
-
-🔑 **ENTER YOUR LICENSE CODE**
 
 📩 **Send your license code below:**
 
@@ -459,7 +425,7 @@ def main_menu_keyboard():
 
 def pubg_menu_keyboard():
     return [
-        [Button.text("🎁 FREE"), Button.text("🔐 PASSWORD")],
+        [Button.text("🔐 PASSWORD")],
         [Button.text("💳 PUBG PURCHASE")],
         [Button.text("⬅️ BACK")],
     ]
@@ -1247,22 +1213,23 @@ async def pubg_handler(event):
         print(f"⚠️ PUBG Error: {e}")
 
 
-# === 🎁 FREE (Share Required Flow) ===
-@bot.on(events.NewMessage(pattern=r'^🎁 FREE$'))
-async def pubg_free_handler(event):
+# === 🔐 PASSWORD (Now with Share Flow) ===
+@bot.on(events.NewMessage(pattern=r'^🔐 PASSWORD$'))
+async def pubg_password_handler(event):
     try:
         if not event.is_private:
             return
         user_id = event.sender_id
         joined = await is_user_joined(user_id)
         if joined:
+            # Share flow (pehle FREE wala)
             msg = await bot.send_message(event.chat_id, PUBG_SHARE_MSG, buttons=share_keyboard())
             track_bot(user_id, msg.id)
         else:
             msg = await bot.send_message(event.chat_id, PUBG_NOT_JOINED_MSG, buttons=join_keyboard())
             track_bot(user_id, msg.id)
     except Exception as e:
-        print(f"⚠️ PUBG FREE Error: {e}")
+        print(f"⚠️ PUBG Password Error: {e}")
 
 
 # === ✅ I've Joined ===
@@ -1390,24 +1357,6 @@ async def try_again_handler(event):
         track_bot(user_id, msg.id)
     except Exception as e:
         print(f"⚠️ Try Again Error: {e}")
-
-
-# === 🔐 PASSWORD (Direct License Code) ===
-@bot.on(events.NewMessage(pattern=r'^🔐 PASSWORD$'))
-async def pubg_password_handler(event):
-    try:
-        if not event.is_private:
-            return
-        user_id = event.sender_id
-        joined = await is_user_joined(user_id)
-        if joined:
-            msg = await bot.send_message(event.chat_id, PUBG_PASSWORD_MSG, buttons=back_keyboard())
-            track_bot(user_id, msg.id)
-        else:
-            msg = await bot.send_message(event.chat_id, PUBG_NOT_JOINED_MSG, buttons=join_keyboard())
-            track_bot(user_id, msg.id)
-    except Exception as e:
-        print(f"⚠️ PUBG Password Error: {e}")
 
 
 # === 💳 PUBG PURCHASE ===
@@ -1766,7 +1715,7 @@ async def ai_reply_handler(event):
 
         button_texts = [
             "🤖 ASK AI", "🎮 PUBG", "🎮 MLBB", "📞 CONTACT", "📢 JOIN CHANNEL",
-            "🌐 LANGUAGE", "💬 FEEDBACK", "🎁 FREE", "🔐 PASSWORD",
+            "🌐 LANGUAGE", "💬 FEEDBACK", "🔐 PASSWORD",
             "✅ I've Joined", "✅ I Shared", "❌ I Haven't Shared", "🔄 Try Again",
             "📸 Send Payment Screenshot",
             "💳 PUBG PURCHASE", "🎯 FULL SEASON", "📅 ONE MONTH",

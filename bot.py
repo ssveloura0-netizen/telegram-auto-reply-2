@@ -22,7 +22,8 @@ BOT_TOKEN = os.environ.get("BOT_TOKEN")
 BOT_LINK = "https://t.me/Vixby_bot"
 CHANNEL_USERNAME = "rovixbyultimate"
 CHANNEL_LINK = "https://t.me/rovixbyultimate"
-PUBG_PASSWORD = "NI HACK AVAILABLE YET STAY TUNED"  # 👈 Apna password daalo
+ADMIN_1 = "@ROVIXU1ti"
+ADMIN_2 = "@she_Shutara"
 
 # ==========================================
 # 🎬 GIF LINKS
@@ -34,20 +35,20 @@ USERBOT_GIF = "https://media.giphy.com/media/10fxZavhBFXsUE/giphy.gif"
 # ==========================================
 # 🌍 MESSAGES
 # ==========================================
-WELCOME = """╔══════════════════════╗
-   🔐 PUBG FILE PASSWORD
+LANG_MENU = """╔══════════════════════╗
+   🌐  LANGUAGE SELECTION
 ╚══════════════════════╝
 
-Welcome! 👋
-
-To get the **PUBG File Password**, click the button below 👇
+Welcome! Please select your preferred language.
 
 ━━━━━━━━━━━━━━━━━━━━━━
-⚠️ You must join our channel first.
-📂 **File is pinned in the channel!**
+👇 **Tap a button below to continue**
 ━━━━━━━━━━━━━━━━━━━━━━"""
 
-PUBG_NOT_JOINED = f"""❌ **You haven't joined our channel yet!**
+MESSAGES = {
+    "en": {
+        "prompt": "👋 **Hello!**\n\nPlease choose an option below:",
+        "not_joined": f"""❌ **You haven't joined our channel yet!**
 
 To get the PUBG File Password, please join our official channel first.
 
@@ -58,24 +59,311 @@ To get the PUBG File Password, please join our official channel first.
 After joining, check the pinned message.
 ━━━━━━━━━━━━━━━━━━━━━━
 
-After joining, click **"✅ I've Joined"** button."""
-
-PUBG_PASSWORD_MSG = f"""🎉 **ACCESS GRANTED!**
+After joining, click **"✅ I've Joined"** button.""",
+        "submit": f"""🎉 **ACCESS GRANTED!**
 
 ✅ You are now verified!
 
 ━━━━━━━━━━━━━━━━━━━━━━
-🔐 **Your PUBG File Password:**
-`{PUBG_PASSWORD}`
+📸 **SUBMIT YOUR SCREENSHOT TO OUR ADMINS**
 ━━━━━━━━━━━━━━━━━━━━━━
 
+To get the PUBG File Password, please send your **screenshot** to our admins:
+
+👤 {ADMIN_1}
+👤 {ADMIN_2}
+
+📌 **Instructions:**
+1️⃣ Send a screenshot of this verification message to admins.
+2️⃣ Wait for their response.
+3️⃣ They will provide you the PUBG File Password.
+
+━━━━━━━━━━━━━━━━━━━━━━
 📂 **Don't forget to check the PINNED file in our channel:**
 🔗 {CHANNEL_LINK}
+━━━━━━━━━━━━━━━━━━━━━━
 
-⚠️ Keep it safe. Do not share with anyone."""
+⚠️ Only verified users will get the password."""
+    },
+    "hi": {
+        "prompt": "👋 **नमस्ते!**\n\nकृपया नीचे एक विकल्प चुनें:",
+        "not_joined": f"""❌ **आपने अभी तक चैनल जॉइन नहीं किया!**
+
+PUBG File Password पाने के लिए पहले हमारा चैनल जॉइन करें।
+
+━━━━━━━━━━━━━━━━━━━━━━
+🔗 {CHANNEL_LINK}
+
+📂 **PUBG फाइल चैनल में PINNED है!**
+जॉइन करने के बाद pinned message देखें।
+━━━━━━━━━━━━━━━━━━━━━━
+
+जॉइन करने के बाद **"✅ I've Joined"** दबाएं।""",
+        "submit": f"""🎉 **एक्सेस मिल गया!**
+
+✅ आप वेरिफाइड हो गए!
+
+━━━━━━━━━━━━━━━━━━━━━━
+📸 **अपना स्क्रीनशॉट एडमिन को भेजें**
+━━━━━━━━━━━━━━━━━━━━━━
+
+PUBG File Password पाने के लिए अपना **स्क्रीनशॉट** इन एडमिन को भेजें:
+
+👤 {ADMIN_1}
+👤 {ADMIN_2}
+
+📌 **निर्देश:**
+1️⃣ इस वेरिफिकेशन मैसेज का स्क्रीनशॉट एडमिन को भेजें।
+2️⃣ उनके जवाब का इंतज़ार करें।
+3️⃣ वो आपको PUBG File Password देंगे।
+
+━━━━━━━━━━━━━━━━━━━━━━
+📂 **चैनल में PINNED फाइल देखना न भूलें:**
+🔗 {CHANNEL_LINK}
+━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️ सिर्फ वेरिफाइड यूज़र्स को पासवर्ड मिलेगा।"""
+    },
+    "my": {
+        "prompt": "👋 **မင်္ဂလာပါ!**\n\nအောက်တွင် ရွေးချယ်ပါ:",
+        "not_joined": f"""❌ **သင်သည် ချန်နယ်သို့ မဝင်ရောက်ရသေးပါ!**
+
+PUBG File Password ရရှိရန် ကျွန်ုပ်တို့၏ ချန်နယ်သို့ ဦးစွာဝင်ပါ။
+
+━━━━━━━━━━━━━━━━━━━━━━
+🔗 {CHANNEL_LINK}
+
+📂 **PUBG ဖိုင် ချန်နယ်တွင် PINNED ဖြစ်သည်!**
+ဝင်ပြီးပါက pinned message ကို ကြည့်ပါ။
+━━━━━━━━━━━━━━━━━━━━━━
+
+ဝင်ပြီးပါက **"✅ I've Joined"** ကို နှိပ်ပါ။""",
+        "submit": f"""🎉 **ဝင်ရောက်ခွင့် ရပါပြီ!**
+
+✅ အတည်ပြုပြီးပါပြီ!
+
+━━━━━━━━━━━━━━━━━━━━━━
+📸 **သင့် screenshot ကို admin များထံ ပေးပို့ပါ**
+━━━━━━━━━━━━━━━━━━━━━━
+
+PUBG File Password ရရှိရန် သင့် **screenshot** ကို admin များထံ ပေးပို့ပါ:
+
+👤 {ADMIN_1}
+👤 {ADMIN_2}
+
+📌 **ညွှန်ကြားချက်များ:**
+1️⃣ ဤ verification message ၏ screenshot ကို admin များထံ ပေးပို့ပါ။
+2️⃣ သူတို့၏ အဖြေကို စောင့်ပါ။
+3️⃣ သူတို့ သင့်အား PUBG File Password ပေးပါမည်။
+
+━━━━━━━━━━━━━━━━━━━━━━
+📂 **ချန်နယ်ရှိ PINNED ဖိုင်ကို ကြည့်ရန် မမေ့ပါနှင့်:**
+🔗 {CHANNEL_LINK}
+━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️ အတည်ပြုပြီးသော user များသာ password ရရှိမည်။"""
+    },
+    "ar": {
+        "prompt": "👋 **مرحباً!**\n\nاختر خياراً أدناه:",
+        "not_joined": f"""❌ **لم تنضم إلى قناتنا بعد!**
+
+للحصول على PUBG File Password، انضم إلى قناتنا الرسمية أولاً.
+
+━━━━━━━━━━━━━━━━━━━━━━
+🔗 {CHANNEL_LINK}
+
+📂 **ملف PUBG مثبت في القناة!**
+بعد الانضمام، تحقق من الرسالة المثبتة.
+━━━━━━━━━━━━━━━━━━━━━━
+
+بعد الانضمام، اضغط على **"✅ I've Joined"**.""",
+        "submit": f"""🎉 **تم منح الوصول!**
+
+✅ تم التحقق منك!
+
+━━━━━━━━━━━━━━━━━━━━━━
+📸 **أرسل لقطة الشاشة إلى المشرفين**
+━━━━━━━━━━━━━━━━━━━━━━
+
+للحصول على PUBG File Password، أرسل **لقطة الشاشة** إلى المشرفين:
+
+👤 {ADMIN_1}
+👤 {ADMIN_2}
+
+📌 **التعليمات:**
+1️⃣ أرسل لقطة شاشة لرسالة التحقق هذه إلى المشرفين.
+2️⃣ انتظر ردهم.
+3️⃣ سيوفرون لك PUBG File Password.
+
+━━━━━━━━━━━━━━━━━━━━━━
+📂 **لا تنسَ التحقق من الملف المثبت في القناة:**
+🔗 {CHANNEL_LINK}
+━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️ فقط المستخدمون الموثقون سيحصلون على كلمة المرور."""
+    },
+    "ur": {
+        "prompt": "👋 **السلام علیکم!**\n\nنیچے ایک آپشن منتخب کریں:",
+        "not_joined": f"""❌ **آپ نے ابھی تک چینل جوائن نہیں کیا!**
+
+PUBG File Password حاصل کرنے کے لیے پہلے ہمارا چینل جوائن کریں۔
+
+━━━━━━━━━━━━━━━━━━━━━━
+🔗 {CHANNEL_LINK}
+
+📂 **PUBG فائل چینل میں PINNED ہے!**
+جوائن کرنے کے بعد pinned message دیکھیں۔
+━━━━━━━━━━━━━━━━━━━━━━
+
+جوائن کرنے کے بعد **"✅ I've Joined"** دبائیں۔""",
+        "submit": f"""🎉 **رسائی مل گئی!**
+
+✅ آپ کی تصدیق ہو گئی!
+
+━━━━━━━━━━━━━━━━━━━━━━
+📸 **اپنا اسکرین شاٹ ایڈمنز کو بھیجیں**
+━━━━━━━━━━━━━━━━━━━━━━
+
+PUBG File Password حاصل کرنے کے لیے اپنا **اسکرین شاٹ** ان ایڈمنز کو بھیجیں:
+
+👤 {ADMIN_1}
+👤 {ADMIN_2}
+
+📌 **ہدایات:**
+1️⃣ اس تصدیقی پیغام کا اسکرین شاٹ ایڈمنز کو بھیجیں۔
+2️⃣ ان کے جواب کا انتظار کریں۔
+3️⃣ وہ آپ کو PUBG File Password دیں گے۔
+
+━━━━━━━━━━━━━━━━━━━━━━
+📂 **چینل میں PINNED فائل دیکھنا نہ بھولیں:**
+🔗 {CHANNEL_LINK}
+━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️ صرف تصدیق شدہ صارفین کو پاس ورڈ ملے گا۔"""
+    },
+    "th": {
+        "prompt": "👋 **สวัสดี!**\n\nกรุณาเลือกตัวเลือกด้านล่าง:",
+        "not_joined": f"""❌ **คุณยังไม่ได้เข้าร่วมช่องของเรา!**
+
+เพื่อรับ PUBG File Password กรุณาเข้าร่วมช่องอย่างเป็นทางการของเราก่อน
+
+━━━━━━━━━━━━━━━━━━━━━━
+🔗 {CHANNEL_LINK}
+
+📂 **ไฟล์ PUBG ถูก PINNED ในช่อง!**
+หลังจากเข้าร่วมแล้ว ตรวจสอบข้อความที่ pinned
+━━━━━━━━━━━━━━━━━━━━━━
+
+หลังจากเข้าร่วมแล้ว กด **"✅ I've Joined"**""",
+        "submit": f"""🎉 **ได้รับอนุญาตแล้ว!**
+
+✅ คุณได้รับการยืนยันแล้ว!
+
+━━━━━━━━━━━━━━━━━━━━━━
+📸 **ส่งภาพหน้าจอของคุณให้ผู้ดูแลของเรา**
+━━━━━━━━━━━━━━━━━━━━━━
+
+เพื่อรับ PUBG File Password กรุณาส่ง **ภาพหน้าจอ** ให้ผู้ดูแลของเรา:
+
+👤 {ADMIN_1}
+👤 {ADMIN_2}
+
+📌 **คำแนะนำ:**
+1️⃣ ส่งภาพหน้าจอของข้อความยืนยันนี้ให้ผู้ดูแล
+2️⃣ รอการตอบกลับของพวกเขา
+3️⃣ พวกเขาจะให้ PUBG File Password แก่คุณ
+
+━━━━━━━━━━━━━━━━━━━━━━
+📂 **อย่าลืมตรวจสอบไฟล์ PINNED ในช่อง:**
+🔗 {CHANNEL_LINK}
+━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️ เฉพาะผู้ใช้ที่ยืนยันแล้วเท่านั้นที่จะได้รับรหัสผ่าน"""
+    },
+    "vi": {
+        "prompt": "👋 **Xin chào!**\n\nVui lòng chọn một tùy chọn bên dưới:",
+        "not_joined": f"""❌ **Bạn chưa tham gia kênh của chúng tôi!**
+
+Để nhận PUBG File Password, vui lòng tham gia kênh chính thức của chúng tôi trước.
+
+━━━━━━━━━━━━━━━━━━━━━━
+🔗 {CHANNEL_LINK}
+
+📂 **Tệp PUBG được PINNED trong kênh!**
+Sau khi tham gia, hãy kiểm tra tin nhắn được ghim.
+━━━━━━━━━━━━━━━━━━━━━━
+
+Sau khi tham gia, nhấn **"✅ I've Joined"**.""",
+        "submit": f"""🎉 **ĐÃ ĐƯỢC CẤP QUYỀN!**
+
+✅ Bạn đã được xác minh!
+
+━━━━━━━━━━━━━━━━━━━━━━
+📸 **GỬI ẢNH CHỤP MÀN HÌNH CHO QUẢN TRỊ VIÊN**
+━━━━━━━━━━━━━━━━━━━━━━
+
+Để nhận PUBG File Password, vui lòng gửi **ảnh chụp màn hình** cho quản trị viên của chúng tôi:
+
+👤 {ADMIN_1}
+👤 {ADMIN_2}
+
+📌 **Hướng dẫn:**
+1️⃣ Gửi ảnh chụp màn hình của tin nhắn xác minh này cho quản trị viên.
+2️⃣ Chờ phản hồi của họ.
+3️⃣ Họ sẽ cung cấp cho bạn PUBG File Password.
+
+━━━━━━━━━━━━━━━━━━━━━━
+📂 **Đừng quên kiểm tra tệp PINNED trong kênh:**
+🔗 {CHANNEL_LINK}
+━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️ Chỉ người dùng đã xác minh mới nhận được mật khẩu."""
+    },
+    "eg": {
+        "prompt": "👋 **أهلاً!**\n\nاختار من الخيارات اللي تحت:",
+        "not_joined": f"""❌ **لسه ما انضميتش لقناتنا!**
+
+عشان تجيب PUBG File Password، لازم تنضم لقناتنا الرسمية الأول.
+
+━━━━━━━━━━━━━━━━━━━━━━
+🔗 {CHANNEL_LINK}
+
+📂 **ملف PUBG متثبت في القناة!**
+بعد ما تنضم، بص على الرسالة المثبتة.
+━━━━━━━━━━━━━━━━━━━━━━
+
+بعد ما تنضم، اضغط على **"✅ I've Joined"**.""",
+        "submit": f"""🎉 **تم منح الوصول!**
+
+✅ تم التحقق منك!
+
+━━━━━━━━━━━━━━━━━━━━━━
+📸 **ابعت لقطة الشاشة للمشرفين**
+━━━━━━━━━━━━━━━━━━━━━━
+
+عشان تجيب PUBG File Password، ابعت **لقطة الشاشة** للمشرفين:
+
+👤 {ADMIN_1}
+👤 {ADMIN_2}
+
+📌 **التعليمات:**
+1️⃣ ابعت لقطة شاشة لرسالة التحقق دي للمشرفين.
+2️⃣ استنى ردهم.
+3️⃣ هما هيدوك PUBG File Password.
+
+━━━━━━━━━━━━━━━━━━━━━━
+📂 **ما تنساش تبص على الملف المثبت في القناة:**
+🔗 {CHANNEL_LINK}
+━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️ بس المستخدمين اللي اتأكدوا هما اللي هياخدوا الباسورد."""
+    }
+}
+
+user_langs = {}
 
 # ==========================================
-# 💾 FILE-BASED TRACKING (Render restart ke liye)
+# 💾 FILE-BASED TRACKING
 # ==========================================
 TRACK_FILE = "tracked_messages.json"
 
@@ -96,7 +384,6 @@ def save_tracking():
         print(f"⚠️ Save error: {e}")
 
 tracked_msgs = load_tracking()
-# tracked_msgs = {"bot": {user_id: [msg_ids]}, "userbot": {user_id: [msg_ids]}}
 
 def track_bot(user_id, msg_id):
     uid = str(user_id)
@@ -113,7 +400,7 @@ def track_userbot(user_id, msg_id):
     save_tracking()
 
 # ==========================================
-# 1️⃣ USERBOT (Personal Account)
+# 1️⃣ USERBOT
 # ==========================================
 userbot = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
 
@@ -151,7 +438,6 @@ Thank you for contacting me. I am currently **offline** right now and will get b
     except Exception as e:
         print(f"⚠️ Userbot Error: {e}")
 
-# 🗑️ Jab owner reply kare — DONO ke messages delete karo
 @userbot.on(events.NewMessage(outgoing=True))
 async def owner_cleanup(event):
     try:
@@ -165,7 +451,6 @@ async def owner_cleanup(event):
 
         deleted = 0
 
-        # 1️⃣ Bot ke messages delete karo
         if user_id in tracked_msgs["bot"]:
             for msg_id in list(tracked_msgs["bot"][user_id]):
                 try:
@@ -175,7 +460,6 @@ async def owner_cleanup(event):
                     pass
             tracked_msgs["bot"][user_id] = []
 
-        # 2️⃣ Userbot ke messages delete karo
         if user_id in tracked_msgs["userbot"]:
             for msg_id in list(tracked_msgs["userbot"][user_id]):
                 try:
@@ -214,32 +498,60 @@ async def start_handler(event):
         if not event.is_private:
             return
         user_id = event.sender_id
-        buttons = [
-            [Button.inline("🔐 Get PUBG File Password", b"get_pubg")],
-            [Button.url("📢 Join Our Channel", CHANNEL_LINK)],
-        ]
-        msg = await bot.send_file(event.chat_id, GIF_URL, caption=WELCOME, buttons=buttons)
-        track_bot(user_id, msg.id)
+
+        if user_id not in user_langs:
+            buttons = [
+                [Button.inline("🇬🇧 English", b"lang_en")],
+                [Button.inline("🇮🇳 हिन्दी (Hindi)", b"lang_hi")],
+                [Button.inline("🇲🇲 မြန်မာ (Burmese)", b"lang_my")],
+                [Button.inline("🇸🇦 العربية (Arabic)", b"lang_ar")],
+                [Button.inline("🇵🇰 اردو (Urdu)", b"lang_ur")],
+                [Button.inline("🇹🇭 ไทย (Thai)", b"lang_th")],
+                [Button.inline("🇻🇳 Tiếng Việt (Vietnamese)", b"lang_vi")],
+                [Button.inline("🇪🇬 مصري (Egyptian)", b"lang_eg")],
+            ]
+            msg = await bot.send_file(event.chat_id, GIF_URL, caption=LANG_MENU, buttons=buttons)
+            track_bot(user_id, msg.id)
     except Exception as e:
         print(f"⚠️ Start Error: {e}")
 
-@bot.on(events.CallbackQuery(data=b"get_pubg"))
-async def get_pubg_handler(event):
+@bot.on(events.CallbackQuery(data=lambda d: d.startswith(b"lang_")))
+async def lang_callback(event):
+    try:
+        lang = event.data.decode().replace("lang_", "")
+        user_id = event.sender_id
+        if lang not in MESSAGES:
+            return
+        user_langs[user_id] = lang
+        await event.delete()
+
+        buttons = [
+            [Button.inline("🔐 PUBG FILE PASSWORD", b"opt_pubg")],
+            [Button.url("📢 Join Our Channel", CHANNEL_LINK)],
+        ]
+        msg = await bot.send_message(event.chat_id, MESSAGES[lang]["prompt"], buttons=buttons)
+        track_bot(user_id, msg.id)
+    except Exception as e:
+        print(f"⚠️ Lang Error: {e}")
+
+@bot.on(events.CallbackQuery(data=b"opt_pubg"))
+async def pubg_handler(event):
     try:
         user_id = event.sender_id
+        lang = user_langs.get(user_id, "en")
         await event.delete()
 
         joined = await is_user_joined(user_id)
 
         if joined:
-            msg = await bot.send_message(event.chat_id, PUBG_PASSWORD_MSG)
+            msg = await bot.send_message(event.chat_id, MESSAGES[lang]["submit"])
             track_bot(user_id, msg.id)
         else:
             verify_buttons = [
                 [Button.url("📢 Join Channel", CHANNEL_LINK)],
                 [Button.inline("✅ I've Joined", b"verify_join")],
             ]
-            msg = await bot.send_file(event.chat_id, MR_BEAN_GIF, caption=PUBG_NOT_JOINED, buttons=verify_buttons)
+            msg = await bot.send_file(event.chat_id, MR_BEAN_GIF, caption=MESSAGES[lang]["not_joined"], buttons=verify_buttons)
             track_bot(user_id, msg.id)
     except Exception as e:
         print(f"⚠️ PUBG Error: {e}")
@@ -248,11 +560,13 @@ async def get_pubg_handler(event):
 async def verify_handler(event):
     try:
         user_id = event.sender_id
+        lang = user_langs.get(user_id, "en")
+
         joined = await is_user_joined(user_id)
 
         if joined:
             await event.delete()
-            msg = await bot.send_message(event.chat_id, PUBG_PASSWORD_MSG)
+            msg = await bot.send_message(event.chat_id, MESSAGES[lang]["submit"])
             track_bot(user_id, msg.id)
         else:
             await event.answer("❌ You haven't joined the channel yet! Please join first.", alert=True)

@@ -13,6 +13,7 @@ import threading
 import requests
 import base64
 import re
+import time
 from datetime import datetime
 
 # ==========================================
@@ -67,6 +68,12 @@ LANG_CODES = {
 
 user_langs = {}
 ai_mode = {}
+
+# ==========================================
+# 🕐 AWAY MODE (1 MINUTE)
+# ==========================================
+last_owner_activity = {}  # {user_id: timestamp}
+AWAY_TIMEOUT = 60  # 1 minute
 
 # ==========================================
 # MESSAGES
@@ -517,7 +524,7 @@ Don't overpromise. Don't share personal info."""},
         return "I'll reply to you soon. Thank you for your patience!"
 
 # ==========================================
-# USERBOT (WITH AI)
+# USERBOT (WITH AI + AWAY MODE)
 # ==========================================
 userbot = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
 
@@ -530,6 +537,16 @@ async def userbot_handler(event):
         if event.sender_id == me.id:
             return
 
+        user_id = event.sender_id
+        now = time.time()
+
+        # 🕐 AWAY MODE: Check karo tum active ho ya nahi
+        last_activity = last_owner_activity.get(user_id, 0)
+        if now - last_activity < AWAY_TIMEOUT:
+            print(f"⏭️ Skipped (you're active with {user_id})")
+            return
+
+        # 🤖 AI reply bhejo (tum 1 min se inactive ho)
         user_message = event.raw_text or ""
         ai_reply = await ask_ai_userbot(user_message)
 
@@ -552,18 +569,18 @@ async def userbot_handler(event):
 ⏳ I'll reply personally soon. Thank you!"""
 
         msg = await userbot.send_file(event.chat_id, USERBOT_GIF, caption=away_text)
-        track_userbot(event.sender_id, msg.id)
+        track_userbot(user_id, msg.id)
 
         try:
             sender = await event.get_sender()
             username = f"@{sender.username}" if sender.username else "No username"
             await notify_owner(
                 "📩 **New Personal Message!**",
-                f"👤 Name: {sender.first_name}\n🔗 Username: {username}\n🆔 ID: `{event.sender_id}`\n💬 Message: {user_message[:100]}\n\n🤖 AI Reply: {ai_reply[:200]}"
+                f"👤 Name: {sender.first_name}\n🔗 Username: {username}\n🆔 ID: `{user_id}`\n💬 Message: {user_message[:100]}\n\n🤖 AI Reply: {ai_reply[:200]}"
             )
         except Exception:
             pass
-        print(f"📩 Userbot AI reply sent to {event.sender_id}")
+        print(f"📩 Userbot AI reply sent to {user_id}")
     except Exception as e:
         print(f"⚠️ Userbot Error: {e}")
 
@@ -573,6 +590,11 @@ async def owner_reply_handler(event):
         if not event.is_private:
             return
         user_id = event.chat_id
+
+        # 🕐 TRACK: Tumhari activity save karo
+        last_owner_activity[user_id] = time.time()
+        print(f"🕐 Owner active with {user_id}")
+
         text = event.text or ""
 
         if text.startswith("tr//"):
@@ -884,61 +906,4 @@ async def ai_reply_handler(event):
             return
 
         button_texts = [
-            "🤖 ASK AI", "🎮 PUBG", "🎮 MLBB", "📞 CONTACT", "📢 JOIN CHANNEL",
-            "🌐 LANGUAGE", "💬 FEEDBACK", "🎁 FREE", "💳 PUBG PURCHASE",
-            "🎯 FULL SEASON", "📅 ONE MONTH", "💳 MLBB PURCHASE", "⬅️ BACK",
-            "💬 DM ADMIN",
-            "🇬🇧 EN", "🇲🇲 MM", "🇮🇳 HI", "🇸🇦 AR", "🇵🇰 UR", "🇧🇩 BN",
-            "🇮🇩 ID", "🇹🇭 TH", "🇨🇳 ZH", "🇯🇵 JA", "🇰🇷 KO", "🇷🇺 RU",
-            "🇪🇸 ES", "🇫🇷 FR", "🇵🇹 PT", "🇩🇪 DE", "🇹🇷 TR", "🇮🇷 FA",
-        ]
-        if text in button_texts:
-            return
-
-        user_id = event.sender_id
-        reply = await ask_ai(text, user_id)
-        msg = await bot.send_message(event.chat_id, reply, buttons=back_keyboard())
-        track_bot(user_id, msg.id)
-    except Exception as e:
-        print(f"⚠️ AI Reply Error: {e}")
-
-# ==========================================
-# WEB SERVER
-# ==========================================
-app = Flask(__name__)
-
-@app.route('/')
-def home():
-    return "Bot is running!"
-
-def run_web_server():
-    port = int(os.environ.get("PORT", 8080))
-    app.run(host='0.0.0.0', port=port)
-
-# ==========================================
-# MAIN
-# ==========================================
-async def main():
-    await userbot.start()
-    me_user = await userbot.get_me()
-    print("=" * 55)
-    print("✅ USERBOT RUNNING!")
-    print(f"👤 Personal: {me_user.first_name}")
-    print("=" * 55)
-
-    await bot.start(bot_token=BOT_TOKEN)
-    me_bot = await bot.get_me()
-    print("=" * 55)
-    print("✅ BOT RUNNING!")
-    print(f"🤖 Bot: @{me_bot.username}")
-    print(f"👤 Owner ID: {OWNER_ID}")
-    print("=" * 55)
-
-    await asyncio.gather(
-        userbot.run_until_disconnected(),
-        bot.run_until_disconnected()
-    )
-
-if __name__ == "__main__":
-    threading.Thread(target=run_web_server, daemon=True).start()
-    asyncio.run(main())
+            "🤖 ASK AI", "🎮 PUBG", "🎮 MLBB", "📞 CONTACT", "📢 JOIN CHANNEL

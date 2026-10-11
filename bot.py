@@ -420,11 +420,44 @@ async def exa_search(query):
     return None
 
 # ==========================================
-# AI
+# LANGUAGE DETECT
+# ==========================================
+async def detect_language(text):
+    if not ai_client:
+        return "en"
+    try:
+        def _call():
+            return ai_client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[
+                    {"role": "system", "content": "Detect the language of the text. Reply ONLY with the 2-letter ISO code (e.g., en, hi, my, ar, ur, th, vi, bn, id, zh, ja, ko, ru, es, fr, pt, de, tr, fa). Nothing else."},
+                    {"role": "user", "content": text}
+                ],
+                max_tokens=5,
+                temperature=0.1
+            )
+        loop = asyncio.get_event_loop()
+        response = await loop.run_in_executor(None, _call)
+        code = response.choices[0].message.content.strip().lower()
+        if code in LANG_CODES:
+            return code
+        if len(code) == 2:
+            return code
+        return "en"
+    except Exception as e:
+        print(f"⚠️ Lang detect error: {e}")
+        return "en"
+
+# ==========================================
+# AI FUNCTIONS
 # ==========================================
 async def ask_ai(user_message, user_id=None):
     if not ai_client:
         return "⚠️ AI is not available right now."
+    if user_id and user_id not in user_langs:
+        detected = await detect_language(user_message)
+        user_langs[user_id] = detected
+        print(f"🌐 Auto-detected: {detected}")
     lang = user_langs.get(user_id, "en") if user_id else "en"
 
     context = ""
@@ -454,8 +487,37 @@ async def ask_ai(user_message, user_id=None):
         print(f"⚠️ AI Error: {e}")
         return "⚠️ AI error. Please try again."
 
+async def ask_ai_userbot(user_message):
+    if not ai_client:
+        return "I'll reply to you soon. Thank you for your patience!"
+    try:
+        detected_lang = await detect_language(user_message)
+    except Exception:
+        detected_lang = "en"
+    try:
+        def _call():
+            return ai_client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[
+                    {"role": "system", "content": f"""You are ROVIXBY Assistant (personal auto-reply).
+Reply in {LANG_CODES.get(detected_lang, 'en')} language.
+Be helpful, friendly, professional. Short reply (2-3 lines max).
+Say that owner is currently offline and will reply soon.
+Don't overpromise. Don't share personal info."""},
+                    {"role": "user", "content": user_message}
+                ],
+                max_tokens=300,
+                temperature=0.7
+            )
+        loop = asyncio.get_event_loop()
+        response = await loop.run_in_executor(None, _call)
+        return response.choices[0].message.content
+    except Exception as e:
+        print(f"⚠️ Userbot AI Error: {e}")
+        return "I'll reply to you soon. Thank you for your patience!"
+
 # ==========================================
-# USERBOT
+# USERBOT (WITH AI)
 # ==========================================
 userbot = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
 
@@ -467,14 +529,17 @@ async def userbot_handler(event):
         me = await userbot.get_me()
         if event.sender_id == me.id:
             return
+
+        user_message = event.raw_text or ""
+        ai_reply = await ask_ai_userbot(user_message)
+
         away_text = f"""╔═════════════════════════╗
        💤  OFFLINE MODE
 ╚═════════════════════════╝
 
-Hello,
+{ai_reply}
 
-Thank you for contacting me. I am currently **offline** right now and will get back to you as soon as possible.
-
+━━━━━━━━━━━━━━━━━━━━━━━
 📢 **JOIN OUR OFFICIAL CHANNEL**
 🔗 {CHANNEL_LINK}
 
@@ -484,19 +549,21 @@ Thank you for contacting me. I am currently **offline** right now and will get b
 👉 {BOT_LINK}
 
 ━━━━━━━━━━━━━━━━━━━━━━━
-⏳ Please wait for my reply. Thank you!"""
+⏳ I'll reply personally soon. Thank you!"""
+
         msg = await userbot.send_file(event.chat_id, USERBOT_GIF, caption=away_text)
         track_userbot(event.sender_id, msg.id)
+
         try:
             sender = await event.get_sender()
             username = f"@{sender.username}" if sender.username else "No username"
             await notify_owner(
                 "📩 **New Personal Message!**",
-                f"👤 Name: {sender.first_name}\n🔗 Username: {username}\n🆔 ID: `{event.sender_id}`\n💬 Message: {event.raw_text[:100]}"
+                f"👤 Name: {sender.first_name}\n🔗 Username: {username}\n🆔 ID: `{event.sender_id}`\n💬 Message: {user_message[:100]}\n\n🤖 AI Reply: {ai_reply[:200]}"
             )
         except Exception:
             pass
-        print(f"📩 Userbot reply sent to {event.sender_id}")
+        print(f"📩 Userbot AI reply sent to {event.sender_id}")
     except Exception as e:
         print(f"⚠️ Userbot Error: {e}")
 

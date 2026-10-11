@@ -7,6 +7,7 @@ import asyncio
 import os
 import json
 import threading
+from datetime import datetime
 
 # ==========================================
 # RENDER ENVIRONMENT VARIABLES
@@ -15,6 +16,7 @@ API_ID = int(os.environ.get("API_ID", 0))
 API_HASH = os.environ.get("API_HASH", "")
 SESSION_STRING = os.environ.get("SESSION_STRING", "")
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
+OWNER_ID = int(os.environ.get("OWNER_ID", 0))
 
 # ==========================================
 # ⚙️ APNI DETAILS YAHAN SET KARO
@@ -400,6 +402,18 @@ def track_userbot(user_id, msg_id):
     save_tracking()
 
 # ==========================================
+# 🔔 OWNER NOTIFICATION FUNCTION
+# ==========================================
+async def notify_owner(title, details):
+    try:
+        if OWNER_ID == 0:
+            return
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        await bot.send_message(OWNER_ID, f"{title}\n\n{details}\n\n📅 Time: {now}")
+    except Exception as e:
+        print(f"⚠️ Notify error: {e}")
+
+# ==========================================
 # 1️⃣ USERBOT
 # ==========================================
 userbot = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
@@ -434,6 +448,21 @@ Thank you for contacting me. I am currently **offline** right now and will get b
 
         msg = await userbot.send_file(event.chat_id, USERBOT_GIF, caption=away_text)
         track_userbot(event.sender_id, msg.id)
+
+        # 🔔 Owner ko notification
+        try:
+            sender = await event.get_sender()
+            username = f"@{sender.username}" if sender.username else "No username"
+            await notify_owner(
+                "📩 **New Personal Message!**",
+                f"👤 Name: {sender.first_name}\n"
+                f"🔗 Username: {username}\n"
+                f"🆔 ID: `{event.sender_id}`\n"
+                f"💬 Message: {event.raw_text[:100]}"
+            )
+        except Exception:
+            pass
+
         print(f"📩 Userbot reply sent to {event.sender_id}")
     except Exception as e:
         print(f"⚠️ Userbot Error: {e}")
@@ -499,6 +528,19 @@ async def start_handler(event):
             return
         user_id = event.sender_id
 
+        # 🔔 Owner ko notification
+        try:
+            sender = await event.get_sender()
+            username = f"@{sender.username}" if sender.username else "No username"
+            await notify_owner(
+                "🔔 **New User Started Bot!**",
+                f"👤 Name: {sender.first_name}\n"
+                f"🔗 Username: {username}\n"
+                f"🆔 ID: `{user_id}`"
+            )
+        except Exception:
+            pass
+
         if user_id not in user_langs:
             buttons = [
                 [Button.inline("🇬🇧 English", b"lang_en")],
@@ -524,6 +566,18 @@ async def lang_callback(event):
             return
         user_langs[user_id] = lang
         await event.delete()
+
+        # 🔔 Owner ko notification
+        try:
+            sender = await event.get_sender()
+            await notify_owner(
+                "🌐 **Language Selected!**",
+                f"👤 Name: {sender.first_name}\n"
+                f"🆔 ID: `{user_id}`\n"
+                f"🗣️ Language: `{lang.upper()}`"
+            )
+        except Exception:
+            pass
 
         buttons = [
             [Button.inline("🔐 PUBG FILE PASSWORD", b"opt_pubg")],
@@ -602,6 +656,7 @@ async def main():
     print("=" * 55)
     print("✅ BOT RUNNING!")
     print(f"🤖 Bot: @{me_bot.username}")
+    print(f"👤 Owner ID: {OWNER_ID}")
     print("=" * 55)
 
     await asyncio.gather(

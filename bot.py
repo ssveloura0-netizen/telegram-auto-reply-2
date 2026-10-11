@@ -176,26 +176,19 @@ Select an option below.
 
 ━━━━━━━━━━━━━━━━━━━━━━"""
 
+LANG_SELECT_MSG = """🌐 **SELECT YOUR LANGUAGE**
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+Please choose your language below 👇
+
+━━━━━━━━━━━━━━━━━━━━━━"""
+
 PUBG_MENU_MSG = """🎮 **PUBG** 🎮
 
 ━━━━━━━━━━━━━━━━━━━━━━
 
 **What do you need?**"""
-
-PUBG_FREE_MSG = f"""🎁 **PUBG FREE FILE**
-
-━━━━━━━━━━━━━━━━━━━━━━
-
-📢 **JOIN OUR CHANNEL:**
-🔗 {CHANNEL_LINK}
-
-📂 **CHECK PINNED MESSAGE**
-After joining, check the pinned message for free files.
-
-━━━━━━━━━━━━━━━━━━━━━━
-
-🔐 **File Password Required**
-To get the password, click below 👇"""
 
 PUBG_NOT_JOINED_MSG = f"""❌ **You haven't joined our channel yet!**
 
@@ -243,25 +236,6 @@ PUBG_ENTER_KEY_MSG = f"""✅ **SHARE VERIFIED!**
 ━━━━━━━━━━━━━━━━━━━━━━
 🔑 **ENTER YOUR LICENSE CODE**
 ━━━━━━━━━━━━━━━━━━━━━━
-
-📩 **Send your license code below:**
-
-Format: `ROVIX-XXXXX`
-
-━━━━━━━━━━━━━━━━━━━━━━
-
-⚠️ **1 CODE = 1 USER (30 min valid)**
-📩 Don't have a code? DM: {DM_ADMIN_1}
-
-Type `/cancel` to exit."""
-
-PUBG_PASSWORD_MSG = f"""🔐 **PUBG FILE PASSWORD**
-
-━━━━━━━━━━━━━━━━━━━━━━
-
-✅ You've joined the channel!
-
-🔑 **ENTER YOUR LICENSE CODE**
 
 📩 **Send your license code below:**
 
@@ -436,6 +410,19 @@ Admin will reply to you personally.
 
 Type `/cancel` to exit."""
 
+CONTACT_ADMIN_MSG = f"""💬 **CONTACT ADMIN**
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+👤 Admin 1: {DM_ADMIN_1}
+👤 Admin 2: {DM_ADMIN_2}
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+📩 For purchase or inquiries, message admins directly.
+
+⏳ Reply time: Usually within 24 hours"""
+
 # ==========================================
 # KEYBOARDS
 # ==========================================
@@ -449,7 +436,7 @@ def main_menu_keyboard():
 
 def pubg_menu_keyboard():
     return [
-        [Button.text("🎁 FREE"), Button.text("🔐 PASSWORD")],
+        [Button.text("🎁 FREE")],
         [Button.text("💳 PUBG PURCHASE")],
         [Button.text("⬅️ BACK")],
     ]
@@ -500,6 +487,7 @@ def share_keyboard():
 def screenshot_keyboard():
     return [
         [Button.text("📸 Send Payment Screenshot")],
+        [Button.text("💬 Contact Admin")],
         [Button.text("⬅️ BACK")],
     ]
 
@@ -1057,7 +1045,7 @@ async def is_user_joined(user_id):
     except Exception:
         return False
 
-# === START ===
+# === START (Language Selection First) ===
 @bot.on(events.NewMessage(pattern=r'^/start$'))
 async def start_handler(event):
     try:
@@ -1073,7 +1061,8 @@ async def start_handler(event):
             )
         except Exception:
             pass
-        msg = await bot.send_message(event.chat_id, WELCOME_MSG, buttons=main_menu_keyboard())
+        # 🌐 Language Menu Pehle
+        msg = await bot.send_message(event.chat_id, LANG_SELECT_MSG, buttons=language_keyboard())
         track_bot(user_id, msg.id)
     except Exception as e:
         print(f"⚠️ Start Error: {e}")
@@ -1201,7 +1190,7 @@ async def pubg_handler(event):
     except Exception as e:
         print(f"⚠️ PUBG Error: {e}")
 
-# === 🎁 FREE (Share Required Flow) ===
+# === 🎁 FREE (Share + Fake Verify + License Code) ===
 @bot.on(events.NewMessage(pattern=r'^🎁 FREE$'))
 async def pubg_free_handler(event):
     try:
@@ -1210,7 +1199,6 @@ async def pubg_free_handler(event):
         user_id = event.sender_id
         joined = await is_user_joined(user_id)
         if joined:
-            # Share message
             msg = await bot.send_message(event.chat_id, PUBG_SHARE_MSG, buttons=share_keyboard())
             track_bot(user_id, msg.id)
         else:
@@ -1236,7 +1224,7 @@ async def joined_handler(event):
     except Exception as e:
         print(f"⚠️ Joined Handler Error: {e}")
 
-# === ✅ I Shared (Fake Verification) ===
+# === ✅ I Shared (Fake Verify) ===
 @bot.on(events.NewMessage(pattern=r'^✅ I Shared$'))
 async def shared_handler(event):
     try:
@@ -1342,23 +1330,6 @@ async def try_again_handler(event):
     except Exception as e:
         print(f"⚠️ Try Again Error: {e}")
 
-# === 🔐 PASSWORD (Direct License Code) ===
-@bot.on(events.NewMessage(pattern=r'^🔐 PASSWORD$'))
-async def pubg_password_handler(event):
-    try:
-        if not event.is_private:
-            return
-        user_id = event.sender_id
-        joined = await is_user_joined(user_id)
-        if joined:
-            msg = await bot.send_message(event.chat_id, PUBG_PASSWORD_MSG, buttons=back_keyboard())
-            track_bot(user_id, msg.id)
-        else:
-            msg = await bot.send_message(event.chat_id, PUBG_NOT_JOINED_MSG, buttons=join_keyboard())
-            track_bot(user_id, msg.id)
-    except Exception as e:
-        print(f"⚠️ PUBG Password Error: {e}")
-
 # === 💳 PUBG PURCHASE ===
 @bot.on(events.NewMessage(pattern=r'^💳 PUBG PURCHASE$'))
 async def pubg_purchase_handler(event):
@@ -1428,6 +1399,18 @@ async def screenshot_prompt_handler(event):
     except Exception as e:
         print(f"⚠️ Screenshot Prompt Error: {e}")
 
+# === 💬 CONTACT ADMIN ===
+@bot.on(events.NewMessage(pattern=r'^💬 Contact Admin$'))
+async def contact_admin_handler(event):
+    try:
+        if not event.is_private:
+            return
+        user_id = event.sender_id
+        msg = await bot.send_message(event.chat_id, CONTACT_ADMIN_MSG, buttons=back_keyboard())
+        track_bot(user_id, msg.id)
+    except Exception as e:
+        print(f"⚠️ Contact Admin Error: {e}")
+
 # === CONTACT ===
 @bot.on(events.NewMessage(pattern=r'^📞 CONTACT$'))
 async def contact_handler(event):
@@ -1480,7 +1463,21 @@ async def lang_select(event):
         }
         lang = lang_map.get(text, "en")
         user_langs[user_id] = lang
-        msg = await bot.send_message(event.chat_id, f"✅ Language set to **{text}**\n\nNow use the menu below:", buttons=main_menu_keyboard())
+
+        # ✅ Confirmation bhejo
+        confirm = await bot.send_message(
+            event.chat_id,
+            f"✅ Language set to **{text}**\n\nLoading menu...",
+            buttons=back_keyboard()
+        )
+        await asyncio.sleep(1)
+        try:
+            await confirm.delete()
+        except:
+            pass
+
+        # 🏠 Main Menu
+        msg = await bot.send_message(event.chat_id, WELCOME_MSG, buttons=main_menu_keyboard())
         track_bot(user_id, msg.id)
     except Exception as e:
         print(f"⚠️ Lang Select Error: {e}")
@@ -1698,9 +1695,9 @@ async def ai_reply_handler(event):
 
         button_texts = [
             "🤖 ASK AI", "🎮 PUBG", "🎮 MLBB", "📞 CONTACT", "📢 JOIN CHANNEL",
-            "🌐 LANGUAGE", "💬 FEEDBACK", "🎁 FREE", "🔐 PASSWORD",
+            "🌐 LANGUAGE", "💬 FEEDBACK", "🎁 FREE",
             "✅ I've Joined", "✅ I Shared", "❌ I Haven't Shared", "🔄 Try Again",
-            "📸 Send Payment Screenshot",
+            "📸 Send Payment Screenshot", "💬 Contact Admin",
             "💳 PUBG PURCHASE", "🎯 FULL SEASON", "📅 ONE MONTH",
             "💳 MLBB PURCHASE", "⬅️ BACK", "💬 DM ADMIN", "💬 LIVE CHAT",
         ]

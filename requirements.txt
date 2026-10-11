@@ -1,4 +1,7 @@
 telethon
 flask
 deep-translator
-
+openai
+requests
+aiohttp
+Pillow

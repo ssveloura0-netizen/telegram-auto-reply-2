@@ -364,17 +364,17 @@ Sau khi tham gia, nhấn **"✅ I've Joined"**.""",
 }
 
 # ==========================================
-# 🔄 LANGUAGE CODES (Translation ke liye)
+# 🔄 LANGUAGE CODES (tr// ke liye)
 # ==========================================
 LANG_CODES = {
     "en": "en",
     "hi": "hi",
-    "my": "my",
+    "mm": "my",
     "ar": "ar",
     "ur": "ur",
     "th": "th",
     "vi": "vi",
-    "eg": "ar",  # Egyptian bhi Arabic hai
+    "eg": "ar",
 }
 
 user_langs = {}
@@ -509,14 +509,18 @@ async def owner_reply_handler(event):
                     await userbot.send_message(user_id, translated)
                     print(f"✅ Translated ({lang_code}): {message_to_translate} → {translated}")
 
-                    # Original message delete karo
+                    await event.delete()
+                    return
+                else:
+                    # Agar language code galat hai ya message khali hai
+                    await userbot.send_message(user_id, f"❌ Invalid format. Use: tr//mm Your English message")
                     await event.delete()
                     return
             except Exception as e:
                 print(f"⚠️ Translation error: {e}")
 
         # ==========================================
-        # 🗑️ AUTO-DELETE (Purana wala)
+        # 🗑️ AUTO-DELETE
         # ==========================================
         if text and text.startswith("/"):
             return

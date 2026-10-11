@@ -231,20 +231,21 @@ PUBG_NOT_SHARED_MSG = f"""❌ **You haven't shared yet!**
 
 After sharing, come back and click **"✅ I Shared"**."""
 
-PUBG_ENTER_KEY_MSG = f"""✅ **SHARE VERIFIED!**
+# 👇 NAYA MESSAGE (Screenshot jaisa)
+PUBG_ENTER_KEY_MSG = f"""✅ **VERIFICATION COMPLETE!** ✅
 
 ━━━━━━━━━━━━━━━━━━━━━━
-🔑 **ENTER YOUR LICENSE CODE**
+🔑 **ENTER YOUR LICENSE KEY**
 ━━━━━━━━━━━━━━━━━━━━━━
 
-📩 **Send your license code below:**
+📩 **Send your license key below:**
 
 Format: `ROVIX-XXXXX`
 
 ━━━━━━━━━━━━━━━━━━━━━━
 
-⚠️ **1 CODE = 1 USER (30 min valid)**
-📩 Don't have a code? DM: {DM_ADMIN_1}
+⚠️ **1 KEY = 1 USER (30 min valid)**
+📩 Don't have a key? DM: {DM_ADMIN_1}
 
 Type `/cancel` to exit."""
 
@@ -1061,7 +1062,6 @@ async def start_handler(event):
             )
         except Exception:
             pass
-        # 🌐 Language Menu Pehle
         msg = await bot.send_message(event.chat_id, LANG_SELECT_MSG, buttons=language_keyboard())
         track_bot(user_id, msg.id)
     except Exception as e:
@@ -1464,7 +1464,6 @@ async def lang_select(event):
         lang = lang_map.get(text, "en")
         user_langs[user_id] = lang
 
-        # ✅ Confirmation bhejo
         confirm = await bot.send_message(
             event.chat_id,
             f"✅ Language set to **{text}**\n\nLoading menu...",
@@ -1476,7 +1475,6 @@ async def lang_select(event):
         except:
             pass
 
-        # 🏠 Main Menu
         msg = await bot.send_message(event.chat_id, WELCOME_MSG, buttons=main_menu_keyboard())
         track_bot(user_id, msg.id)
     except Exception as e:

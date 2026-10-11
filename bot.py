@@ -3,24 +3,32 @@ from telethon.sessions import StringSession
 from telethon.tl.functions.channels import GetParticipantRequest
 from telethon.errors import UserNotParticipantError, ChatAdminRequiredError
 from deep_translator import GoogleTranslator
+from openai import OpenAI
+from PIL import Image
 from flask import Flask
 import asyncio
 import os
 import json
 import threading
+import requests
+import base64
+import re
 from datetime import datetime
 
 # ==========================================
-# RENDER ENVIRONMENT VARIABLES
+# ENV VARIABLES
 # ==========================================
 API_ID = int(os.environ.get("API_ID", 0))
 API_HASH = os.environ.get("API_HASH", "")
 SESSION_STRING = os.environ.get("SESSION_STRING", "")
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
 OWNER_ID = int(os.environ.get("OWNER_ID", 0))
+GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")
+EXA_API_KEY = os.environ.get("EXA_API_KEY", "")
+OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY", "")
 
 # ==========================================
-# ⚙️ APNI DETAILS
+# APNI DETAILS
 # ==========================================
 BOT_LINK = "https://t.me/Vixby_bot"
 CHANNEL_USERNAME = "rovixbyultimate"
@@ -29,25 +37,39 @@ DM_ADMIN_1 = "@ROVIXU1ti"
 DM_ADMIN_2 = "@she_Shutara"
 
 # ==========================================
-# 🎬 GIF LINKS
+# AI CLIENTS
+# ==========================================
+ai_client = OpenAI(base_url="https://api.groq.com/openai/v1", api_key=GROQ_API_KEY) if GROQ_API_KEY else None
+ocr_client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=OPENROUTER_API_KEY) if OPENROUTER_API_KEY else None
+
+VISION_MODELS = [
+    "google/gemini-2.0-flash-exp:free",
+    "meta-llama/llama-3.2-11b-vision-instruct:free",
+]
+
+# ==========================================
+# GIF LINKS
 # ==========================================
 GIF_URL = "https://media.giphy.com/media/OQS9HFAZuLvJEoUdR1/giphy.gif"
 MR_BEAN_GIF = "https://media.giphy.com/media/3o7abKhOpu0NwenH3O/giphy.gif"
 USERBOT_GIF = "https://media.giphy.com/media/10fxZavhBFXsUE/giphy.gif"
 
 # ==========================================
-# 🔄 LANG CODES (tr// ke liye)
+# LANG CODES
 # ==========================================
 LANG_CODES = {
     "en": "en", "hi": "hi", "mm": "my", "ar": "ar",
     "ur": "ur", "th": "th", "vi": "vi", "eg": "ar",
+    "bn": "bn", "id": "id", "zh": "zh-CN", "ja": "ja",
+    "ko": "ko", "ru": "ru", "es": "es", "fr": "fr",
+    "pt": "pt", "de": "de", "tr": "tr", "fa": "fa",
 }
 
 user_langs = {}
-user_back_state = {}  # BACK button ke liye state tracking
+ai_mode = {}
 
 # ==========================================
-# 🎯 MESSAGES
+# MESSAGES
 # ==========================================
 WELCOME_MSG = """💎 **ROVIXBY BOT**
 🚀 **PROFESSIONAL GAMING SERVICE**
@@ -202,14 +224,23 @@ DM_ADMIN_MSG = f"""📩 **DM the Admin:**
 
 ⏳ Please wait for their reply."""
 
+AI_INTRO_MSG = """🤖 **ASK AI** 🤖
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+Ask me anything — I'll reply in your language!
+
+👇 Type your question below."""
+
 # ==========================================
-# ⌨️ KEYBOARDS
+# KEYBOARDS
 # ==========================================
 def main_menu_keyboard():
     return [
-        [Button.text("🎮 PUBG"), Button.text("🎮 MLBB")],
-        [Button.text("📞 CONTACT"), Button.text("📢 JOIN CHANNEL")],
-        [Button.text("🌐 LANGUAGE"), Button.text("💬 FEEDBACK")],
+        [Button.text("🤖 ASK AI"), Button.text("🎮 PUBG")],
+        [Button.text("🎮 MLBB"), Button.text("📞 CONTACT")],
+        [Button.text("📢 JOIN CHANNEL"), Button.text("🌐 LANGUAGE")],
+        [Button.text("💬 FEEDBACK")],
     ]
 
 def pubg_menu_keyboard():
@@ -242,10 +273,12 @@ def back_keyboard():
 
 def language_keyboard():
     return [
-        [Button.text("🇬🇧 EN"), Button.text("🇲🇲 MM")],
-        [Button.text("🇮🇳 HI"), Button.text("🇸🇦 AR")],
-        [Button.text("🇵🇰 UR"), Button.text("🇹🇭 TH")],
-        [Button.text("🇻🇳 VI"), Button.text("🇪🇬 EG")],
+        [Button.text("🇬🇧 EN"), Button.text("🇲🇲 MM"), Button.text("🇮🇳 HI")],
+        [Button.text("🇸🇦 AR"), Button.text("🇵🇰 UR"), Button.text("🇧🇩 BN")],
+        [Button.text("🇮🇩 ID"), Button.text("🇹🇭 TH"), Button.text("🇨🇳 ZH")],
+        [Button.text("🇯🇵 JA"), Button.text("🇰🇷 KO"), Button.text("🇷🇺 RU")],
+        [Button.text("🇪🇸 ES"), Button.text("🇫🇷 FR"), Button.text("🇵🇹 PT")],
+        [Button.text("🇩🇪 DE"), Button.text("🇹🇷 TR"), Button.text("🇮🇷 FA")],
         [Button.text("⬅️ BACK")],
     ]
 
@@ -256,7 +289,7 @@ def join_keyboard():
     ]
 
 # ==========================================
-# 💾 FILE-BASED TRACKING
+# TRACKING
 # ==========================================
 TRACK_FILE = "tracked_messages.json"
 
@@ -293,7 +326,7 @@ def track_userbot(user_id, msg_id):
     save_tracking()
 
 # ==========================================
-# 🔔 OWNER NOTIFICATION
+# OWNER NOTIFICATION
 # ==========================================
 async def notify_owner(title, details):
     try:
@@ -305,7 +338,124 @@ async def notify_owner(title, details):
         print(f"⚠️ Notify error: {e}")
 
 # ==========================================
-# 1️⃣ USERBOT
+# OCR
+# ==========================================
+async def extract_pubg_kills(image_path):
+    if not ocr_client:
+        return None
+    resized_path = None
+    try:
+        img = Image.open(image_path)
+        W, H = img.size
+        if W > 1280:
+            ratio = 1280 / W
+            img = img.resize((1280, int(H * ratio)), Image.LANCZOS)
+        if img.mode != "RGB":
+            img = img.convert("RGB")
+        resized_path = image_path + "_resized.jpg"
+        img.save(resized_path, "JPEG", quality=88)
+        with open(resized_path, "rb") as f:
+            base64_image = base64.b64encode(f.read()).decode("utf-8")
+        for model_name in VISION_MODELS:
+            try:
+                def _ocr():
+                    return ocr_client.chat.completions.create(
+                        model=model_name,
+                        messages=[{
+                            "role": "user",
+                            "content": [
+                                {"type": "text", "text": "Look at this PUBG Mobile screenshot. Find 'Eliminations XX' in top-left. Reply ONLY the digits. If not found reply 0."},
+                                {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"}}
+                            ]
+                        }],
+                        max_tokens=10,
+                        temperature=0.0
+                    )
+                loop = asyncio.get_event_loop()
+                response = await loop.run_in_executor(None, _ocr)
+                text = response.choices[0].message.content.strip()
+                match = re.search(r'(\d{1,3})', text)
+                if match:
+                    kills = int(match.group(1))
+                    return kills if 0 <= kills <= 99 else 0
+            except Exception as e:
+                print(f"⚠️ OCR model error ({model_name}): {e}")
+                continue
+        return 0
+    except Exception as e:
+        print(f"❌ OCR Error: {e}")
+        return None
+    finally:
+        try:
+            if resized_path and os.path.exists(resized_path):
+                os.remove(resized_path)
+        except:
+            pass
+
+# ==========================================
+# EXA SEARCH
+# ==========================================
+async def exa_search(query):
+    if not EXA_API_KEY:
+        return None
+    try:
+        def _search():
+            return requests.post(
+                "https://api.exa.ai/search",
+                headers={"x-api-key": EXA_API_KEY, "Content-Type": "application/json"},
+                json={"query": query, "numResults": 3, "type": "instant", "contents": {"text": {"maxCharacters": 500}}},
+                timeout=5
+            )
+        loop = asyncio.get_event_loop()
+        response = await loop.run_in_executor(None, _search)
+        if response.status_code == 200:
+            results = response.json().get("results", [])
+            if results:
+                combined = ""
+                for r in results[:3]:
+                    combined += f"**{r.get('title','')}**\n{r.get('text','')[:300]}\n🔗 {r.get('url','')}\n\n"
+                return combined.strip()
+    except Exception as e:
+        print(f"⚠️ Exa error: {e}")
+    return None
+
+# ==========================================
+# AI
+# ==========================================
+async def ask_ai(user_message, user_id=None):
+    if not ai_client:
+        return "⚠️ AI is not available right now."
+    lang = user_langs.get(user_id, "en") if user_id else "en"
+
+    context = ""
+    if EXA_API_KEY and len(user_message) > 5:
+        try:
+            exa_result = await asyncio.wait_for(exa_search(user_message), timeout=5.0)
+            if exa_result:
+                context = f"\n\nWeb search results:\n{exa_result}"
+        except:
+            pass
+
+    try:
+        def _call():
+            return ai_client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[
+                    {"role": "system", "content": f"You are ROVIXBY Assistant. Reply in {LANG_CODES.get(lang, 'en')} language. Be helpful, short (3-5 lines), friendly.{context}"},
+                    {"role": "user", "content": user_message}
+                ],
+                max_tokens=700,
+                temperature=0.75
+            )
+        loop = asyncio.get_event_loop()
+        response = await loop.run_in_executor(None, _call)
+        return response.choices[0].message.content
+    except Exception as e:
+        print(f"⚠️ AI Error: {e}")
+        return "⚠️ AI error. Please try again."
+
+# ==========================================
+# USERBOT
 # ==========================================
 userbot = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
 
@@ -317,7 +467,6 @@ async def userbot_handler(event):
         me = await userbot.get_me()
         if event.sender_id == me.id:
             return
-
         away_text = f"""╔═════════════════════════╗
        💤  OFFLINE MODE
 ╚═════════════════════════╝
@@ -336,58 +485,47 @@ Thank you for contacting me. I am currently **offline** right now and will get b
 
 ━━━━━━━━━━━━━━━━━━━━━━━
 ⏳ Please wait for my reply. Thank you!"""
-
         msg = await userbot.send_file(event.chat_id, USERBOT_GIF, caption=away_text)
         track_userbot(event.sender_id, msg.id)
-
         try:
             sender = await event.get_sender()
             username = f"@{sender.username}" if sender.username else "No username"
             await notify_owner(
                 "📩 **New Personal Message!**",
-                f"👤 Name: {sender.first_name}\n"
-                f"🔗 Username: {username}\n"
-                f"🆔 ID: `{event.sender_id}`\n"
-                f"💬 Message: {event.raw_text[:100]}"
+                f"👤 Name: {sender.first_name}\n🔗 Username: {username}\n🆔 ID: `{event.sender_id}`\n💬 Message: {event.raw_text[:100]}"
             )
         except Exception:
             pass
-
         print(f"📩 Userbot reply sent to {event.sender_id}")
     except Exception as e:
         print(f"⚠️ Userbot Error: {e}")
 
-# 🗑️ OWNER REPLY + tr// TRANSLATION
 @userbot.on(events.NewMessage(outgoing=True))
 async def owner_reply_handler(event):
     try:
         if not event.is_private:
             return
-
         user_id = event.chat_id
         text = event.text or ""
 
-        # 🌐 tr// TRANSLATION
         if text.startswith("tr//"):
             try:
                 parts = text.split(" ", 1)
                 lang_code = parts[0].replace("tr//", "").lower()
                 message_to_translate = parts[1] if len(parts) > 1 else ""
-
                 if lang_code in LANG_CODES and message_to_translate:
                     translated = GoogleTranslator(source="en", target=LANG_CODES[lang_code]).translate(message_to_translate)
                     await userbot.send_message(user_id, translated)
-                    print(f"✅ Translated ({lang_code}): {message_to_translate} → {translated}")
+                    print(f"✅ Translated ({lang_code})")
                     await event.delete()
                     return
             except Exception as e:
                 print(f"⚠️ Translation error: {e}")
 
-        # 🗑️ AUTO-DELETE
         if text and text.startswith("/"):
             return
 
-        print(f"👤 Owner replied to {user_id} — cleaning up...")
+        print(f"👤 Owner replied — cleaning up...")
         deleted = 0
 
         if str(user_id) in tracked_msgs["bot"]:
@@ -409,12 +547,12 @@ async def owner_reply_handler(event):
             tracked_msgs["userbot"][str(user_id)] = []
 
         save_tracking()
-        print(f"🗑️ {deleted} messages deleted for {user_id}")
+        print(f"🗑️ {deleted} messages deleted")
     except Exception as e:
         print(f"⚠️ Owner Reply Error: {e}")
 
 # ==========================================
-# 2️⃣ BOTFATHER BOT
+# BOT
 # ==========================================
 bot = TelegramClient('bot_session', API_ID, API_HASH)
 
@@ -422,23 +560,17 @@ async def is_user_joined(user_id):
     try:
         await bot(GetParticipantRequest(channel=CHANNEL_USERNAME, participant=user_id))
         return True
-    except UserNotParticipantError:
+    except (UserNotParticipantError, ChatAdminRequiredError):
         return False
-    except ChatAdminRequiredError:
-        print("⚠️ Bot ko channel ka admin banao!")
-        return False
-    except Exception as e:
-        print(f"⚠️ Group check error: {e}")
+    except Exception:
         return False
 
-# === START ===
 @bot.on(events.NewMessage(pattern=r'^/start$'))
 async def start_handler(event):
     try:
         if not event.is_private:
             return
         user_id = event.sender_id
-
         try:
             sender = await event.get_sender()
             username = f"@{sender.username}" if sender.username else "No username"
@@ -448,13 +580,23 @@ async def start_handler(event):
             )
         except Exception:
             pass
-
         msg = await bot.send_message(event.chat_id, WELCOME_MSG, buttons=main_menu_keyboard())
         track_bot(user_id, msg.id)
     except Exception as e:
         print(f"⚠️ Start Error: {e}")
 
-# === PUBG MENU ===
+@bot.on(events.NewMessage(pattern=r'^🤖 ASK AI$'))
+async def ask_ai_handler(event):
+    try:
+        if not event.is_private:
+            return
+        user_id = event.sender_id
+        ai_mode[user_id] = True
+        msg = await bot.send_message(event.chat_id, AI_INTRO_MSG, buttons=back_keyboard())
+        track_bot(user_id, msg.id)
+    except Exception as e:
+        print(f"⚠️ Ask AI Error: {e}")
+
 @bot.on(events.NewMessage(pattern=r'^🎮 PUBG$'))
 async def pubg_handler(event):
     try:
@@ -466,7 +608,6 @@ async def pubg_handler(event):
     except Exception as e:
         print(f"⚠️ PUBG Error: {e}")
 
-# === PUBG FREE ===
 @bot.on(events.NewMessage(pattern=r'^🎁 FREE$'))
 async def pubg_free_handler(event):
     try:
@@ -478,7 +619,6 @@ async def pubg_free_handler(event):
     except Exception as e:
         print(f"⚠️ PUBG FREE Error: {e}")
 
-# === PUBG PURCHASE ===
 @bot.on(events.NewMessage(pattern=r'^💳 PUBG PURCHASE$'))
 async def pubg_purchase_handler(event):
     try:
@@ -490,7 +630,6 @@ async def pubg_purchase_handler(event):
     except Exception as e:
         print(f"⚠️ PUBG Purchase Error: {e}")
 
-# === FULL SEASON ===
 @bot.on(events.NewMessage(pattern=r'^🎯 FULL SEASON$'))
 async def full_season_handler(event):
     try:
@@ -502,7 +641,6 @@ async def full_season_handler(event):
     except Exception as e:
         print(f"⚠️ Full Season Error: {e}")
 
-# === ONE MONTH ===
 @bot.on(events.NewMessage(pattern=r'^📅 ONE MONTH$'))
 async def one_month_handler(event):
     try:
@@ -514,7 +652,6 @@ async def one_month_handler(event):
     except Exception as e:
         print(f"⚠️ One Month Error: {e}")
 
-# === MLBB MENU ===
 @bot.on(events.NewMessage(pattern=r'^🎮 MLBB$'))
 async def mlbb_handler(event):
     try:
@@ -526,7 +663,6 @@ async def mlbb_handler(event):
     except Exception as e:
         print(f"⚠️ MLBB Error: {e}")
 
-# === MLBB PURCHASE ===
 @bot.on(events.NewMessage(pattern=r'^💳 MLBB PURCHASE$'))
 async def mlbb_purchase_handler(event):
     try:
@@ -538,7 +674,6 @@ async def mlbb_purchase_handler(event):
     except Exception as e:
         print(f"⚠️ MLBB Purchase Error: {e}")
 
-# === CONTACT ===
 @bot.on(events.NewMessage(pattern=r'^📞 CONTACT$'))
 async def contact_handler(event):
     try:
@@ -550,7 +685,6 @@ async def contact_handler(event):
     except Exception as e:
         print(f"⚠️ Contact Error: {e}")
 
-# === JOIN CHANNEL ===
 @bot.on(events.NewMessage(pattern=r'^📢 JOIN CHANNEL$'))
 async def join_handler(event):
     try:
@@ -562,7 +696,6 @@ async def join_handler(event):
     except Exception as e:
         print(f"⚠️ Join Error: {e}")
 
-# === LANGUAGE ===
 @bot.on(events.NewMessage(pattern=r'^🌐 LANGUAGE$'))
 async def language_handler(event):
     try:
@@ -574,37 +707,35 @@ async def language_handler(event):
     except Exception as e:
         print(f"⚠️ Language Error: {e}")
 
-# === LANGUAGE SELECT ===
-@bot.on(events.NewMessage(pattern=r'^(🇬🇧 EN|🇲🇲 MM|🇮🇳 HI|🇸🇦 AR|🇵🇰 UR|🇹🇭 TH|🇻🇳 VI|🇪🇬 EG)$'))
+@bot.on(events.NewMessage(pattern=r'^(🇬🇧 EN|🇲🇲 MM|🇮🇳 HI|🇸🇦 AR|🇵🇰 UR|🇧🇩 BN|🇮🇩 ID|🇹🇭 TH|🇨🇳 ZH|🇯🇵 JA|🇰🇷 KO|🇷🇺 RU|🇪🇸 ES|🇫🇷 FR|🇵🇹 PT|🇩🇪 DE|🇹🇷 TR|🇮🇷 FA)$'))
 async def lang_select(event):
     try:
         if not event.is_private:
             return
         user_id = event.sender_id
         text = event.text
-
         lang_map = {
-            "🇬🇧 EN": "en", "🇲🇲 MM": "my", "🇮🇳 HI": "hi", "🇸🇦 AR": "ar",
-            "🇵🇰 UR": "ur", "🇹🇭 TH": "th", "🇻🇳 VI": "vi", "🇪🇬 EG": "eg",
+            "🇬🇧 EN": "en", "🇲🇲 MM": "mm", "🇮🇳 HI": "hi", "🇸🇦 AR": "ar",
+            "🇵🇰 UR": "ur", "🇧🇩 BN": "bn", "🇮🇩 ID": "id", "🇹🇭 TH": "th",
+            "🇨🇳 ZH": "zh", "🇯🇵 JA": "ja", "🇰🇷 KO": "ko", "🇷🇺 RU": "ru",
+            "🇪🇸 ES": "es", "🇫🇷 FR": "fr", "🇵🇹 PT": "pt", "🇩🇪 DE": "de",
+            "🇹🇷 TR": "tr", "🇮🇷 FA": "fa",
         }
         lang = lang_map.get(text, "en")
         user_langs[user_id] = lang
-
         try:
             sender = await event.get_sender()
             await notify_owner(
                 "🌐 **Language Selected!**",
-                f"👤 Name: {sender.first_name}\n🆔 ID: `{user_id}`\n🗣️ Language: `{lang.upper()}`"
+                f"👤 Name: {sender.first_name}\n🆔 ID: `{user_id}`\n🗣️ Language: `{text}`"
             )
         except Exception:
             pass
-
         msg = await bot.send_message(event.chat_id, f"✅ Language set to **{text}**\n\nNow use the menu below:", buttons=main_menu_keyboard())
         track_bot(user_id, msg.id)
     except Exception as e:
         print(f"⚠️ Lang Select Error: {e}")
 
-# === FEEDBACK ===
 @bot.on(events.NewMessage(pattern=r'^💬 FEEDBACK$'))
 async def feedback_handler(event):
     try:
@@ -616,19 +747,18 @@ async def feedback_handler(event):
     except Exception as e:
         print(f"⚠️ Feedback Error: {e}")
 
-# === BACK ===
 @bot.on(events.NewMessage(pattern=r'^⬅️ BACK$'))
 async def back_handler(event):
     try:
         if not event.is_private:
             return
         user_id = event.sender_id
+        ai_mode[user_id] = False
         msg = await bot.send_message(event.chat_id, WELCOME_MSG, buttons=main_menu_keyboard())
         track_bot(user_id, msg.id)
     except Exception as e:
         print(f"⚠️ Back Error: {e}")
 
-# === DM ADMIN ===
 @bot.on(events.NewMessage(pattern=r'^💬 DM ADMIN$'))
 async def dm_admin_handler(event):
     try:
@@ -640,8 +770,73 @@ async def dm_admin_handler(event):
     except Exception as e:
         print(f"⚠️ DM Admin Error: {e}")
 
+# === IMAGE OCR ===
+@bot.on(events.NewMessage(incoming=True))
+async def image_handler(event):
+    try:
+        if not event.is_private or not event.photo:
+            return
+        user_id = event.sender_id
+        await bot.send_message(event.chat_id, "🔍 **Analyzing your PUBG screenshot...**")
+        path = await event.download_media()
+        kills = await extract_pubg_kills(path)
+        try:
+            if path and os.path.exists(path):
+                os.remove(path)
+        except:
+            pass
+        if kills is not None:
+            msg = await bot.send_message(
+                event.chat_id,
+                f"🎮 **PUBG SCREENSHOT ANALYZED**\n\n🎯 **Eliminations:** `{kills}`\n\n━━━━━━━━━━━━━━━━━━━━━━\n🤖 Analyzed by ROVIXBY AI",
+                buttons=back_keyboard()
+            )
+            track_bot(user_id, msg.id)
+            try:
+                sender = await event.get_sender()
+                await notify_owner(
+                    "📸 **New PUBG Screenshot!**",
+                    f"👤 Name: {sender.first_name}\n🆔 ID: `{user_id}`\n🎯 Kills: `{kills}`"
+                )
+            except Exception:
+                pass
+        else:
+            msg = await bot.send_message(event.chat_id, "⚠️ Could not analyze the image.", buttons=back_keyboard())
+            track_bot(user_id, msg.id)
+    except Exception as e:
+        print(f"⚠️ Image Handler Error: {e}")
+
+# === AI REPLY ===
+@bot.on(events.NewMessage(incoming=True))
+async def ai_reply_handler(event):
+    try:
+        if not event.is_private:
+            return
+        text = event.text or ""
+        if not text or text.startswith("/"):
+            return
+
+        button_texts = [
+            "🤖 ASK AI", "🎮 PUBG", "🎮 MLBB", "📞 CONTACT", "📢 JOIN CHANNEL",
+            "🌐 LANGUAGE", "💬 FEEDBACK", "🎁 FREE", "💳 PUBG PURCHASE",
+            "🎯 FULL SEASON", "📅 ONE MONTH", "💳 MLBB PURCHASE", "⬅️ BACK",
+            "💬 DM ADMIN",
+            "🇬🇧 EN", "🇲🇲 MM", "🇮🇳 HI", "🇸🇦 AR", "🇵🇰 UR", "🇧🇩 BN",
+            "🇮🇩 ID", "🇹🇭 TH", "🇨🇳 ZH", "🇯🇵 JA", "🇰🇷 KO", "🇷🇺 RU",
+            "🇪🇸 ES", "🇫🇷 FR", "🇵🇹 PT", "🇩🇪 DE", "🇹🇷 TR", "🇮🇷 FA",
+        ]
+        if text in button_texts:
+            return
+
+        user_id = event.sender_id
+        reply = await ask_ai(text, user_id)
+        msg = await bot.send_message(event.chat_id, reply, buttons=back_keyboard())
+        track_bot(user_id, msg.id)
+    except Exception as e:
+        print(f"⚠️ AI Reply Error: {e}")
+
 # ==========================================
-# 🌐 WEB SERVER
+# WEB SERVER
 # ==========================================
 app = Flask(__name__)
 

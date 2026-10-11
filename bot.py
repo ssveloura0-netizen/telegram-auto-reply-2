@@ -20,13 +20,13 @@ BOT_TOKEN = os.environ.get("BOT_TOKEN")
 OWNER_ID = int(os.environ.get("OWNER_ID", 0))
 
 # ==========================================
-# ⚙️ APNI DETAILS YAHAN SET KARO
+# ⚙️ APNI DETAILS
 # ==========================================
 BOT_LINK = "https://t.me/Vixby_bot"
 CHANNEL_USERNAME = "rovixbyultimate"
 CHANNEL_LINK = "https://t.me/rovixbyultimate"
-ADMIN_1 = "@ROVIXU1ti"
-ADMIN_2 = "@she_Shutara"
+DM_ADMIN_1 = "@ROVIXU1ti"
+DM_ADMIN_2 = "@she_Shutara"
 
 # ==========================================
 # 🎬 GIF LINKS
@@ -36,348 +36,224 @@ MR_BEAN_GIF = "https://media.giphy.com/media/3o7abKhOpu0NwenH3O/giphy.gif"
 USERBOT_GIF = "https://media.giphy.com/media/10fxZavhBFXsUE/giphy.gif"
 
 # ==========================================
-# 🌍 MESSAGES
-# ==========================================
-LANG_MENU = """╔══════════════════════╗
-   🌐  LANGUAGE SELECTION
-╚══════════════════════╝
-
-Welcome! Please select your preferred language.
-
-━━━━━━━━━━━━━━━━━━━━━━
-👇 **Tap a button below to continue**
-━━━━━━━━━━━━━━━━━━━━━━"""
-
-MESSAGES = {
-    "en": {
-        "prompt": "👋 **Hello!**\n\nPlease choose an option below:",
-        "not_joined": f"""❌ **You haven't joined our channel yet!**
-
-To get the PUBG File Password, please join our official channel first.
-
-━━━━━━━━━━━━━━━━━━━━━━
-🔗 {CHANNEL_LINK}
-
-📂 **The PUBG File is PINNED in the channel!**
-After joining, check the pinned message.
-━━━━━━━━━━━━━━━━━━━━━━
-
-After joining, click **"✅ I've Joined"** button.""",
-        "submit": f"""🎉 **ACCESS GRANTED!**
-
-✅ You are now verified!
-
-━━━━━━━━━━━━━━━━━━━━━━
-📸 **SUBMIT YOUR SCREENSHOT TO OUR ADMINS**
-━━━━━━━━━━━━━━━━━━━━━━
-
-To get the PUBG File Password, please send your **screenshot** to our admins:
-
-👤 {ADMIN_1}
-👤 {ADMIN_2}
-
-📌 **Instructions:**
-1️⃣ Send a screenshot of this verification message to admins.
-2️⃣ Wait for their response.
-3️⃣ They will provide you the PUBG File Password.
-
-━━━━━━━━━━━━━━━━━━━━━━
-📂 **Don't forget to check the PINNED file in our channel:**
-🔗 {CHANNEL_LINK}
-━━━━━━━━━━━━━━━━━━━━━━
-
-⚠️ Only verified users will get the password."""
-    },
-    "hi": {
-        "prompt": "👋 **नमस्ते!**\n\nकृपया नीचे एक विकल्प चुनें:",
-        "not_joined": f"""❌ **आपने अभी तक चैनल जॉइन नहीं किया!**
-
-PUBG File Password पाने के लिए पहले हमारा चैनल जॉइन करें।
-
-━━━━━━━━━━━━━━━━━━━━━━
-🔗 {CHANNEL_LINK}
-
-📂 **PUBG फाइल चैनल में PINNED है!**
-जॉइन करने के बाद pinned message देखें।
-━━━━━━━━━━━━━━━━━━━━━━
-
-जॉइन करने के बाद **"✅ I've Joined"** दबाएं।""",
-        "submit": f"""🎉 **एक्सेस मिल गया!**
-
-✅ आप वेरिफाइड हो गए!
-
-━━━━━━━━━━━━━━━━━━━━━━
-📸 **अपना स्क्रीनशॉट एडमिन को भेजें**
-━━━━━━━━━━━━━━━━━━━━━━
-
-PUBG File Password पाने के लिए अपना **स्क्रीनशॉट** इन एडमिन को भेजें:
-
-👤 {ADMIN_1}
-👤 {ADMIN_2}
-
-📌 **निर्देश:**
-1️⃣ इस वेरिफिकेशन मैसेज का स्क्रीनशॉट एडमिन को भेजें।
-2️⃣ उनके जवाब का इंतज़ार करें।
-3️⃣ वो आपको PUBG File Password देंगे।
-
-━━━━━━━━━━━━━━━━━━━━━━
-📂 **चैनल में PINNED फाइल देखना न भूलें:**
-🔗 {CHANNEL_LINK}
-━━━━━━━━━━━━━━━━━━━━━━
-
-⚠️ सिर्फ वेरिफाइड यूज़र्स को पासवर्ड मिलेगा।"""
-    },
-    "my": {
-        "prompt": "👋 **မင်္ဂလာပါ!**\n\nအောက်တွင် ရွေးချယ်ပါ:",
-        "not_joined": f"""❌ **သင်သည် ချန်နယ်သို့ မဝင်ရောက်ရသေးပါ!**
-
-PUBG File Password ရရှိရန် ကျွန်ုပ်တို့၏ ချန်နယ်သို့ ဦးစွာဝင်ပါ။
-
-━━━━━━━━━━━━━━━━━━━━━━
-🔗 {CHANNEL_LINK}
-
-📂 **PUBG ဖိုင် ချန်နယ်တွင် PINNED ဖြစ်သည်!**
-ဝင်ပြီးပါက pinned message ကို ကြည့်ပါ။
-━━━━━━━━━━━━━━━━━━━━━━
-
-ဝင်ပြီးပါက **"✅ I've Joined"** ကို နှိပ်ပါ။""",
-        "submit": f"""🎉 **ဝင်ရောက်ခွင့် ရပါပြီ!**
-
-✅ အတည်ပြုပြီးပါပြီ!
-
-━━━━━━━━━━━━━━━━━━━━━━
-📸 **သင့် screenshot ကို admin များထံ ပေးပို့ပါ**
-━━━━━━━━━━━━━━━━━━━━━━
-
-PUBG File Password ရရှိရန် သင့် **screenshot** ကို admin များထံ ပေးပို့ပါ:
-
-👤 {ADMIN_1}
-👤 {ADMIN_2}
-
-📌 **ညွှန်ကြားချက်များ:**
-1️⃣ ဤ verification message ၏ screenshot ကို admin များထံ ပေးပို့ပါ။
-2️⃣ သူတို့၏ အဖြေကို စောင့်ပါ။
-3️⃣ သူတို့ သင့်အား PUBG File Password ပေးပါမည်။
-
-━━━━━━━━━━━━━━━━━━━━━━
-📂 **ချန်နယ်ရှိ PINNED ဖိုင်ကို ကြည့်ရန် မမေ့ပါနှင့်:**
-🔗 {CHANNEL_LINK}
-━━━━━━━━━━━━━━━━━━━━━━
-
-⚠️ အတည်ပြုပြီးသော user များသာ password ရရှိမည်။"""
-    },
-    "ar": {
-        "prompt": "👋 **مرحباً!**\n\nاختر خياراً أدناه:",
-        "not_joined": f"""❌ **لم تنضم إلى قناتنا بعد!**
-
-للحصول على PUBG File Password، انضم إلى قناتنا الرسمية أولاً.
-
-━━━━━━━━━━━━━━━━━━━━━━
-🔗 {CHANNEL_LINK}
-
-📂 **ملف PUBG مثبت في القناة!**
-بعد الانضمام، تحقق من الرسالة المثبتة.
-━━━━━━━━━━━━━━━━━━━━━━
-
-بعد الانضمام، اضغط على **"✅ I've Joined"**.""",
-        "submit": f"""🎉 **تم منح الوصول!**
-
-✅ تم التحقق منك!
-
-━━━━━━━━━━━━━━━━━━━━━━
-📸 **أرسل لقطة الشاشة إلى المشرفين**
-━━━━━━━━━━━━━━━━━━━━━━
-
-للحصول على PUBG File Password، أرسل **لقطة الشاشة** إلى المشرفين:
-
-👤 {ADMIN_1}
-👤 {ADMIN_2}
-
-📌 **التعليمات:**
-1️⃣ أرسل لقطة شاشة لرسالة التحقق هذه إلى المشرفين.
-2️⃣ انتظر ردهم.
-3️⃣ سيوفرون لك PUBG File Password.
-
-━━━━━━━━━━━━━━━━━━━━━━
-📂 **لا تنسَ التحقق من الملف المثبت في القناة:**
-🔗 {CHANNEL_LINK}
-━━━━━━━━━━━━━━━━━━━━━━
-
-⚠️ فقط المستخدمون الموثقون سيحصلون على كلمة المرور."""
-    },
-    "ur": {
-        "prompt": "👋 **السلام علیکم!**\n\nنیچے ایک آپشن منتخب کریں:",
-        "not_joined": f"""❌ **آپ نے ابھی تک چینل جوائن نہیں کیا!**
-
-PUBG File Password حاصل کرنے کے لیے پہلے ہمارا چینل جوائن کریں۔
-
-━━━━━━━━━━━━━━━━━━━━━━
-🔗 {CHANNEL_LINK}
-
-📂 **PUBG فائل چینل میں PINNED ہے!**
-جوائن کرنے کے بعد pinned message دیکھیں۔
-━━━━━━━━━━━━━━━━━━━━━━
-
-جوائن کرنے کے بعد **"✅ I've Joined"** دبائیں۔""",
-        "submit": f"""🎉 **رسائی مل گئی!**
-
-✅ آپ کی تصدیق ہو گئی!
-
-━━━━━━━━━━━━━━━━━━━━━━
-📸 **اپنا اسکرین شاٹ ایڈمنز کو بھیجیں**
-━━━━━━━━━━━━━━━━━━━━━━
-
-PUBG File Password حاصل کرنے کے لیے اپنا **اسکرین شاٹ** ان ایڈمنز کو بھیجیں:
-
-👤 {ADMIN_1}
-👤 {ADMIN_2}
-
-📌 **ہدایات:**
-1️⃣ اس تصدیقی پیغام کا اسکرین شاٹ ایڈمنز کو بھیجیں۔
-2️⃣ ان کے جواب کا انتظار کریں۔
-3️⃣ وہ آپ کو PUBG File Password دیں گے۔
-
-━━━━━━━━━━━━━━━━━━━━━━
-📂 **چینل میں PINNED فائل دیکھنا نہ بھولیں:**
-🔗 {CHANNEL_LINK}
-━━━━━━━━━━━━━━━━━━━━━━
-
-⚠️ صرف تصدیق شدہ صارفین کو پاس ورڈ ملے گا۔"""
-    },
-    "th": {
-        "prompt": "👋 **สวัสดี!**\n\nกรุณาเลือกตัวเลือกด้านล่าง:",
-        "not_joined": f"""❌ **คุณยังไม่ได้เข้าร่วมช่องของเรา!**
-
-เพื่อรับ PUBG File Password กรุณาเข้าร่วมช่องอย่างเป็นทางการของเราก่อน
-
-━━━━━━━━━━━━━━━━━━━━━━
-🔗 {CHANNEL_LINK}
-
-📂 **ไฟล์ PUBG ถูก PINNED ในช่อง!**
-หลังจากเข้าร่วมแล้ว ตรวจสอบข้อความที่ pinned
-━━━━━━━━━━━━━━━━━━━━━━
-
-หลังจากเข้าร่วมแล้ว กด **"✅ I've Joined"**""",
-        "submit": f"""🎉 **ได้รับอนุญาตแล้ว!**
-
-✅ คุณได้รับการยืนยันแล้ว!
-
-━━━━━━━━━━━━━━━━━━━━━━
-📸 **ส่งภาพหน้าจอของคุณให้ผู้ดูแลของเรา**
-━━━━━━━━━━━━━━━━━━━━━━
-
-เพื่อรับ PUBG File Password กรุณาส่ง **ภาพหน้าจอ** ให้ผู้ดูแลของเรา:
-
-👤 {ADMIN_1}
-👤 {ADMIN_2}
-
-📌 **คำแนะนำ:**
-1️⃣ ส่งภาพหน้าจอของข้อความยืนยันนี้ให้ผู้ดูแล
-2️⃣ รอการตอบกลับของพวกเขา
-3️⃣ พวกเขาจะให้ PUBG File Password แก่คุณ
-
-━━━━━━━━━━━━━━━━━━━━━━
-📂 **อย่าลืมตรวจสอบไฟล์ PINNED ในช่อง:**
-🔗 {CHANNEL_LINK}
-━━━━━━━━━━━━━━━━━━━━━━
-
-⚠️ เฉพาะผู้ใช้ที่ยืนยันแล้วเท่านั้นที่จะได้รับรหัสผ่าน"""
-    },
-    "vi": {
-        "prompt": "👋 **Xin chào!**\n\nVui lòng chọn một tùy chọn bên dưới:",
-        "not_joined": f"""❌ **Bạn chưa tham gia kênh của chúng tôi!**
-
-Để nhận PUBG File Password, vui lòng tham gia kênh chính thức của chúng tôi trước.
-
-━━━━━━━━━━━━━━━━━━━━━━
-🔗 {CHANNEL_LINK}
-
-📂 **Tệp PUBG được PINNED trong kênh!**
-Sau khi tham gia, hãy kiểm tra tin nhắn được ghim.
-━━━━━━━━━━━━━━━━━━━━━━
-
-Sau khi tham gia, nhấn **"✅ I've Joined"**.""",
-        "submit": f"""🎉 **ĐÃ ĐƯỢC CẤP QUYỀN!**
-
-✅ Bạn đã được xác minh!
-
-━━━━━━━━━━━━━━━━━━━━━━
-📸 **GỬI ẢNH CHỤP MÀN HÌNH CHO QUẢN TRỊ VIÊN**
-━━━━━━━━━━━━━━━━━━━━━━
-
-Để nhận PUBG File Password, vui lòng gửi **ảnh chụp màn hình** cho quản trị viên của chúng tôi:
-
-👤 {ADMIN_1}
-👤 {ADMIN_2}
-
-📌 **Hướng dẫn:**
-1️⃣ Gửi ảnh chụp màn hình của tin nhắn xác minh này cho quản trị viên.
-2️⃣ Chờ phản hồi của họ.
-3️⃣ Họ sẽ cung cấp cho bạn PUBG File Password.
-
-━━━━━━━━━━━━━━━━━━━━━━
-📂 **Đừng quên kiểm tra tệp PINNED trong kênh:**
-🔗 {CHANNEL_LINK}
-━━━━━━━━━━━━━━━━━━━━━━
-
-⚠️ Chỉ người dùng đã xác minh mới nhận được mật khẩu."""
-    },
-    "eg": {
-        "prompt": "👋 **أهلاً!**\n\nاختار من الخيارات اللي تحت:",
-        "not_joined": f"""❌ **لسه ما انضميتش لقناتنا!**
-
-عشان تجيب PUBG File Password، لازم تنضم لقناتنا الرسمية الأول.
-
-━━━━━━━━━━━━━━━━━━━━━━
-🔗 {CHANNEL_LINK}
-
-📂 **ملف PUBG متثبت في القناة!**
-بعد ما تنضم، بص على الرسالة المثبتة.
-━━━━━━━━━━━━━━━━━━━━━━
-
-بعد ما تنضم، اضغط على **"✅ I've Joined"**.""",
-        "submit": f"""🎉 **تم منح الوصول!**
-
-✅ تم التحقق منك!
-
-━━━━━━━━━━━━━━━━━━━━━━
-📸 **ابعت لقطة الشاشة للمشرفين**
-━━━━━━━━━━━━━━━━━━━━━━
-
-عشان تجيب PUBG File Password، ابعت **لقطة الشاشة** للمشرفين:
-
-👤 {ADMIN_1}
-👤 {ADMIN_2}
-
-📌 **التعليمات:**
-1️⃣ ابعت لقطة شاشة لرسالة التحقق دي للمشرفين.
-2️⃣ استنى ردهم.
-3️⃣ هما هيدوك PUBG File Password.
-
-━━━━━━━━━━━━━━━━━━━━━━
-📂 **ما تنساش تبص على الملف المثبت في القناة:**
-🔗 {CHANNEL_LINK}
-━━━━━━━━━━━━━━━━━━━━━━
-
-⚠️ بس المستخدمين اللي اتأكدوا هما اللي هياخدوا الباسورد."""
-    }
-}
-
-# ==========================================
-# 🔄 LANGUAGE CODES (tr// ke liye)
+# 🔄 LANG CODES (tr// ke liye)
 # ==========================================
 LANG_CODES = {
-    "en": "en",
-    "hi": "hi",
-    "mm": "my",
-    "ar": "ar",
-    "ur": "ur",
-    "th": "th",
-    "vi": "vi",
-    "eg": "ar",
+    "en": "en", "hi": "hi", "mm": "my", "ar": "ar",
+    "ur": "ur", "th": "th", "vi": "vi", "eg": "ar",
 }
 
 user_langs = {}
+user_back_state = {}  # BACK button ke liye state tracking
+
+# ==========================================
+# 🎯 MESSAGES
+# ==========================================
+WELCOME_MSG = """💎 **ROVIXBY BOT**
+🚀 **PROFESSIONAL GAMING SERVICE**
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+✨ **Welcome!**
+
+Select an option below.
+
+🤖 Bot created by @ROVIXU1ti
+
+━━━━━━━━━━━━━━━━━━━━━━"""
+
+PUBG_MENU_MSG = """🎮 **PUBG** 🎮
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+**What do you need?**"""
+
+PUBG_FREE_MSG = f"""🎮 **PUBG FREE MODS**
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+📢 **JOIN OUR CHANNEL:**
+🔗 {CHANNEL_LINK}
+
+📂 **CHECK PINNED MESSAGE**
+After joining, check the pinned message for free files.
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Enjoy free mods & hacks!"""
+
+PUBG_DURATION_MSG = """🎯 **SELECT DURATION**
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+📅 **Choose your plan:**
+
+━━━━━━━━━━━━━━━━━━━━━━"""
+
+PUBG_FULL_SEASON_MSG = f"""🎯 **FULL SEASON**
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+💰 **Price: $15 / 25,000 KS**
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+📩 Contact admin for purchase:
+👤 {DM_ADMIN_1}
+👤 {DM_ADMIN_2}
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+⏳ Reply time: Usually within 24 hours"""
+
+PUBG_ONE_MONTH_MSG = f"""📅 **ONE MONTH PACKAGE**
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+💰 **Price: $7 / 15,000 KS**
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+📩 Contact admin for purchase:
+👤 {DM_ADMIN_1}
+👤 {DM_ADMIN_2}
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+⏳ Reply time: Usually within 24 hours"""
+
+MLBB_MENU_MSG = """🎮 **MOBILE LEGENDS** 🎮
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+**Choose an option:**"""
+
+MLBB_PURCHASE_MSG = f"""🎮 **MOBILE LEGENDS PURCHASE**
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+💰 **Price: 5000 KS / $2 per file**
+
+━━━━━━━━━━━━━━━━━━━━━━
+💳 **PAYMENT METHODS:**
+━━━━━━━━━━━━━━━━━━━━━━
+
+📱 **KBZ Pay:**
+   09897052554 (Raw Eis)
+
+📱 **Wave Pay:**
+   Contact Admin
+   👤 {DM_ADMIN_1}
+   👤 {DM_ADMIN_2}
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+📸 After payment, send screenshot to:
+👤 {DM_ADMIN_1}
+👤 {DM_ADMIN_2}
+
+⏳ Reply time: Usually within 24 hours"""
+
+CONTACT_MSG = f"""📞 **CONTACT OWNER**
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+👤 Admin 1: {DM_ADMIN_1}
+👤 Admin 2: {DM_ADMIN_2}
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+⏳ Reply time: Usually within 24 hours"""
+
+JOIN_CHANNEL_MSG = f"""📢 **JOIN OUR CHANNEL**
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+🔗 {CHANNEL_LINK}
+
+📂 **Check the pinned message after joining!**
+
+━━━━━━━━━━━━━━━━━━━━━━"""
+
+LANGUAGE_MSG = """🌐 **SELECT LANGUAGE**
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+**Choose your language:**"""
+
+FEEDBACK_MSG = f"""💬 **FEEDBACK**
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+We'd love to hear your feedback!
+
+Please send your feedback to:
+👤 {DM_ADMIN_1}
+👤 {DM_ADMIN_2}
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+Thank you for your support! ❤️"""
+
+DM_ADMIN_MSG = f"""📩 **DM the Admin:**
+
+👤 {DM_ADMIN_1}
+👤 {DM_ADMIN_2}
+
+⏳ Please wait for their reply."""
+
+# ==========================================
+# ⌨️ KEYBOARDS
+# ==========================================
+def main_menu_keyboard():
+    return [
+        [Button.text("🎮 PUBG"), Button.text("🎮 MLBB")],
+        [Button.text("📞 CONTACT"), Button.text("📢 JOIN CHANNEL")],
+        [Button.text("🌐 LANGUAGE"), Button.text("💬 FEEDBACK")],
+    ]
+
+def pubg_menu_keyboard():
+    return [
+        [Button.text("🎁 FREE"), Button.text("💳 PUBG PURCHASE")],
+        [Button.text("⬅️ BACK")],
+    ]
+
+def pubg_purchase_keyboard():
+    return [
+        [Button.text("🎯 FULL SEASON")],
+        [Button.text("📅 ONE MONTH")],
+        [Button.text("⬅️ BACK")],
+    ]
+
+def dm_admin_keyboard():
+    return [
+        [Button.text("💬 DM ADMIN")],
+        [Button.text("⬅️ BACK")],
+    ]
+
+def mlbb_menu_keyboard():
+    return [
+        [Button.text("💳 MLBB PURCHASE")],
+        [Button.text("⬅️ BACK")],
+    ]
+
+def back_keyboard():
+    return [[Button.text("⬅️ BACK")]]
+
+def language_keyboard():
+    return [
+        [Button.text("🇬🇧 EN"), Button.text("🇲🇲 MM")],
+        [Button.text("🇮🇳 HI"), Button.text("🇸🇦 AR")],
+        [Button.text("🇵🇰 UR"), Button.text("🇹🇭 TH")],
+        [Button.text("🇻🇳 VI"), Button.text("🇪🇬 EG")],
+        [Button.text("⬅️ BACK")],
+    ]
+
+def join_keyboard():
+    return [
+        [Button.url("🔗 Join Channel", CHANNEL_LINK)],
+        [Button.text("⬅️ BACK")],
+    ]
 
 # ==========================================
 # 💾 FILE-BASED TRACKING
@@ -491,9 +367,7 @@ async def owner_reply_handler(event):
         user_id = event.chat_id
         text = event.text or ""
 
-        # ==========================================
-        # 🌐 MANUAL TRANSLATION TRIGGER (tr//)
-        # ==========================================
+        # 🌐 tr// TRANSLATION
         if text.startswith("tr//"):
             try:
                 parts = text.split(" ", 1)
@@ -501,27 +375,15 @@ async def owner_reply_handler(event):
                 message_to_translate = parts[1] if len(parts) > 1 else ""
 
                 if lang_code in LANG_CODES and message_to_translate:
-                    translated = GoogleTranslator(
-                        source="en",
-                        target=LANG_CODES[lang_code]
-                    ).translate(message_to_translate)
-
+                    translated = GoogleTranslator(source="en", target=LANG_CODES[lang_code]).translate(message_to_translate)
                     await userbot.send_message(user_id, translated)
                     print(f"✅ Translated ({lang_code}): {message_to_translate} → {translated}")
-
-                    await event.delete()
-                    return
-                else:
-                    # Agar language code galat hai ya message khali hai
-                    await userbot.send_message(user_id, f"❌ Invalid format. Use: tr//mm Your English message")
                     await event.delete()
                     return
             except Exception as e:
                 print(f"⚠️ Translation error: {e}")
 
-        # ==========================================
         # 🗑️ AUTO-DELETE
-        # ==========================================
         if text and text.startswith("/"):
             return
 
@@ -569,6 +431,7 @@ async def is_user_joined(user_id):
         print(f"⚠️ Group check error: {e}")
         return False
 
+# === START ===
 @bot.on(events.NewMessage(pattern=r'^/start$'))
 async def start_handler(event):
     try:
@@ -581,97 +444,201 @@ async def start_handler(event):
             username = f"@{sender.username}" if sender.username else "No username"
             await notify_owner(
                 "🔔 **New User Started Bot!**",
-                f"👤 Name: {sender.first_name}\n"
-                f"🔗 Username: {username}\n"
-                f"🆔 ID: `{user_id}`"
+                f"👤 Name: {sender.first_name}\n🔗 Username: {username}\n🆔 ID: `{user_id}`"
             )
         except Exception:
             pass
 
-        if user_id not in user_langs:
-            buttons = [
-                [Button.inline("🇬🇧 English", b"lang_en")],
-                [Button.inline("🇮🇳 हिन्दी (Hindi)", b"lang_hi")],
-                [Button.inline("🇲🇲 မြန်မာ (Burmese)", b"lang_my")],
-                [Button.inline("🇸🇦 العربية (Arabic)", b"lang_ar")],
-                [Button.inline("🇵🇰 اردو (Urdu)", b"lang_ur")],
-                [Button.inline("🇹🇭 ไทย (Thai)", b"lang_th")],
-                [Button.inline("🇻🇳 Tiếng Việt (Vietnamese)", b"lang_vi")],
-                [Button.inline("🇪🇬 مصري (Egyptian)", b"lang_eg")],
-            ]
-            msg = await bot.send_file(event.chat_id, GIF_URL, caption=LANG_MENU, buttons=buttons)
-            track_bot(user_id, msg.id)
+        msg = await bot.send_message(event.chat_id, WELCOME_MSG, buttons=main_menu_keyboard())
+        track_bot(user_id, msg.id)
     except Exception as e:
         print(f"⚠️ Start Error: {e}")
 
-@bot.on(events.CallbackQuery(data=lambda d: d.startswith(b"lang_")))
-async def lang_callback(event):
+# === PUBG MENU ===
+@bot.on(events.NewMessage(pattern=r'^🎮 PUBG$'))
+async def pubg_handler(event):
     try:
-        lang = event.data.decode().replace("lang_", "")
-        user_id = event.sender_id
-        if lang not in MESSAGES:
+        if not event.is_private:
             return
+        user_id = event.sender_id
+        msg = await bot.send_message(event.chat_id, PUBG_MENU_MSG, buttons=pubg_menu_keyboard())
+        track_bot(user_id, msg.id)
+    except Exception as e:
+        print(f"⚠️ PUBG Error: {e}")
+
+# === PUBG FREE ===
+@bot.on(events.NewMessage(pattern=r'^🎁 FREE$'))
+async def pubg_free_handler(event):
+    try:
+        if not event.is_private:
+            return
+        user_id = event.sender_id
+        msg = await bot.send_message(event.chat_id, PUBG_FREE_MSG, buttons=back_keyboard())
+        track_bot(user_id, msg.id)
+    except Exception as e:
+        print(f"⚠️ PUBG FREE Error: {e}")
+
+# === PUBG PURCHASE ===
+@bot.on(events.NewMessage(pattern=r'^💳 PUBG PURCHASE$'))
+async def pubg_purchase_handler(event):
+    try:
+        if not event.is_private:
+            return
+        user_id = event.sender_id
+        msg = await bot.send_message(event.chat_id, PUBG_DURATION_MSG, buttons=pubg_purchase_keyboard())
+        track_bot(user_id, msg.id)
+    except Exception as e:
+        print(f"⚠️ PUBG Purchase Error: {e}")
+
+# === FULL SEASON ===
+@bot.on(events.NewMessage(pattern=r'^🎯 FULL SEASON$'))
+async def full_season_handler(event):
+    try:
+        if not event.is_private:
+            return
+        user_id = event.sender_id
+        msg = await bot.send_message(event.chat_id, PUBG_FULL_SEASON_MSG, buttons=dm_admin_keyboard())
+        track_bot(user_id, msg.id)
+    except Exception as e:
+        print(f"⚠️ Full Season Error: {e}")
+
+# === ONE MONTH ===
+@bot.on(events.NewMessage(pattern=r'^📅 ONE MONTH$'))
+async def one_month_handler(event):
+    try:
+        if not event.is_private:
+            return
+        user_id = event.sender_id
+        msg = await bot.send_message(event.chat_id, PUBG_ONE_MONTH_MSG, buttons=dm_admin_keyboard())
+        track_bot(user_id, msg.id)
+    except Exception as e:
+        print(f"⚠️ One Month Error: {e}")
+
+# === MLBB MENU ===
+@bot.on(events.NewMessage(pattern=r'^🎮 MLBB$'))
+async def mlbb_handler(event):
+    try:
+        if not event.is_private:
+            return
+        user_id = event.sender_id
+        msg = await bot.send_message(event.chat_id, MLBB_MENU_MSG, buttons=mlbb_menu_keyboard())
+        track_bot(user_id, msg.id)
+    except Exception as e:
+        print(f"⚠️ MLBB Error: {e}")
+
+# === MLBB PURCHASE ===
+@bot.on(events.NewMessage(pattern=r'^💳 MLBB PURCHASE$'))
+async def mlbb_purchase_handler(event):
+    try:
+        if not event.is_private:
+            return
+        user_id = event.sender_id
+        msg = await bot.send_message(event.chat_id, MLBB_PURCHASE_MSG, buttons=dm_admin_keyboard())
+        track_bot(user_id, msg.id)
+    except Exception as e:
+        print(f"⚠️ MLBB Purchase Error: {e}")
+
+# === CONTACT ===
+@bot.on(events.NewMessage(pattern=r'^📞 CONTACT$'))
+async def contact_handler(event):
+    try:
+        if not event.is_private:
+            return
+        user_id = event.sender_id
+        msg = await bot.send_message(event.chat_id, CONTACT_MSG, buttons=back_keyboard())
+        track_bot(user_id, msg.id)
+    except Exception as e:
+        print(f"⚠️ Contact Error: {e}")
+
+# === JOIN CHANNEL ===
+@bot.on(events.NewMessage(pattern=r'^📢 JOIN CHANNEL$'))
+async def join_handler(event):
+    try:
+        if not event.is_private:
+            return
+        user_id = event.sender_id
+        msg = await bot.send_message(event.chat_id, JOIN_CHANNEL_MSG, buttons=join_keyboard())
+        track_bot(user_id, msg.id)
+    except Exception as e:
+        print(f"⚠️ Join Error: {e}")
+
+# === LANGUAGE ===
+@bot.on(events.NewMessage(pattern=r'^🌐 LANGUAGE$'))
+async def language_handler(event):
+    try:
+        if not event.is_private:
+            return
+        user_id = event.sender_id
+        msg = await bot.send_message(event.chat_id, LANGUAGE_MSG, buttons=language_keyboard())
+        track_bot(user_id, msg.id)
+    except Exception as e:
+        print(f"⚠️ Language Error: {e}")
+
+# === LANGUAGE SELECT ===
+@bot.on(events.NewMessage(pattern=r'^(🇬🇧 EN|🇲🇲 MM|🇮🇳 HI|🇸🇦 AR|🇵🇰 UR|🇹🇭 TH|🇻🇳 VI|🇪🇬 EG)$'))
+async def lang_select(event):
+    try:
+        if not event.is_private:
+            return
+        user_id = event.sender_id
+        text = event.text
+
+        lang_map = {
+            "🇬🇧 EN": "en", "🇲🇲 MM": "my", "🇮🇳 HI": "hi", "🇸🇦 AR": "ar",
+            "🇵🇰 UR": "ur", "🇹🇭 TH": "th", "🇻🇳 VI": "vi", "🇪🇬 EG": "eg",
+        }
+        lang = lang_map.get(text, "en")
         user_langs[user_id] = lang
-        await event.delete()
 
         try:
             sender = await event.get_sender()
             await notify_owner(
                 "🌐 **Language Selected!**",
-                f"👤 Name: {sender.first_name}\n"
-                f"🆔 ID: `{user_id}`\n"
-                f"🗣️ Language: `{lang.upper()}`"
+                f"👤 Name: {sender.first_name}\n🆔 ID: `{user_id}`\n🗣️ Language: `{lang.upper()}`"
             )
         except Exception:
             pass
 
-        buttons = [
-            [Button.inline("🔐 PUBG FILE PASSWORD", b"opt_pubg")],
-            [Button.url("📢 Join Our Channel", CHANNEL_LINK)],
-        ]
-        msg = await bot.send_message(event.chat_id, MESSAGES[lang]["prompt"], buttons=buttons)
+        msg = await bot.send_message(event.chat_id, f"✅ Language set to **{text}**\n\nNow use the menu below:", buttons=main_menu_keyboard())
         track_bot(user_id, msg.id)
     except Exception as e:
-        print(f"⚠️ Lang Error: {e}")
+        print(f"⚠️ Lang Select Error: {e}")
 
-@bot.on(events.CallbackQuery(data=b"opt_pubg"))
-async def pubg_handler(event):
+# === FEEDBACK ===
+@bot.on(events.NewMessage(pattern=r'^💬 FEEDBACK$'))
+async def feedback_handler(event):
     try:
+        if not event.is_private:
+            return
         user_id = event.sender_id
-        lang = user_langs.get(user_id, "en")
-        await event.delete()
-
-        joined = await is_user_joined(user_id)
-
-        if joined:
-            msg = await bot.send_message(event.chat_id, MESSAGES[lang]["submit"])
-            track_bot(user_id, msg.id)
-        else:
-            verify_buttons = [
-                [Button.url("📢 Join Channel", CHANNEL_LINK)],
-                [Button.inline("✅ I've Joined", b"verify_join")],
-            ]
-            msg = await bot.send_file(event.chat_id, MR_BEAN_GIF, caption=MESSAGES[lang]["not_joined"], buttons=verify_buttons)
-            track_bot(user_id, msg.id)
+        msg = await bot.send_message(event.chat_id, FEEDBACK_MSG, buttons=back_keyboard())
+        track_bot(user_id, msg.id)
     except Exception as e:
-        print(f"⚠️ PUBG Error: {e}")
+        print(f"⚠️ Feedback Error: {e}")
 
-@bot.on(events.CallbackQuery(data=b"verify_join"))
-async def verify_handler(event):
+# === BACK ===
+@bot.on(events.NewMessage(pattern=r'^⬅️ BACK$'))
+async def back_handler(event):
     try:
+        if not event.is_private:
+            return
         user_id = event.sender_id
-        lang = user_langs.get(user_id, "en")
-
-        joined = await is_user_joined(user_id)
-
-        if joined:
-            await event.delete()
-            msg = await bot.send_message(event.chat_id, MESSAGES[lang]["submit"])
-            track_bot(user_id, msg.id)
-        else:
-            await event.answer("❌ You haven't joined the channel yet! Please join first.", alert=True)
+        msg = await bot.send_message(event.chat_id, WELCOME_MSG, buttons=main_menu_keyboard())
+        track_bot(user_id, msg.id)
     except Exception as e:
-        print(f"⚠️ Verify Error: {e}")
+        print(f"⚠️ Back Error: {e}")
+
+# === DM ADMIN ===
+@bot.on(events.NewMessage(pattern=r'^💬 DM ADMIN$'))
+async def dm_admin_handler(event):
+    try:
+        if not event.is_private:
+            return
+        user_id = event.sender_id
+        msg = await bot.send_message(event.chat_id, DM_ADMIN_MSG, buttons=back_keyboard())
+        track_bot(user_id, msg.id)
+    except Exception as e:
+        print(f"⚠️ DM Admin Error: {e}")
 
 # ==========================================
 # 🌐 WEB SERVER

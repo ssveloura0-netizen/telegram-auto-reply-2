@@ -2,6 +2,7 @@ from telethon import TelegramClient, events, Button
 from telethon.sessions import StringSession
 from telethon.tl.functions.channels import GetParticipantRequest
 from telethon.errors import UserNotParticipantError, ChatAdminRequiredError
+from deep_translator import GoogleTranslator
 from flask import Flask
 import asyncio
 import os
@@ -362,6 +363,20 @@ Sau khi tham gia, nhấn **"✅ I've Joined"**.""",
     }
 }
 
+# ==========================================
+# 🔄 LANGUAGE CODES (Translation ke liye)
+# ==========================================
+LANG_CODES = {
+    "en": "en",
+    "hi": "hi",
+    "my": "my",
+    "ar": "ar",
+    "ur": "ur",
+    "th": "th",
+    "vi": "vi",
+    "eg": "ar",  # Egyptian bhi Arabic hai
+}
+
 user_langs = {}
 
 # ==========================================
@@ -402,7 +417,7 @@ def track_userbot(user_id, msg_id):
     save_tracking()
 
 # ==========================================
-# 🔔 OWNER NOTIFICATION FUNCTION
+# 🔔 OWNER NOTIFICATION
 # ==========================================
 async def notify_owner(title, details):
     try:
@@ -449,7 +464,6 @@ Thank you for contacting me. I am currently **offline** right now and will get b
         msg = await userbot.send_file(event.chat_id, USERBOT_GIF, caption=away_text)
         track_userbot(event.sender_id, msg.id)
 
-        # 🔔 Owner ko notification
         try:
             sender = await event.get_sender()
             username = f"@{sender.username}" if sender.username else "No username"
@@ -467,41 +481,71 @@ Thank you for contacting me. I am currently **offline** right now and will get b
     except Exception as e:
         print(f"⚠️ Userbot Error: {e}")
 
+# 🗑️ OWNER REPLY + tr// TRANSLATION
 @userbot.on(events.NewMessage(outgoing=True))
-async def owner_cleanup(event):
+async def owner_reply_handler(event):
     try:
         if not event.is_private:
             return
-        if event.text and event.text.startswith("/"):
+
+        user_id = event.chat_id
+        text = event.text or ""
+
+        # ==========================================
+        # 🌐 MANUAL TRANSLATION TRIGGER (tr//)
+        # ==========================================
+        if text.startswith("tr//"):
+            try:
+                parts = text.split(" ", 1)
+                lang_code = parts[0].replace("tr//", "").lower()
+                message_to_translate = parts[1] if len(parts) > 1 else ""
+
+                if lang_code in LANG_CODES and message_to_translate:
+                    translated = GoogleTranslator(
+                        source="en",
+                        target=LANG_CODES[lang_code]
+                    ).translate(message_to_translate)
+
+                    await userbot.send_message(user_id, translated)
+                    print(f"✅ Translated ({lang_code}): {message_to_translate} → {translated}")
+
+                    # Original message delete karo
+                    await event.delete()
+                    return
+            except Exception as e:
+                print(f"⚠️ Translation error: {e}")
+
+        # ==========================================
+        # 🗑️ AUTO-DELETE (Purana wala)
+        # ==========================================
+        if text and text.startswith("/"):
             return
 
-        user_id = str(event.chat_id)
         print(f"👤 Owner replied to {user_id} — cleaning up...")
-
         deleted = 0
 
-        if user_id in tracked_msgs["bot"]:
-            for msg_id in list(tracked_msgs["bot"][user_id]):
+        if str(user_id) in tracked_msgs["bot"]:
+            for msg_id in list(tracked_msgs["bot"][str(user_id)]):
                 try:
-                    await bot.delete_messages(int(user_id), msg_id)
+                    await bot.delete_messages(user_id, msg_id)
                     deleted += 1
                 except Exception:
                     pass
-            tracked_msgs["bot"][user_id] = []
+            tracked_msgs["bot"][str(user_id)] = []
 
-        if user_id in tracked_msgs["userbot"]:
-            for msg_id in list(tracked_msgs["userbot"][user_id]):
+        if str(user_id) in tracked_msgs["userbot"]:
+            for msg_id in list(tracked_msgs["userbot"][str(user_id)]):
                 try:
-                    await userbot.delete_messages(int(user_id), msg_id)
+                    await userbot.delete_messages(user_id, msg_id)
                     deleted += 1
                 except Exception:
                     pass
-            tracked_msgs["userbot"][user_id] = []
+            tracked_msgs["userbot"][str(user_id)] = []
 
         save_tracking()
         print(f"🗑️ {deleted} messages deleted for {user_id}")
     except Exception as e:
-        print(f"⚠️ Owner Cleanup Error: {e}")
+        print(f"⚠️ Owner Reply Error: {e}")
 
 # ==========================================
 # 2️⃣ BOTFATHER BOT
@@ -528,7 +572,6 @@ async def start_handler(event):
             return
         user_id = event.sender_id
 
-        # 🔔 Owner ko notification
         try:
             sender = await event.get_sender()
             username = f"@{sender.username}" if sender.username else "No username"
@@ -567,7 +610,6 @@ async def lang_callback(event):
         user_langs[user_id] = lang
         await event.delete()
 
-        # 🔔 Owner ko notification
         try:
             sender = await event.get_sender()
             await notify_owner(

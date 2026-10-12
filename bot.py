@@ -190,22 +190,9 @@ PUBG_MENU_MSG = """🎮 **PUBG** 🎮
 
 **What do you need?**"""
 
-PUBG_NOT_JOINED_MSG = f"""❌ **You haven't joined our channel yet!**
-
-━━━━━━━━━━━━━━━━━━━━━━
-🔗 **JOIN CHANNEL FIRST:**
-{CHANNEL_LINK}
-
-📂 **Check the pinned message after joining!**
-━━━━━━━━━━━━━━━━━━━━━━
-
-After joining, click **"✅ I've Joined"** to continue."""
-
 PUBG_SHARE_MSG = f"""📤 **SHARE REQUIRED**
 
 ━━━━━━━━━━━━━━━━━━━━━━
-
-✅ You've joined the channel!
 
 📋 **Step 1: Share the channel link with 5 people**
 
@@ -382,13 +369,6 @@ Please send your feedback to:
 ━━━━━━━━━━━━━━━━━━━━━━
 
 Thank you for your support! ❤️"""
-
-DM_ADMIN_MSG = f"""📩 **DM the Admin:**
-
-👤 {DM_ADMIN_1}
-👤 {DM_ADMIN_2}
-
-⏳ Please wait for their reply."""
 
 AI_INTRO_MSG = """🤖 **ASK AI** 🤖
 
@@ -1072,16 +1052,6 @@ async def owner_reply_handler(event):
 bot = TelegramClient('bot_session', API_ID, API_HASH)
 
 
-async def is_user_joined(user_id):
-    try:
-        await bot(GetParticipantRequest(channel=CHANNEL_USERNAME, participant=user_id))
-        return True
-    except (UserNotParticipantError, ChatAdminRequiredError):
-        return False
-    except Exception:
-        return False
-
-
 # === START ===
 @bot.on(events.NewMessage(pattern=r'^/start$'))
 async def start_handler(event):
@@ -1234,7 +1204,7 @@ async def pubg_handler(event):
         print(f"⚠️ PUBG Error: {e}")
 
 
-# === 🔐 PASSWORD (Emoji-free safe pattern + Share Flow) ===
+# === 🔐 PASSWORD (Direct Share Flow - No Join Check) ===
 @bot.on(events.NewMessage(incoming=True))
 async def pubg_password_handler(event):
     try:
@@ -1251,31 +1221,23 @@ async def pubg_password_handler(event):
             return
 
         user_id = event.sender_id
-        joined = await is_user_joined(user_id)
-        if joined:
-            msg = await bot.send_message(event.chat_id, PUBG_SHARE_MSG, buttons=share_keyboard())
-            track_bot(user_id, msg.id)
-        else:
-            msg = await bot.send_message(event.chat_id, PUBG_NOT_JOINED_MSG, buttons=join_keyboard())
-            track_bot(user_id, msg.id)
+        # ✅ Direct share message - koi join check nahi
+        msg = await bot.send_message(event.chat_id, PUBG_SHARE_MSG, buttons=share_keyboard())
+        track_bot(user_id, msg.id)
     except Exception as e:
         print(f"⚠️ PUBG Password Error: {e}")
 
 
-# === ✅ I've Joined ===
+# === ✅ I've Joined (Direct Share) ===
 @bot.on(events.NewMessage(pattern=r'^✅ I\'ve Joined$'))
 async def joined_handler(event):
     try:
         if not event.is_private:
             return
         user_id = event.sender_id
-        joined = await is_user_joined(user_id)
-        if joined:
-            msg = await bot.send_message(event.chat_id, PUBG_SHARE_MSG, buttons=share_keyboard())
-            track_bot(user_id, msg.id)
-        else:
-            msg = await bot.send_message(event.chat_id, "❌ You haven't joined yet. Please join first.", buttons=join_keyboard())
-            track_bot(user_id, msg.id)
+        # ✅ Direct share message
+        msg = await bot.send_message(event.chat_id, PUBG_SHARE_MSG, buttons=share_keyboard())
+        track_bot(user_id, msg.id)
     except Exception as e:
         print(f"⚠️ Joined Handler Error: {e}")
 
@@ -1728,14 +1690,13 @@ async def admin_reply_handler(event):
         print(f"⚠️ Admin Reply Error: {e}")
 
 
-# === AI REPLY (with bot filter + keyword block) ===
+# === AI REPLY ===
 @bot.on(events.NewMessage(incoming=True))
 async def ai_reply_handler(event):
     try:
         if not event.is_private:
             return
 
-        # ✅ Skip bots
         try:
             sender = await event.get_sender()
             if getattr(sender, 'bot', False):
@@ -1752,7 +1713,6 @@ async def ai_reply_handler(event):
         if live_chat_mode.get(user_id):
             return
 
-        # ✅ Emoji-safe keyword block
         text_upper = text.strip().upper()
         blocked_keywords = [
             "PASSWORD", "PURCHASE", "FULL SEASON", "ONE MONTH",
@@ -1832,7 +1792,7 @@ async def reject_handler(event):
 
 
 # ==========================================
-# 💾 AUTO-BACKUP LOOP (Har 12 ghante)
+# 💾 AUTO-BACKUP LOOP
 # ==========================================
 async def auto_backup_loop():
     while True:
@@ -1919,7 +1879,7 @@ def run_web_server():
 
 
 # ==========================================
-# MAIN (FIXED)
+# MAIN
 # ==========================================
 async def main():
     await userbot.start()
@@ -1942,7 +1902,6 @@ async def main():
     print(f"🔐 File Password: {FILE_PASSWORD}")
     print("=" * 55)
 
-    # ✅ Sirf bot ID check (userbot ID check hata diya)
     if OWNER_ID == me_bot.id:
         print("🚨 ERROR: OWNER_ID = Bot's ID! Change it to your personal ID!")
         return

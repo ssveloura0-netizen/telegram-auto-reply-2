@@ -1245,7 +1245,6 @@ async def pubg_password_handler(event):
 
         text = event.text.strip().upper()
 
-        # Sirf PASSWORD match karo, dusre buttons skip karo
         if "PASSWORD" not in text:
             return
         if "PUBG" in text or "PURCHASE" in text or "MLBB" in text:
@@ -1920,7 +1919,7 @@ def run_web_server():
 
 
 # ==========================================
-# MAIN
+# MAIN (FIXED)
 # ==========================================
 async def main():
     await userbot.start()
@@ -1943,11 +1942,9 @@ async def main():
     print(f"🔐 File Password: {FILE_PASSWORD}")
     print("=" * 55)
 
+    # ✅ Sirf bot ID check (userbot ID check hata diya)
     if OWNER_ID == me_bot.id:
         print("🚨 ERROR: OWNER_ID = Bot's ID! Change it to your personal ID!")
-        return
-    if OWNER_ID == me_user.id:
-        print("🚨 ERROR: OWNER_ID = Userbot's ID! Change it to your personal ID!")
         return
 
     asyncio.create_task(auto_backup_loop())

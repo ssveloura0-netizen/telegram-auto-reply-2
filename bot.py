@@ -867,6 +867,16 @@ async def userbot_handler(event):
         if event.sender_id == me.id:
             return
 
+        # ✅ Skip bots & Telegram system
+        try:
+            sender = await event.get_sender()
+            if getattr(sender, 'bot', False):
+                return
+            if event.sender_id == 777000:
+                return
+        except Exception:
+            pass
+
         user_id = event.sender_id
         now = time.time()
 
@@ -935,20 +945,31 @@ async def userbot_handler(event):
         user_message = event.raw_text or ""
         ai_reply = await ask_ai_userbot(user_message)
 
-        away_text = f"""╔═════════════════════════╗
-   💼 OWNER OFFLINE
-╚═════════════════════════╝
+        # 💎 DIAMOND AUTO-REPLY
+        away_text = f"""💎━━━━━━━━━━━━━━━━━━━━━━━💎
+   ✨ **DIAMOND AUTO-REPLY** ✨
+💎━━━━━━━━━━━━━━━━━━━━━━━💎
 
-{ai_reply}
+     💠 **OWNER IS BUSY** 💠
 
-━━━━━━━━━━━━━━━━━━━━━━━
-🤖 **CHAT WITH MY BOT** 🤖 - {BOT_LINK}
-━━━━━━━━━━━━━━━━━━━━━━━
-━━━━━━━━━━━━━━━━━━━━━━━
-📢 **JOIN OUR CHANNEL** 📢 - {CHANNEL_LINK}
-━━━━━━━━━━━━━━━━━━━━━━━
+📢 **Please contact with the bot**
+**for instant help!**
 
-📂 **HACK FILE PINNED!**"""
+💎━━━━━━━━━━━━━━━━━━━━━━━💎
+
+💬 **AI:** {ai_reply}
+
+💎━━━━━━━━━━━━━━━━━━━━━━━💎
+
+   🤖 **ROVIXBY BOT**
+   ➤ {BOT_LINK}
+
+   📢 **ROVIXBY CHANNEL**
+   ➤ {CHANNEL_LINK}
+
+💎━━━━━━━━━━━━━━━━━━━━━━━💎
+     💠 **ROVIXBY ULTIMATE** 💠
+💎━━━━━━━━━━━━━━━━━━━━━━━💎"""
 
         msg = await userbot.send_file(event.chat_id, USERBOT_GIF, caption=away_text)
         track_userbot(user_id, msg.id)
@@ -1213,16 +1234,26 @@ async def pubg_handler(event):
         print(f"⚠️ PUBG Error: {e}")
 
 
-# === 🔐 PASSWORD (Now with Share Flow) ===
-@bot.on(events.NewMessage(pattern=r'^🔐 PASSWORD$'))
+# === 🔐 PASSWORD (Emoji-free safe pattern + Share Flow) ===
+@bot.on(events.NewMessage(incoming=True))
 async def pubg_password_handler(event):
     try:
         if not event.is_private:
             return
+        if not event.text:
+            return
+
+        text = event.text.strip().upper()
+
+        # Sirf PASSWORD match karo, dusre buttons skip karo
+        if "PASSWORD" not in text:
+            return
+        if "PUBG" in text or "PURCHASE" in text or "MLBB" in text:
+            return
+
         user_id = event.sender_id
         joined = await is_user_joined(user_id)
         if joined:
-            # Share flow (pehle FREE wala)
             msg = await bot.send_message(event.chat_id, PUBG_SHARE_MSG, buttons=share_keyboard())
             track_bot(user_id, msg.id)
         else:
@@ -1698,12 +1729,21 @@ async def admin_reply_handler(event):
         print(f"⚠️ Admin Reply Error: {e}")
 
 
-# === AI REPLY ===
+# === AI REPLY (with bot filter + keyword block) ===
 @bot.on(events.NewMessage(incoming=True))
 async def ai_reply_handler(event):
     try:
         if not event.is_private:
             return
+
+        # ✅ Skip bots
+        try:
+            sender = await event.get_sender()
+            if getattr(sender, 'bot', False):
+                return
+        except Exception:
+            pass
+
         text = event.text or ""
         if not text or text.startswith("/"):
             return
@@ -1713,16 +1753,18 @@ async def ai_reply_handler(event):
         if live_chat_mode.get(user_id):
             return
 
-        button_texts = [
-            "🤖 ASK AI", "🎮 PUBG", "🎮 MLBB", "📞 CONTACT", "📢 JOIN CHANNEL",
-            "🌐 LANGUAGE", "💬 FEEDBACK", "🔐 PASSWORD",
-            "✅ I've Joined", "✅ I Shared", "❌ I Haven't Shared", "🔄 Try Again",
-            "📸 Send Payment Screenshot",
-            "💳 PUBG PURCHASE", "🎯 FULL SEASON", "📅 ONE MONTH",
-            "💳 MLBB PURCHASE", "⬅️ BACK", "💬 DM ADMIN", "💬 LIVE CHAT",
+        # ✅ Emoji-safe keyword block
+        text_upper = text.strip().upper()
+        blocked_keywords = [
+            "PASSWORD", "PURCHASE", "FULL SEASON", "ONE MONTH",
+            "MLBB", "PUBG", "ASK AI", "CONTACT", "JOIN CHANNEL",
+            "LANGUAGE", "FEEDBACK", "LIVE CHAT", "BACK",
+            "I'VE JOINED", "I SHARED", "I HAVEN'T SHARED",
+            "TRY AGAIN", "SEND PAYMENT SCREENSHOT",
         ]
-        if text in button_texts:
-            return
+        for kw in blocked_keywords:
+            if kw in text_upper:
+                return
 
         reply = await ask_ai(text, user_id)
         msg = await bot.send_message(event.chat_id, reply, buttons=back_keyboard())
@@ -1886,6 +1928,7 @@ async def main():
     print("=" * 55)
     print("✅ USERBOT RUNNING!")
     print(f"👤 Personal: {me_user.first_name}")
+    print(f"🆔 Userbot ID: {me_user.id}")
     print("=" * 55)
 
     await bot.start(bot_token=BOT_TOKEN)
@@ -1893,11 +1936,19 @@ async def main():
     print("=" * 55)
     print("✅ BOT RUNNING!")
     print(f"🤖 Bot: @{me_bot.username}")
+    print(f"🆔 Bot ID: {me_bot.id}")
     print(f"👤 Owner ID: {OWNER_ID}")
     print(f"🔑 Total Keys: {len(active_keys)}")
     print(f"🕐 Key Expiry: {KEY_EXPIRY_MINUTES} minutes")
     print(f"🔐 File Password: {FILE_PASSWORD}")
     print("=" * 55)
+
+    if OWNER_ID == me_bot.id:
+        print("🚨 ERROR: OWNER_ID = Bot's ID! Change it to your personal ID!")
+        return
+    if OWNER_ID == me_user.id:
+        print("🚨 ERROR: OWNER_ID = Userbot's ID! Change it to your personal ID!")
+        return
 
     asyncio.create_task(auto_backup_loop())
     asyncio.create_task(key_expiry_checker())

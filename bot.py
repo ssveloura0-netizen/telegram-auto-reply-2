@@ -32,6 +32,16 @@ USERBOT_GIF = "https://media.giphy.com/media/OQS9HFAZuLvJEoUdR1/giphy.gif"
 
 LANG_CODES = {"en":"en","hi":"hi","mm":"my","ar":"ar","ur":"ur","th":"th","vi":"vi","eg":"ar","bn":"bn","id":"id","zh":"zh-CN","ja":"ja","ko":"ko","ru":"ru","es":"es","fr":"fr","pt":"pt","de":"de","tr":"tr","fa":"fa"}
 
+LANG_FLAGS = {
+    "en": ("🇬🇧", "English"), "hi": ("🇮🇳", "Hindi"), "mm": ("🇲🇲", "Burmese"),
+    "ar": ("🇸🇦", "Arabic"), "ur": ("🇵🇰", "Urdu"), "th": ("🇹🇭", "Thai"),
+    "vi": ("🇻🇳", "Vietnamese"), "bn": ("🇧🇩", "Bengali"), "id": ("🇮🇩", "Indonesian"),
+    "zh": ("🇨🇳", "Chinese"), "ja": ("🇯🇵", "Japanese"), "ko": ("🇰🇷", "Korean"),
+    "ru": ("🇷🇺", "Russian"), "es": ("🇪🇸", "Spanish"), "fr": ("🇫🇷", "French"),
+    "pt": ("🇵🇹", "Portuguese"), "de": ("🇩🇪", "German"), "tr": ("🇹🇷", "Turkish"),
+    "fa": ("🇮🇷", "Persian"),
+}
+
 last_owner_activity = {}
 user_auto_reply_count = {}
 AWAY_TIMEOUT = 300
@@ -353,9 +363,6 @@ FEEDBACK_MSG = f"""╔═══════════════════�
 ❤️ **Thank you for your support!**"""
 
 
-# ==========================================
-# KEYBOARDS
-# ==========================================
 def language_keyboard():
     return [
         [Button.text("🇬🇧 EN"), Button.text("🇲🇲 MM"), Button.text("🇮🇳 HI")],
@@ -557,6 +564,39 @@ async def voice_to_text(audio_path, language="en"):
 
 
 async def translate_auto(text, target_lang):
+    """Translate with beautiful format"""
+    if not ai_client:
+        return text
+    if not text:
+        return text
+    if target_lang == "en":
+        return text
+    try:
+        def _call():
+            return ai_client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[
+                    {"role": "system", "content": f"Translate the following text to {LANG_CODES.get(target_lang, target_lang)}. Keep emojis, markdown (**), formatting, and links exactly as they are. Reply ONLY the translation, nothing else."},
+                    {"role": "user", "content": text}
+                ],
+                max_tokens=700, temperature=0.3
+            )
+        loop = asyncio.get_event_loop()
+        response = await loop.run_in_executor(None, _call)
+        translated = response.choices[0].message.content
+        flag, lang_name = LANG_FLAGS.get(target_lang, ("🌐", "Translation"))
+        formatted = f"""🌐 **Translation**
+━━━━━━━━━━━━━━━━━━
+{flag} **{lang_name}:**
+{translated}"""
+        return formatted
+    except Exception as e:
+        print(f"Translate error: {e}")
+        return text
+
+
+async def translate_auto_simple(text, target_lang):
+    """Simple translation without formatting"""
     if not ai_client:
         return text
     if not text:
@@ -566,7 +606,7 @@ async def translate_auto(text, target_lang):
             return ai_client.chat.completions.create(
                 model="llama-3.3-70b-versatile",
                 messages=[
-                    {"role": "system", "content": f"Translate the following text to {LANG_CODES.get(target_lang, target_lang)}. Keep formatting, emojis, links. Reply ONLY the translation."},
+                    {"role": "system", "content": f"Translate to {LANG_CODES.get(target_lang, target_lang)}. Reply ONLY translation."},
                     {"role": "user", "content": text}
                 ],
                 max_tokens=700, temperature=0.3
@@ -575,7 +615,7 @@ async def translate_auto(text, target_lang):
         response = await loop.run_in_executor(None, _call)
         return response.choices[0].message.content
     except Exception as e:
-        print(f"Translate error: {e}")
+        print(f"Translate simple error: {e}")
         return text
 
 
@@ -659,7 +699,7 @@ async def userbot_handler(event):
             try:
                 text_from_voice = await voice_to_text(voice_path, "auto")
                 if text_from_voice:
-                    english_text = await translate_auto(text_from_voice, "en")
+                    english_text = await translate_auto_simple(text_from_voice, "en")
                     await notify_owner(
                         "🎤 Voice Message!",
                         f"🆔 `{user_id}`\n📝 Original: {text_from_voice}\n🇬🇧 English: {english_text}"
@@ -680,7 +720,20 @@ async def userbot_handler(event):
             return
 
         user_message = event.raw_text or ""
-        english_msg = await translate_auto(user_message, "en")
+        
+        # Auto-translate user message for owner notification
+        if user_message and len(user_message.strip()) > 1:
+            try:
+                detected = await detect_language(user_message)
+                if detected != "en":
+                    flag, lang_name = LANG_FLAGS.get(detected, ("🌐", "Original"))
+                    en_text = await translate_auto_simple(user_message, "en")
+                    await notify_owner(
+                        "🌐 **Translation**",
+                        f"{flag} **{lang_name}:**\n{user_message}\n\n🇬🇧 **English:**\n{en_text}"
+                    )
+            except Exception as e:
+                print(f"User message translate error: {e}")
 
         away_text = f"""💎    𝐀𝐔𝐓𝐎-𝐑𝐄𝐏𝐋𝐘 💎
 ━━━━━━━━━━━━━━━━━━
@@ -707,7 +760,7 @@ for instant help!
             username = f"@{sender.username}" if sender.username else "No username"
             await notify_owner(
                 "📩 New Personal Message!",
-                f"👤 {sender.first_name}\n🔗 {username}\n🆔 `{user_id}`\n💬 Original: {user_message[:100]}\n🇬🇧 English: {english_msg[:100]}\n🔢 Auto-reply: {count + 1}/{MAX_AUTO_REPLIES}"
+                f"👤 {sender.first_name}\n🔗 {username}\n🆔 `{user_id}`\n🔢 Auto-reply: {count + 1}/{MAX_AUTO_REPLIES}"
             )
         except:
             pass
@@ -745,7 +798,7 @@ async def owner_reply_handler(event):
                 text_from_voice = await voice_to_text(voice_path, "en")
                 if text_from_voice:
                     target_lang = user_langs.get(user_id, "en")
-                    translated = await translate_auto(text_from_voice, target_lang)
+                    translated = await translate_auto(text_from_voice, target_lang) if target_lang != "en" else text_from_voice
                     await userbot.send_message(user_id, f"🎤 Voice:\n\n{translated}")
             except Exception as e:
                 print(f"Owner Voice error: {e}")
@@ -760,6 +813,7 @@ async def owner_reply_handler(event):
         if text and text.startswith("/"):
             return
 
+        # Auto-translate owner message to user's language
         if text:
             target_lang = user_langs.get(user_id, "en")
             if target_lang != "en":
@@ -770,6 +824,7 @@ async def owner_reply_handler(event):
                 except Exception as e:
                     print(f"Auto-translate owner msg error: {e}")
 
+        # Auto-delete tracked messages
         if str(user_id) in tracked_msgs["bot"]:
             for msg_id in list(tracked_msgs["bot"][str(user_id)]):
                 try:
@@ -793,6 +848,23 @@ async def owner_reply_handler(event):
 # BOT
 # ==========================================
 bot = TelegramClient('bot_session', API_ID, API_HASH)
+
+
+# === HELPER: Translate + Send ===
+async def send_translated(chat_id, text, buttons, user_id, track=True):
+    try:
+        user_lang = user_langs.get(user_id, "en")
+        if user_lang != "en":
+            translated = await translate_auto(text, user_lang)
+        else:
+            translated = text
+        msg = await bot.send_message(chat_id, translated, buttons=buttons)
+        if track:
+            track_bot(user_id, msg.id)
+        return msg
+    except Exception as e:
+        print(f"Send translated error: {e}")
+        return None
 
 
 # === START (Language First) ===
@@ -830,7 +902,8 @@ async def lang_select(event):
         user_langs[user_id] = lang_map[clean]
         save_langs()
         lang_selected[user_id] = True
-        msg = await bot.send_message(event.chat_id, f"✅ **Language:** **{clean}**\n\n" + MAIN_MENU_MSG, buttons=main_menu_keyboard())
+        menu_text = await translate_auto(MAIN_MENU_MSG, lang_map[clean]) if clean != "EN" else MAIN_MENU_MSG
+        msg = await bot.send_message(event.chat_id, f"✅ **Language:** **{clean}**\n\n" + menu_text, buttons=main_menu_keyboard())
         track_bot(user_id, msg.id)
     except Exception as e:
         print(f"Lang Select Error: {e}")
@@ -911,8 +984,7 @@ async def pubg_handler(event):
         if clean_btn_text(event.text) != "PUBG":
             return
         user_id = event.sender_id
-        msg = await bot.send_message(event.chat_id, PUBG_MENU_MSG, buttons=pubg_menu_keyboard())
-        track_bot(user_id, msg.id)
+        await send_translated(event.chat_id, PUBG_MENU_MSG, pubg_menu_keyboard(), user_id)
     except Exception as e:
         print(f"PUBG Error: {e}")
 
@@ -925,8 +997,7 @@ async def mlbb_handler(event):
         if clean_btn_text(event.text) != "MLBB":
             return
         user_id = event.sender_id
-        msg = await bot.send_message(event.chat_id, MLBB_MENU_MSG, buttons=mlbb_menu_keyboard())
-        track_bot(user_id, msg.id)
+        await send_translated(event.chat_id, MLBB_MENU_MSG, mlbb_menu_keyboard(), user_id)
     except Exception as e:
         print(f"MLBB Error: {e}")
 
@@ -939,8 +1010,7 @@ async def contact_handler(event):
         if clean_btn_text(event.text) != "CONTACT":
             return
         user_id = event.sender_id
-        msg = await bot.send_message(event.chat_id, CONTACT_MSG, buttons=back_keyboard())
-        track_bot(user_id, msg.id)
+        await send_translated(event.chat_id, CONTACT_MSG, back_keyboard(), user_id)
     except Exception as e:
         print(f"Contact Error: {e}")
 
@@ -967,8 +1037,7 @@ async def feedback_handler(event):
         if clean_btn_text(event.text) != "FEEDBACK":
             return
         user_id = event.sender_id
-        msg = await bot.send_message(event.chat_id, FEEDBACK_MSG, buttons=back_keyboard())
-        track_bot(user_id, msg.id)
+        await send_translated(event.chat_id, FEEDBACK_MSG, back_keyboard(), user_id)
     except Exception as e:
         print(f"Feedback Error: {e}")
 
@@ -982,8 +1051,7 @@ async def free_file_handler(event):
         if clean_btn_text(event.text) != "FREE FILE":
             return
         user_id = event.sender_id
-        msg = await bot.send_message(event.chat_id, FREE_FILE_MSG, buttons=back_keyboard())
-        track_bot(user_id, msg.id)
+        await send_translated(event.chat_id, FREE_FILE_MSG, back_keyboard(), user_id)
     except Exception as e:
         print(f"FREE FILE Error: {e}")
 
@@ -998,60 +1066,41 @@ async def file_password_handler(event):
             return
         user_id = event.sender_id
         joined = await is_user_joined(user_id)
+        user_lang = user_langs.get(user_id, "en")
+
         if joined:
-            verify_msg = await bot.send_message(event.chat_id, """🔍 **𝐕𝐄𝐑𝐈𝐅𝐘𝐈𝐍𝐆...**
+            loading_texts = [
+                "🔍 **𝐕𝐄𝐑𝐈𝐅𝐘𝐈𝐍𝐆...**\n\n━━━━━━━━━━━━━━━━━━━━━━\n`[░░░░░░░░░░] 0%`\n\n⏳ Please wait...\n━━━━━━━━━━━━━━━━━━━━━━",
+                "🔍 **𝐕𝐄𝐑𝐈𝐅𝐘𝐈𝐍𝐆...**\n\n━━━━━━━━━━━━━━━━━━━━━━\n`[████░░░░░░] 40%`\n\n🔒 Checking...\n━━━━━━━━━━━━━━━━━━━━━━",
+                "🔍 **𝐕𝐄𝐑𝐈𝐅𝐘𝐈𝐍𝐆...**\n\n━━━━━━━━━━━━━━━━━━━━━━\n`[████████░░] 80%`\n\n🔐 Validating...\n━━━━━━━━━━━━━━━━━━━━━━",
+                "🔍 **𝐕𝐄𝐑𝐈𝐅𝐘𝐈𝐍𝐆...**\n\n━━━━━━━━━━━━━━━━━━━━━━\n`[██████████] 100%`\n\n🎉 Almost done...\n━━━━━━━━━━━━━━━━━━━━━━"
+            ]
+            if user_lang != "en":
+                loading_texts = [await translate_auto(t, user_lang) for t in loading_texts]
 
-━━━━━━━━━━━━━━━━━━━━━━
-`[░░░░░░░░░░] 0%`
-
-⏳ Please wait...
-━━━━━━━━━━━━━━━━━━━━━━""")
+            verify_msg = await bot.send_message(event.chat_id, loading_texts[0])
             await asyncio.sleep(0.7)
-            await verify_msg.edit("""🔍 **𝐕𝐄𝐑𝐈𝐅𝐘𝐈𝐍𝐆...**
-
-━━━━━━━━━━━━━━━━━━━━━━
-`[████░░░░░░] 40%`
-
-🔒 Checking credentials...
-━━━━━━━━━━━━━━━━━━━━━━""")
+            await verify_msg.edit(loading_texts[1])
             await asyncio.sleep(0.7)
-            await verify_msg.edit("""🔍 **𝐕𝐄𝐑𝐈𝐅𝐘𝐈𝐍𝐆...**
-
-━━━━━━━━━━━━━━━━━━━━━━
-`[████████░░] 80%`
-
-🔐 Validating access...
-━━━━━━━━━━━━━━━━━━━━━━""")
+            await verify_msg.edit(loading_texts[2])
             await asyncio.sleep(0.7)
-            await verify_msg.edit("""🔍 **𝐕𝐄𝐑𝐈𝐅𝐘𝐈𝐍𝐆...**
-
-━━━━━━━━━━━━━━━━━━━━━━
-`[██████████] 100%`
-
-🎉 Almost done...
-━━━━━━━━━━━━━━━━━━━━━━""")
+            await verify_msg.edit(loading_texts[3])
             await asyncio.sleep(0.5)
+
             if random.random() < 0.20:
-                await verify_msg.edit("""❌ **𝐕𝐄𝐑𝐈𝐅𝐈𝐂𝐀𝐓𝐈𝐎𝐍 𝐅𝐀𝐈𝐋𝐄𝐃**
-
-━━━━━━━━━━━━━━━━━━━━━━
-😔 Access could not be verified.
-
-🔄 Please try again.
-━━━━━━━━━━━━━━━━━━━━━━""",
-                    buttons=[[Button.text("🔄 Try Again")], [Button.text("⬅️ BACK")]]
-                )
+                fail_text = """❌ **𝐕𝐄𝐑𝐈𝐅𝐈𝐂𝐀𝐓𝐈𝐎𝐍 𝐅𝐀𝐈𝐋𝐄𝐃**\n\n━━━━━━━━━━━━━━━━━━━━━━\n😔 Access could not be verified.\n\n🔄 Please try again.\n━━━━━━━━━━━━━━━━━━━━━━"""
+                if user_lang != "en":
+                    fail_text = await translate_auto(fail_text, user_lang)
+                await verify_msg.edit(fail_text, buttons=[[Button.text("🔄 Try Again")], [Button.text("⬅️ BACK")]])
                 return
             else:
                 try:
                     await verify_msg.delete()
                 except:
                     pass
-                msg = await bot.send_message(event.chat_id, PUBG_ENTER_KEY_MSG, buttons=back_keyboard())
-                track_bot(user_id, msg.id)
+                await send_translated(event.chat_id, PUBG_ENTER_KEY_MSG, back_keyboard(), user_id)
         else:
-            msg = await bot.send_message(event.chat_id, PUBG_NOT_JOINED_MSG, buttons=join_keyboard())
-            track_bot(user_id, msg.id)
+            await send_translated(event.chat_id, PUBG_NOT_JOINED_MSG, join_keyboard(), user_id)
     except Exception as e:
         print(f"FILE PASSWORD Error: {e}")
 
@@ -1064,50 +1113,27 @@ async def try_again_handler(event):
         if clean_btn_text(event.text) != "TRY AGAIN":
             return
         user_id = event.sender_id
-        verify_msg = await bot.send_message(event.chat_id, """🔍 **𝐕𝐄𝐑𝐈𝐅𝐘𝐈𝐍𝐆...**
-
-━━━━━━━━━━━━━━━━━━━━━━
-`[░░░░░░░░░░] 0%`
-
-⏳ Please wait...
-━━━━━━━━━━━━━━━━━━━━━━""")
+        user_lang = user_langs.get(user_id, "en")
+        verify_msg = await bot.send_message(event.chat_id, "🔍 **𝐕𝐄𝐑𝐈𝐅𝐘𝐈𝐍𝐆...**\n\n`[░░░░░░░░░░] 0%`")
         await asyncio.sleep(0.7)
-        await verify_msg.edit("""🔍 **𝐕𝐄𝐑𝐈𝐅𝐘𝐈𝐍𝐆...**
-
-━━━━━━━━━━━━━━━━━━━━━━
-`[████░░░░░░] 40%`
-━━━━━━━━━━━━━━━━━━━━━━""")
+        await verify_msg.edit("🔍 **𝐕𝐄𝐑𝐈𝐅𝐘𝐈𝐍𝐆...**\n\n`[████░░░░░░] 40%`")
         await asyncio.sleep(0.7)
-        await verify_msg.edit("""🔍 **𝐕𝐄𝐑𝐈𝐅𝐘𝐈𝐍𝐆...**
-
-━━━━━━━━━━━━━━━━━━━━━━
-`[████████░░] 80%`
-━━━━━━━━━━━━━━━━━━━━━━""")
+        await verify_msg.edit("🔍 **𝐕𝐄𝐑𝐈𝐅𝐘𝐈𝐍𝐆...**\n\n`[████████░░] 80%`")
         await asyncio.sleep(0.7)
-        await verify_msg.edit("""🔍 **𝐕𝐄𝐑𝐈𝐅𝐘𝐈𝐍𝐆...**
-
-━━━━━━━━━━━━━━━━━━━━━━
-`[██████████] 100%`
-━━━━━━━━━━━━━━━━━━━━━━""")
+        await verify_msg.edit("🔍 **𝐕𝐄𝐑𝐈𝐅𝐘𝐈𝐍𝐆...**\n\n`[██████████] 100%`")
         await asyncio.sleep(0.5)
         if random.random() < 0.20:
-            await verify_msg.edit("""❌ **𝐕𝐄𝐑𝐈𝐅𝐈𝐂𝐀𝐓𝐈𝐎𝐍 𝐅𝐀𝐈𝐋𝐄𝐃**
-
-━━━━━━━━━━━━━━━━━━━━━━
-😔 Still could not verify.
-
-🔄 Try one more time.
-━━━━━━━━━━━━━━━━━━━━━━""",
-                buttons=[[Button.text("🔄 Try Again")], [Button.text("⬅️ BACK")]]
-            )
+            fail_text = "❌ **𝐕𝐄𝐑𝐈𝐅𝐈𝐂𝐀𝐓𝐈𝐎𝐍 𝐅𝐀𝐈𝐋𝐄𝐃**\n\n🔄 Try one more time."
+            if user_lang != "en":
+                fail_text = await translate_auto(fail_text, user_lang)
+            await verify_msg.edit(fail_text, buttons=[[Button.text("🔄 Try Again")], [Button.text("⬅️ BACK")]])
             return
         else:
             try:
                 await verify_msg.delete()
             except:
                 pass
-            msg = await bot.send_message(event.chat_id, PUBG_ENTER_KEY_MSG, buttons=back_keyboard())
-            track_bot(user_id, msg.id)
+            await send_translated(event.chat_id, PUBG_ENTER_KEY_MSG, back_keyboard(), user_id)
     except Exception as e:
         print(f"Try Again Error: {e}")
 
@@ -1123,11 +1149,9 @@ async def joined_handler(event):
         user_id = event.sender_id
         joined = await is_user_joined(user_id)
         if joined:
-            msg = await bot.send_message(event.chat_id, PUBG_MENU_MSG, buttons=pubg_menu_keyboard())
-            track_bot(user_id, msg.id)
+            await send_translated(event.chat_id, PUBG_MENU_MSG, pubg_menu_keyboard(), user_id)
         else:
-            msg = await bot.send_message(event.chat_id, "❌ **Not Joined**\n\nPlease join first.", buttons=join_keyboard())
-            track_bot(user_id, msg.id)
+            await send_translated(event.chat_id, "❌ **Not Joined**\n\nPlease join first.", join_keyboard(), user_id)
     except Exception as e:
         print(f"Joined Error: {e}")
 
@@ -1141,8 +1165,7 @@ async def vip_purchase_handler(event):
         if clean_btn_text(event.text) != "VIP PURCHASE":
             return
         user_id = event.sender_id
-        msg = await bot.send_message(event.chat_id, PUBG_DURATION_MSG, buttons=pubg_purchase_keyboard())
-        track_bot(user_id, msg.id)
+        await send_translated(event.chat_id, PUBG_DURATION_MSG, pubg_purchase_keyboard(), user_id)
     except Exception as e:
         print(f"VIP Purchase Error: {e}")
 
@@ -1155,8 +1178,7 @@ async def full_season_handler(event):
         if clean_btn_text(event.text) != "FULL SEASON":
             return
         user_id = event.sender_id
-        msg = await bot.send_message(event.chat_id, PUBG_FULL_SEASON_MSG, buttons=screenshot_keyboard())
-        track_bot(user_id, msg.id)
+        await send_translated(event.chat_id, PUBG_FULL_SEASON_MSG, screenshot_keyboard(), user_id)
     except Exception as e:
         print(f"Full Season Error: {e}")
 
@@ -1169,8 +1191,7 @@ async def one_month_handler(event):
         if clean_btn_text(event.text) != "ONE MONTH":
             return
         user_id = event.sender_id
-        msg = await bot.send_message(event.chat_id, PUBG_ONE_MONTH_MSG, buttons=screenshot_keyboard())
-        track_bot(user_id, msg.id)
+        await send_translated(event.chat_id, PUBG_ONE_MONTH_MSG, screenshot_keyboard(), user_id)
     except Exception as e:
         print(f"One Month Error: {e}")
 
@@ -1183,8 +1204,7 @@ async def mlbb_purchase_handler(event):
         if clean_btn_text(event.text) != "MLBB PURCHASE":
             return
         user_id = event.sender_id
-        msg = await bot.send_message(event.chat_id, MLBB_PURCHASE_MSG, buttons=screenshot_keyboard())
-        track_bot(user_id, msg.id)
+        await send_translated(event.chat_id, MLBB_PURCHASE_MSG, screenshot_keyboard(), user_id)
     except Exception as e:
         print(f"MLBB Purchase Error: {e}")
 
@@ -1197,8 +1217,7 @@ async def screenshot_prompt_handler(event):
         if clean_btn_text(event.text) != "SEND PAYMENT SCREENSHOT":
             return
         user_id = event.sender_id
-        msg = await bot.send_message(event.chat_id, SCREENSHOT_PROMPT_MSG, buttons=back_keyboard())
-        track_bot(user_id, msg.id)
+        await send_translated(event.chat_id, SCREENSHOT_PROMPT_MSG, back_keyboard(), user_id)
     except Exception as e:
         print(f"Screenshot Error: {e}")
 
@@ -1212,13 +1231,12 @@ async def back_handler(event):
         if clean_btn_text(event.text) != "BACK":
             return
         user_id = event.sender_id
-        msg = await bot.send_message(event.chat_id, MAIN_MENU_MSG, buttons=main_menu_keyboard())
-        track_bot(user_id, msg.id)
+        await send_translated(event.chat_id, MAIN_MENU_MSG, main_menu_keyboard(), user_id)
     except Exception as e:
         print(f"Back Error: {e}")
 
 
-# === LICENSE KEY VERIFY (NEW FORMAT) ===
+# === LICENSE KEY VERIFY ===
 @bot.on(events.NewMessage(incoming=True))
 async def key_verify_handler(event):
     try:
@@ -1230,22 +1248,19 @@ async def key_verify_handler(event):
         user_id = event.sender_id
         key = text
         if key not in active_keys:
-            msg = await bot.send_message(event.chat_id, "❌ **Invalid Code**", buttons=back_keyboard())
-            track_bot(user_id, msg.id)
+            await send_translated(event.chat_id, "❌ **Invalid Code**", back_keyboard(), user_id)
             return
         key_data = active_keys[key]
         if key_data.get("used"):
             if key_data.get("user_id") != user_id:
-                msg = await bot.send_message(event.chat_id, "❌ **Already Used**", buttons=back_keyboard())
-                track_bot(user_id, msg.id)
+                await send_translated(event.chat_id, "❌ **Already Used**", back_keyboard(), user_id)
                 return
             expires_at = key_data.get("expires_at")
             if expires_at:
                 try:
                     expiry = datetime.strptime(expires_at, "%Y-%m-%d %H:%M:%S")
                     if datetime.now() > expiry:
-                        msg = await bot.send_message(event.chat_id, f"❌ **Key Expired**\n\n📩 {DM_ADMIN_1}", buttons=back_keyboard())
-                        track_bot(user_id, msg.id)
+                        await send_translated(event.chat_id, f"❌ **Key Expired**\n\n📩 {DM_ADMIN_1}", back_keyboard(), user_id)
                         return
                 except:
                     pass
@@ -1270,8 +1285,7 @@ async def key_verify_handler(event):
 
 ━━━━━━━━━━━━━━━━━━━━━━
 ⚠️ **Do NOT share this password!**"""
-        msg = await bot.send_message(event.chat_id, success_msg, buttons=back_keyboard())
-        track_bot(user_id, msg.id)
+        await send_translated(event.chat_id, success_msg, back_keyboard(), user_id)
         try:
             sender = await event.get_sender()
             await notify_owner("🔑 CODE ACTIVATED", f"👤 {sender.first_name}\n🆔 `{user_id}`\n🔑 `{key}`\n⏱️ {expires_str}")
@@ -1357,6 +1371,9 @@ async def approve_handler(event):
 
 ━━━━━━━━━━━━━━━━━━━━━━
 📩 {DM_ADMIN_1}"""
+        target_lang = user_langs.get(user_id, "en")
+        if target_lang != "en":
+            approve_msg = await translate_auto(approve_msg, target_lang)
         await bot.send_message(user_id, approve_msg)
         await event.respond(f"✅ Key sent to `{user_id}`\n\n🔑 `{key}`")
         await notify_owner("🔑 AUTO KEY ISSUED", f"👤 `{user_id}`\n🔑 `{key}`")
@@ -1370,7 +1387,11 @@ async def reject_handler(event):
         if event.sender_id != OWNER_ID:
             return
         user_id = int(event.pattern_match.group(1))
-        await bot.send_message(user_id, f"❌ **Payment Not Verified**\n\n📩 {DM_ADMIN_1}")
+        reject_msg = f"❌ **Payment Not Verified**\n\n📩 {DM_ADMIN_1}"
+        target_lang = user_langs.get(user_id, "en")
+        if target_lang != "en":
+            reject_msg = await translate_auto(reject_msg, target_lang)
+        await bot.send_message(user_id, reject_msg)
         await event.respond(f"❌ Sent to `{user_id}`")
     except Exception as e:
         print(f"Reject Error: {e}")

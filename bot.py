@@ -50,9 +50,6 @@ VISION_MODELS = [
 
 USERBOT_GIF = "https://media.giphy.com/media/OQS9HFAZuLvJEoUdR1/giphy.gif"
 
-# ==========================================
-# LANG CODES
-# ==========================================
 LANG_CODES = {
     "en": "en", "hi": "hi", "mm": "my", "ar": "ar",
     "ur": "ur", "th": "th", "vi": "vi", "eg": "ar",
@@ -64,17 +61,11 @@ LANG_CODES = {
 user_langs = {}
 ai_mode = {}
 
-# ==========================================
-# AWAY MODE + AUTO-REPLY
-# ==========================================
 last_owner_activity = {}
 user_auto_reply_count = {}
 AWAY_TIMEOUT = 300
 MAX_AUTO_REPLIES = 3
 
-# ==========================================
-# ANTI-SPAM
-# ==========================================
 user_message_times = {}
 spam_warnings = {}
 muted_users = {}
@@ -83,9 +74,6 @@ SPAM_LIMIT_1 = 5
 SPAM_LIMIT_2 = 10
 SPAM_LIMIT_3 = 20
 
-# ==========================================
-# LICENSE KEYS
-# ==========================================
 KEY_FILE = "license_keys.json"
 KEY_EXPIRY_MINUTES = 30
 
@@ -127,9 +115,6 @@ def create_key():
     return key
 
 
-# ==========================================
-# BACKUP
-# ==========================================
 BACKUP_FILE = "backup_data.json"
 
 
@@ -153,218 +138,190 @@ live_chat_mode = {}
 # ==========================================
 # MESSAGES
 # ==========================================
-WELCOME_MSG = """**ROVIXBY BOT**
-**PROFESSIONAL GAMING SERVICE**
+WELCOME_MSG = """💎 **ROVIXBY BOT**
+🚀 **PROFESSIONAL GAMING SERVICE**
 
 ━━━━━━━━━━━━━━━━━━━━━━
 
-Welcome!
+✨ **Welcome!**
 
 Select an option below.
 
-Bot created by @ROVIXU1ti
+🤖 Bot created by @ROVIXU1ti
 
 ━━━━━━━━━━━━━━━━━━━━━━"""
 
-PUBG_MENU_MSG = """**PUBG**
+PUBG_MENU_MSG = """🎮 **PUBG** 🎮
 
 ━━━━━━━━━━━━━━━━━━━━━━
 
-What do you need?"""
+**What do you need?**"""
 
-PUBG_SHARE_MSG = f"""**SHARE REQUIRED**
-
-━━━━━━━━━━━━━━━━━━━━━━
-
-**Step 1:** Share the channel link with 5 people
-
-**Channel Link:**
-{CHANNEL_LINK}
+PUBG_ENTER_KEY_MSG = f"""✅ **VERIFIED!**
 
 ━━━━━━━━━━━━━━━━━━━━━━
-
-**Step 2:** After sharing, click **I Shared**
-
-If you haven't shared, click **Not Shared**."""
-
-PUBG_NOT_SHARED_MSG = f"""**You haven't shared yet!**
-
+🔐 **ENTER YOUR LICENSE CODE**
 ━━━━━━━━━━━━━━━━━━━━━━
 
-Please share the channel link with **5 people** first.
-
-**Channel Link:**
-{CHANNEL_LINK}
-
-━━━━━━━━━━━━━━━━━━━━━━
-
-After sharing, come back and click **I Shared**."""
-
-PUBG_ENTER_KEY_MSG = f"""**SHARE VERIFIED!**
-
-━━━━━━━━━━━━━━━━━━━━━━
-**ENTER YOUR LICENSE CODE**
-━━━━━━━━━━━━━━━━━━━━━━
-
-**Send your license code below:**
+📩 **Send your license code below:**
 
 Format: `ROVIX-XXXXX`
 
 ━━━━━━━━━━━━━━━━━━━━━━
 
-**1 CODE = 1 USER (30 min valid)**
-Don't have a code? DM: {DM_ADMIN_1}
+⚠️ **1 CODE = 1 USER (30 min valid)**
+📩 Don't have a code? DM: {DM_ADMIN_1}
 
 Type `/cancel` to exit."""
 
-PUBG_DURATION_MSG = """**SELECT DURATION**
+PUBG_DURATION_MSG = """🎯 **SELECT DURATION**
 
 ━━━━━━━━━━━━━━━━━━━━━━
 
-Choose your plan:
+📅 **Choose your plan:**
 
 ━━━━━━━━━━━━━━━━━━━━━━"""
 
-PUBG_FULL_SEASON_MSG = f"""**FULL SEASON PACKAGE**
+PUBG_FULL_SEASON_MSG = f"""🎯 **FULL SEASON PACKAGE**
 
 ━━━━━━━━━━━━━━━━━━━━━━
 
-**Price: $15 / 25,000 KS**
+💰 **Price: $15 / 25,000 KS**
 
 ━━━━━━━━━━━━━━━━━━━━━━
-**PAYMENT METHODS:**
+💳 **PAYMENT METHODS:**
 ━━━━━━━━━━━━━━━━━━━━━━
 
-**KBZ Pay:**
+📱 **KBZ Pay:**
    09897052554 (Raw Eis)
 
-**Wave Pay:**
+📱 **Wave Pay:**
    Contact Admin
-   {DM_ADMIN_1}
-   {DM_ADMIN_2}
+   👤 {DM_ADMIN_1}
+   👤 {DM_ADMIN_2}
 
 ━━━━━━━━━━━━━━━━━━━━━━
 
-After payment, click below to send screenshot:"""
+📸 **After payment, click below to send screenshot:**"""
 
-PUBG_ONE_MONTH_MSG = f"""**ONE MONTH PACKAGE**
-
-━━━━━━━━━━━━━━━━━━━━━━
-
-**Price: $7 / 15,000 KS**
+PUBG_ONE_MONTH_MSG = f"""📅 **ONE MONTH PACKAGE**
 
 ━━━━━━━━━━━━━━━━━━━━━━
-**PAYMENT METHODS:**
+
+💰 **Price: $7 / 15,000 KS**
+
+━━━━━━━━━━━━━━━━━━━━━━
+💳 **PAYMENT METHODS:**
 ━━━━━━━━━━━━━━━━━━━━━━
 
-**KBZ Pay:**
+📱 **KBZ Pay:**
    09897052554 (Raw Eis)
 
-**Wave Pay:**
+📱 **Wave Pay:**
    Contact Admin
-   {DM_ADMIN_1}
-   {DM_ADMIN_2}
+   👤 {DM_ADMIN_1}
+   👤 {DM_ADMIN_2}
 
 ━━━━━━━━━━━━━━━━━━━━━━
 
-After payment, click below to send screenshot:"""
+📸 **After payment, click below to send screenshot:**"""
 
-MLBB_MENU_MSG = """**MOBILE LEGENDS**
-
-━━━━━━━━━━━━━━━━━━━━━━
-
-Choose an option:"""
-
-MLBB_PURCHASE_MSG = f"""**MOBILE LEGENDS PURCHASE**
+MLBB_MENU_MSG = """🎮 **MOBILE LEGENDS** 🎮
 
 ━━━━━━━━━━━━━━━━━━━━━━
 
-**Price: 5000 KS / $2 per file**
+**Choose an option:**"""
+
+MLBB_PURCHASE_MSG = f"""🎮 **MOBILE LEGENDS PURCHASE**
 
 ━━━━━━━━━━━━━━━━━━━━━━
-**PAYMENT METHODS:**
+
+💰 **Price: 5000 KS / $2 per file**
+
+━━━━━━━━━━━━━━━━━━━━━━
+💳 **PAYMENT METHODS:**
 ━━━━━━━━━━━━━━━━━━━━━━
 
-**KBZ Pay:**
+📱 **KBZ Pay:**
    09897052554 (Raw Eis)
 
-**Wave Pay:**
+📱 **Wave Pay:**
    Contact Admin
-   {DM_ADMIN_1}
-   {DM_ADMIN_2}
+   👤 {DM_ADMIN_1}
+   👤 {DM_ADMIN_2}
 
 ━━━━━━━━━━━━━━━━━━━━━━
 
-After payment, click below to send screenshot:"""
+📸 **After payment, click below to send screenshot:**"""
 
-SCREENSHOT_PROMPT_MSG = """**SEND PAYMENT SCREENSHOT**
-
-━━━━━━━━━━━━━━━━━━━━━━
-Please send your payment screenshot below
-
-Make sure the screenshot shows:
-  - Amount
-  - Date/Time
-  - Transaction ID
+SCREENSHOT_PROMPT_MSG = """📸 **SEND PAYMENT SCREENSHOT**
 
 ━━━━━━━━━━━━━━━━━━━━━━
+Please send your payment screenshot below 👇
 
-After verification, admin will send you the file."""
-
-CONTACT_MSG = f"""**CONTACT OWNER**
+✅ Make sure the screenshot shows:
+  • Amount
+  • Date/Time
+  • Transaction ID
 
 ━━━━━━━━━━━━━━━━━━━━━━
 
-Admin 1: {DM_ADMIN_1}
-Admin 2: {DM_ADMIN_2}
+⚠️ After verification, admin will send you the file."""
+
+CONTACT_MSG = f"""📞 **CONTACT OWNER**
 
 ━━━━━━━━━━━━━━━━━━━━━━
 
-Reply time: Usually within 24 hours"""
-
-JOIN_CHANNEL_MSG = f"""**JOIN OUR CHANNEL**
+👤 Admin 1: {DM_ADMIN_1}
+👤 Admin 2: {DM_ADMIN_2}
 
 ━━━━━━━━━━━━━━━━━━━━━━
 
-{CHANNEL_LINK}
+⏳ Reply time: Usually within 24 hours"""
 
-Check the pinned message after joining!
+JOIN_CHANNEL_MSG = f"""📢 **JOIN OUR CHANNEL**
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+🔗 {CHANNEL_LINK}
+
+📂 **Check the pinned message after joining!**
 
 ━━━━━━━━━━━━━━━━━━━━━━"""
 
-LANGUAGE_MSG = """**SELECT LANGUAGE**
+LANGUAGE_MSG = """🌐 **SELECT LANGUAGE**
 
 ━━━━━━━━━━━━━━━━━━━━━━
 
-Choose your language:"""
+**Choose your language:**"""
 
-FEEDBACK_MSG = f"""**FEEDBACK**
+FEEDBACK_MSG = f"""💬 **FEEDBACK**
 
 ━━━━━━━━━━━━━━━━━━━━━━
 
 We'd love to hear your feedback!
 
 Please send your feedback to:
-{DM_ADMIN_1}
-{DM_ADMIN_2}
+👤 {DM_ADMIN_1}
+👤 {DM_ADMIN_2}
 
 ━━━━━━━━━━━━━━━━━━━━━━
 
-Thank you for your support!"""
+Thank you for your support! ❤️"""
 
-AI_INTRO_MSG = """**ASK AI**
-
-━━━━━━━━━━━━━━━━━━━━━━
-
-Ask me anything - I'll reply in your language!
-
-Type your question below."""
-
-LIVE_CHAT_MSG = """**LIVE CHAT WITH ADMIN**
+AI_INTRO_MSG = """🤖 **ASK AI** 🤖
 
 ━━━━━━━━━━━━━━━━━━━━━━
 
-Type your message below
+Ask me anything — I'll reply in your language!
+
+👇 Type your question below."""
+
+LIVE_CHAT_MSG = """💬 **LIVE CHAT WITH ADMIN**
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+Type your message below 👇
 
 Admin will reply to you personally.
 
@@ -374,78 +331,68 @@ Type `/cancel` to exit."""
 
 
 # ==========================================
-# KEYBOARDS (EMOJI-FREE)
+# KEYBOARDS (EMOJI BACK)
 # ==========================================
 def main_menu_keyboard():
     return [
-        [Button.text("ASK AI"), Button.text("PUBG")],
-        [Button.text("MLBB"), Button.text("CONTACT")],
-        [Button.text("JOIN CHANNEL"), Button.text("LANGUAGE")],
-        [Button.text("FEEDBACK"), Button.text("LIVE CHAT")],
+        [Button.text("🤖 ASK AI"), Button.text("🎮 PUBG")],
+        [Button.text("🎮 MLBB"), Button.text("📞 CONTACT")],
+        [Button.text("📢 JOIN CHANNEL"), Button.text("🌐 LANGUAGE")],
+        [Button.text("💬 FEEDBACK"), Button.text("💬 LIVE CHAT")],
     ]
 
 
 def pubg_menu_keyboard():
     return [
-        [Button.text("PASSWORD")],
-        [Button.text("PUBG PURCHASE")],
-        [Button.text("BACK")],
+        [Button.text("🔐 PASSWORD")],
+        [Button.text("💳 PUBG PURCHASE")],
+        [Button.text("⬅️ BACK")],
     ]
 
 
 def pubg_purchase_keyboard():
     return [
-        [Button.text("FULL SEASON")],
-        [Button.text("ONE MONTH")],
-        [Button.text("BACK")],
+        [Button.text("🎯 FULL SEASON")],
+        [Button.text("📅 ONE MONTH")],
+        [Button.text("⬅️ BACK")],
     ]
 
 
 def mlbb_menu_keyboard():
     return [
-        [Button.text("MLBB PURCHASE")],
-        [Button.text("BACK")],
+        [Button.text("💳 MLBB PURCHASE")],
+        [Button.text("⬅️ BACK")],
     ]
 
 
 def back_keyboard():
-    return [[Button.text("BACK")]]
+    return [[Button.text("⬅️ BACK")]]
 
 
 def language_keyboard():
     return [
-        [Button.text("EN"), Button.text("MM"), Button.text("HI")],
-        [Button.text("AR"), Button.text("UR"), Button.text("BN")],
-        [Button.text("ID"), Button.text("TH"), Button.text("ZH")],
-        [Button.text("JA"), Button.text("KO"), Button.text("RU")],
-        [Button.text("ES"), Button.text("FR"), Button.text("PT")],
-        [Button.text("DE"), Button.text("TR"), Button.text("FA")],
-        [Button.text("BACK")],
+        [Button.text("🇬🇧 EN"), Button.text("🇲🇲 MM"), Button.text("🇮🇳 HI")],
+        [Button.text("🇸🇦 AR"), Button.text("🇵🇰 UR"), Button.text("🇧🇩 BN")],
+        [Button.text("🇮🇩 ID"), Button.text("🇹🇭 TH"), Button.text("🇨🇳 ZH")],
+        [Button.text("🇯🇵 JA"), Button.text("🇰🇷 KO"), Button.text("🇷🇺 RU")],
+        [Button.text("🇪🇸 ES"), Button.text("🇫🇷 FR"), Button.text("🇵🇹 PT")],
+        [Button.text("🇩🇪 DE"), Button.text("🇹🇷 TR"), Button.text("🇮🇷 FA")],
+        [Button.text("⬅️ BACK")],
     ]
 
 
 def join_keyboard():
     return [
-        [Button.url("Join Channel", CHANNEL_LINK)],
-        [Button.text("I Joined")],
-        [Button.text("BACK")],
-    ]
-
-
-def share_keyboard():
-    share_url = f"https://t.me/share/url?url={CHANNEL_LINK}&text=Check%20this%20channel!"
-    return [
-        [Button.url("Share Channel", share_url)],
-        [Button.text("I Shared")],
-        [Button.text("Not Shared")],
-        [Button.text("BACK")],
+        [Button.url("🔗 Join Channel", CHANNEL_LINK)],
+        [Button.text("✅ I've Joined")],
+        [Button.text("⬅️ BACK")],
     ]
 
 
 def screenshot_keyboard():
     return [
-        [Button.text("Send Payment Screenshot")],
-        [Button.text("BACK")],
+        [Button.text("📸 Send Payment Screenshot")],
+        [Button.text("⬅️ BACK")],
     ]
 
 
@@ -492,15 +439,12 @@ def track_userbot(user_id, msg_id):
     save_tracking()
 
 
-# ==========================================
-# OWNER NOTIFICATION
-# ==========================================
 async def notify_owner(title, details):
     try:
         if OWNER_ID == 0:
             return
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        await bot.send_message(OWNER_ID, f"{title}\n\n{details}\n\nTime: {now}")
+        await bot.send_message(OWNER_ID, f"{title}\n\n{details}\n\n📅 Time: {now}")
     except Exception as e:
         print(f"Notify error: {e}")
 
@@ -605,7 +549,7 @@ async def exa_search(query):
             if results:
                 combined = ""
                 for r in results[:3]:
-                    combined += f"**{r.get('title','')}**\n{r.get('text','')[:300]}\n{r.get('url','')}\n\n"
+                    combined += f"**{r.get('title','')}**\n{r.get('text','')[:300]}\n🔗 {r.get('url','')}\n\n"
                 return combined.strip()
     except Exception as e:
         print(f"Exa error: {e}")
@@ -642,9 +586,6 @@ async def detect_language(text):
         return "en"
 
 
-# ==========================================
-# VOICE TRANSLATION
-# ==========================================
 async def voice_to_text(audio_path, language="en"):
     if not ai_client:
         return None
@@ -804,16 +745,16 @@ async def userbot_handler(event):
 
         if len(times) >= SPAM_LIMIT_3:
             banned_users[user_id] = True
-            await notify_owner("USER BANNED", f"ID: `{user_id}`\nSpam: {len(times)} msgs")
+            await notify_owner("🚫 USER BANNED", f"🆔 ID: `{user_id}`\n📊 Spam: {len(times)} msgs")
             return
         elif len(times) >= SPAM_LIMIT_2:
             muted_users[user_id] = now + 300
-            await event.reply("You are muted for 5 minutes due to spam.")
+            await event.reply("🔇 You are muted for 5 minutes due to spam.")
             return
         elif len(times) >= SPAM_LIMIT_1:
             if spam_warnings.get(user_id, 0) == 0:
                 spam_warnings[user_id] = 1
-                await event.reply("Warning! Don't spam.")
+                await event.reply("⚠️ Warning! Don't spam.")
             return
 
         if event.voice or event.audio:
@@ -823,10 +764,10 @@ async def userbot_handler(event):
                 if text_from_voice:
                     english_text = await translate_to_user_lang(text_from_voice, OWNER_ID)
                     await notify_owner(
-                        "Voice Message from User!",
-                        f"User ID: `{user_id}`\nOriginal: {text_from_voice}\nEnglish: {english_text}"
+                        "🎤 Voice Message from User!",
+                        f"👤 User ID: `{user_id}`\n📝 Original: {text_from_voice}\n🇬🇧 English: {english_text}"
                     )
-                    await event.reply("Got your voice message! Owner will reply soon.")
+                    await event.reply("🎤 Got your voice message! Owner will reply soon.")
             except Exception as e:
                 print(f"Voice error: {e}")
             finally:
@@ -844,28 +785,28 @@ async def userbot_handler(event):
         user_message = event.raw_text or ""
         ai_reply = await ask_ai_userbot(user_message)
 
-        away_text = f"""D I A M O N D   A U T O - R E P L Y
+        away_text = f"""💎 D I A M O N D   A U T O - R E P L Y 💎
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-OWNER IS BUSY
+💠 **OWNER IS BUSY**
 
-Please contact with the bot
-for instant help!
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-AI: {ai_reply}
+📢 **Please contact with the bot**
+**for instant help!**
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-ROVIXBY BOT
+💬 **AI:** {ai_reply}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🤖 **ROVIXBY BOT**
 {BOT_LINK}
 
-ROVIXBY CHANNEL
+📢 **ROVIXBY CHANNEL**
 {CHANNEL_LINK}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
-ROVIXBY ULTIMATE"""
+⚡ **ROVIXBY ULTIMATE**"""
 
         msg = await userbot.send_file(event.chat_id, USERBOT_GIF, caption=away_text)
         track_userbot(user_id, msg.id)
@@ -875,8 +816,8 @@ ROVIXBY ULTIMATE"""
             sender = await event.get_sender()
             username = f"@{sender.username}" if sender.username else "No username"
             await notify_owner(
-                "New Personal Message!",
-                f"Name: {sender.first_name}\nUsername: {username}\nID: `{user_id}`\nMessage: {user_message[:100]}\nAuto-reply: {count + 1}/{MAX_AUTO_REPLIES}"
+                "📩 New Personal Message!",
+                f"👤 Name: {sender.first_name}\n🔗 Username: {username}\n🆔 ID: `{user_id}`\n💬 Message: {user_message[:100]}\n🔢 Auto-reply: {count + 1}/{MAX_AUTO_REPLIES}"
             )
         except Exception:
             pass
@@ -914,7 +855,7 @@ async def owner_reply_handler(event):
                 text_from_voice = await voice_to_text(voice_path, "en")
                 if text_from_voice:
                     translated = await translate_to_user_lang(text_from_voice, user_id)
-                    await userbot.send_message(user_id, f"Voice Message:\n\n{translated}")
+                    await userbot.send_message(user_id, f"🎤 Voice Message:\n\n{translated}")
             except Exception as e:
                 print(f"Owner Voice error: {e}")
             finally:
@@ -955,6 +896,12 @@ async def owner_reply_handler(event):
 bot = TelegramClient('bot_session', API_ID, API_HASH)
 
 
+def clean_btn_text(text):
+    """Emoji-safe: sirf letters aur space rakho, uppercase karo"""
+    text = text.strip().upper()
+    return re.sub(r'[^A-Z ]', '', text).strip()
+
+
 # === START ===
 @bot.on(events.NewMessage(pattern=r'^/start$'))
 async def start_handler(event):
@@ -966,8 +913,8 @@ async def start_handler(event):
             sender = await event.get_sender()
             username = f"@{sender.username}" if sender.username else "No username"
             await notify_owner(
-                "New User Started Bot!",
-                f"Name: {sender.first_name}\nUsername: {username}\nID: `{user_id}`"
+                "🔔 New User Started Bot!",
+                f"👤 Name: {sender.first_name}\n🔗 Username: {username}\n🆔 ID: `{user_id}`"
             )
         except Exception:
             pass
@@ -984,7 +931,7 @@ async def newkey_handler(event):
         if event.sender_id != OWNER_ID:
             return
         key = create_key()
-        await event.respond(f"NEW KEY GENERATED\n\nKey: `{key}`\n\nValid for: 30 minutes after activation")
+        await event.respond(f"✅ NEW KEY GENERATED\n\n🔑 `{key}`\n\n⏱️ Valid for: 30 minutes after activation")
     except Exception as e:
         print(f"Newkey Error: {e}")
 
@@ -999,7 +946,7 @@ async def newkey_multi_handler(event):
             count = 50
         keys = [create_key() for _ in range(count)]
         key_list = "\n".join([f"{i+1}. `{k}`" for i, k in enumerate(keys)])
-        await event.respond(f"{count} NEW KEYS GENERATED\n\n{key_list}")
+        await event.respond(f"✅ {count} NEW KEYS GENERATED\n\n{key_list}")
     except Exception as e:
         print(f"Newkey Multi Error: {e}")
 
@@ -1010,12 +957,12 @@ async def keys_handler(event):
         if event.sender_id != OWNER_ID:
             return
         if not active_keys:
-            await event.respond("No keys yet.")
+            await event.respond("📭 No keys yet.")
             return
         total = len(active_keys)
         used = sum(1 for k in active_keys.values() if k.get("used"))
         unused = total - used
-        await event.respond(f"KEYS STATUS\n\nTotal: `{total}`\nUsed: `{used}`\nUnused: `{unused}`")
+        await event.respond(f"📊 KEYS STATUS\n\n🔑 Total: `{total}`\n✅ Used: `{used}`\n🆓 Unused: `{unused}`")
     except Exception as e:
         print(f"Keys Error: {e}")
 
@@ -1037,25 +984,25 @@ async def stats_handler(event):
         for l in user_langs.values():
             lang_stats[l] = lang_stats.get(l, 0) + 1
         top_langs = sorted(lang_stats.items(), key=lambda x: x[1], reverse=True)[:5]
-        lang_str = "\n".join([f"  - {k}: {v}" for k, v in top_langs]) or "  - No data"
+        lang_str = "\n".join([f"  • {k}: {v}" for k, v in top_langs]) or "  • No data"
 
-        stats_msg = f"""LIVE STATS
+        stats_msg = f"""📊 LIVE STATS
 
 ━━━━━━━━━━━━━━━━━━━━━━
-KEYS
-  - Total: `{total_keys}`
-  - Used: `{used_keys}`
-  - Unused: `{unused_keys}`
+🔑 KEYS
+  • Total: `{total_keys}`
+  • Used: `{used_keys}`
+  • Unused: `{unused_keys}`
 
-USERS
-  - Active: `{active_users}`
-  - Banned: `{banned}`
-  - Muted: `{muted}`
+👥 USERS
+  • Active: `{active_users}`
+  • Banned: `{banned}`
+  • Muted: `{muted}`
 
-LANGUAGES (Top 5)
+🌐 LANGUAGES (Top 5)
 {lang_str}
 
-TIME: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
+📅 TIME: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 ━━━━━━━━━━━━━━━━━━━━━━"""
         await event.respond(stats_msg)
     except Exception as e:
@@ -1070,13 +1017,13 @@ async def backup_handler(event):
             return
         file = create_backup()
         if file and os.path.exists(file):
-            await bot.send_file(OWNER_ID, file, caption=f"MANUAL BACKUP\n\n{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+            await bot.send_file(OWNER_ID, file, caption=f"💾 MANUAL BACKUP\n\n📅 {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     except Exception as e:
         print(f"Backup Error: {e}")
 
 
 # ==========================================
-# BUTTON HANDLERS (ALL EMOJI-FREE + TEXT CHECK)
+# BUTTON HANDLERS (EMOJI-SAFE WITH clean_btn_text)
 # ==========================================
 
 # === ASK AI ===
@@ -1085,7 +1032,7 @@ async def ask_ai_handler(event):
     try:
         if not event.is_private or not event.text:
             return
-        if event.text.strip().upper() != "ASK AI":
+        if clean_btn_text(event.text) != "ASK AI":
             return
         user_id = event.sender_id
         ai_mode[user_id] = True
@@ -1101,7 +1048,7 @@ async def pubg_handler(event):
     try:
         if not event.is_private or not event.text:
             return
-        if event.text.strip().upper() != "PUBG":
+        if clean_btn_text(event.text) != "PUBG":
             return
         user_id = event.sender_id
         msg = await bot.send_message(event.chat_id, PUBG_MENU_MSG, buttons=pubg_menu_keyboard())
@@ -1110,64 +1057,68 @@ async def pubg_handler(event):
         print(f"PUBG Error: {e}")
 
 
-# === PASSWORD ===
+# === PASSWORD (FAKE LOADING + LICENSE CODE) ===
 @bot.on(events.NewMessage(incoming=True))
 async def pubg_password_handler(event):
     try:
         if not event.is_private or not event.text:
             return
-        if event.text.strip().upper() != "PASSWORD":
+        if clean_btn_text(event.text) != "PASSWORD":
             return
+        
         user_id = event.sender_id
-        msg = await bot.send_message(event.chat_id, PUBG_SHARE_MSG, buttons=share_keyboard())
-        track_bot(user_id, msg.id)
-    except Exception as e:
-        print(f"PASSWORD Error: {e}")
+        
+        # FAKE LOADING ANIMATION
+        loading_msg = await bot.send_message(
+            event.chat_id,
+            """🔍 **VERIFYING...**
 
+━━━━━━━━━━━━━━━━━━━━━━
+`[░░░░░░░░░░] 0%`
 
-# === I JOINED ===
-@bot.on(events.NewMessage(incoming=True))
-async def joined_handler(event):
-    try:
-        if not event.is_private or not event.text:
-            return
-        if event.text.strip().upper() != "I JOINED":
-            return
-        user_id = event.sender_id
-        msg = await bot.send_message(event.chat_id, PUBG_SHARE_MSG, buttons=share_keyboard())
-        track_bot(user_id, msg.id)
-    except Exception as e:
-        print(f"Joined Error: {e}")
+⏳ Please wait...
+━━━━━━━━━━━━━━━━━━━━━━"""
+        )
+        
+        await asyncio.sleep(0.7)
+        await loading_msg.edit("""🔍 **VERIFYING...**
 
+━━━━━━━━━━━━━━━━━━━━━━
+`[████░░░░░░] 40%`
 
-# === I SHARED ===
-@bot.on(events.NewMessage(incoming=True))
-async def shared_handler(event):
-    try:
-        if not event.is_private or not event.text:
-            return
-        if event.text.strip().upper() != "I SHARED":
-            return
-        user_id = event.sender_id
+🔒 Checking access...
+━━━━━━━━━━━━━━━━━━━━━━""")
+        
+        await asyncio.sleep(0.7)
+        await loading_msg.edit("""🔍 **VERIFYING...**
+
+━━━━━━━━━━━━━━━━━━━━━━
+`[████████░░] 80%`
+
+🔐 Validating...
+━━━━━━━━━━━━━━━━━━━━━━""")
+        
+        await asyncio.sleep(0.7)
+        await loading_msg.edit("""✅ **VERIFIED!**
+
+━━━━━━━━━━━━━━━━━━━━━━
+`[██████████] 100%`
+
+🎉 Access granted!
+━━━━━━━━━━━━━━━━━━━━━━""")
+        
+        await asyncio.sleep(0.5)
+        
+        # Delete loading, send license code prompt
+        try:
+            await loading_msg.delete()
+        except:
+            pass
+        
         msg = await bot.send_message(event.chat_id, PUBG_ENTER_KEY_MSG, buttons=back_keyboard())
         track_bot(user_id, msg.id)
     except Exception as e:
-        print(f"Shared Error: {e}")
-
-
-# === NOT SHARED ===
-@bot.on(events.NewMessage(incoming=True))
-async def not_shared_handler(event):
-    try:
-        if not event.is_private or not event.text:
-            return
-        if event.text.strip().upper() != "NOT SHARED":
-            return
-        user_id = event.sender_id
-        msg = await bot.send_message(event.chat_id, PUBG_NOT_SHARED_MSG, buttons=back_keyboard())
-        track_bot(user_id, msg.id)
-    except Exception as e:
-        print(f"Not Shared Error: {e}")
+        print(f"PASSWORD Error: {e}")
 
 
 # === PUBG PURCHASE ===
@@ -1176,7 +1127,7 @@ async def pubg_purchase_handler(event):
     try:
         if not event.is_private or not event.text:
             return
-        if event.text.strip().upper() != "PUBG PURCHASE":
+        if clean_btn_text(event.text) != "PUBG PURCHASE":
             return
         user_id = event.sender_id
         msg = await bot.send_message(event.chat_id, PUBG_DURATION_MSG, buttons=pubg_purchase_keyboard())
@@ -1191,7 +1142,7 @@ async def full_season_handler(event):
     try:
         if not event.is_private or not event.text:
             return
-        if event.text.strip().upper() != "FULL SEASON":
+        if clean_btn_text(event.text) != "FULL SEASON":
             return
         user_id = event.sender_id
         msg = await bot.send_message(event.chat_id, PUBG_FULL_SEASON_MSG, buttons=screenshot_keyboard())
@@ -1206,7 +1157,7 @@ async def one_month_handler(event):
     try:
         if not event.is_private or not event.text:
             return
-        if event.text.strip().upper() != "ONE MONTH":
+        if clean_btn_text(event.text) != "ONE MONTH":
             return
         user_id = event.sender_id
         msg = await bot.send_message(event.chat_id, PUBG_ONE_MONTH_MSG, buttons=screenshot_keyboard())
@@ -1221,7 +1172,7 @@ async def mlbb_handler(event):
     try:
         if not event.is_private or not event.text:
             return
-        if event.text.strip().upper() != "MLBB":
+        if clean_btn_text(event.text) != "MLBB":
             return
         user_id = event.sender_id
         msg = await bot.send_message(event.chat_id, MLBB_MENU_MSG, buttons=mlbb_menu_keyboard())
@@ -1236,7 +1187,7 @@ async def mlbb_purchase_handler(event):
     try:
         if not event.is_private or not event.text:
             return
-        if event.text.strip().upper() != "MLBB PURCHASE":
+        if clean_btn_text(event.text) != "MLBB PURCHASE":
             return
         user_id = event.sender_id
         msg = await bot.send_message(event.chat_id, MLBB_PURCHASE_MSG, buttons=screenshot_keyboard())
@@ -1251,7 +1202,7 @@ async def screenshot_prompt_handler(event):
     try:
         if not event.is_private or not event.text:
             return
-        if event.text.strip().upper() != "SEND PAYMENT SCREENSHOT":
+        if clean_btn_text(event.text) != "SEND PAYMENT SCREENSHOT":
             return
         user_id = event.sender_id
         msg = await bot.send_message(event.chat_id, SCREENSHOT_PROMPT_MSG, buttons=back_keyboard())
@@ -1266,7 +1217,7 @@ async def contact_handler(event):
     try:
         if not event.is_private or not event.text:
             return
-        if event.text.strip().upper() != "CONTACT":
+        if clean_btn_text(event.text) != "CONTACT":
             return
         user_id = event.sender_id
         msg = await bot.send_message(event.chat_id, CONTACT_MSG, buttons=back_keyboard())
@@ -1281,7 +1232,7 @@ async def join_handler(event):
     try:
         if not event.is_private or not event.text:
             return
-        if event.text.strip().upper() != "JOIN CHANNEL":
+        if clean_btn_text(event.text) != "JOIN CHANNEL":
             return
         user_id = event.sender_id
         msg = await bot.send_message(event.chat_id, JOIN_CHANNEL_MSG, buttons=join_keyboard())
@@ -1296,7 +1247,7 @@ async def language_handler(event):
     try:
         if not event.is_private or not event.text:
             return
-        if event.text.strip().upper() != "LANGUAGE":
+        if clean_btn_text(event.text) != "LANGUAGE":
             return
         user_id = event.sender_id
         msg = await bot.send_message(event.chat_id, LANGUAGE_MSG, buttons=language_keyboard())
@@ -1311,9 +1262,9 @@ async def lang_select(event):
     try:
         if not event.is_private or not event.text:
             return
-        text = event.text.strip().upper()
+        clean = re.sub(r'[^A-Z]', '', event.text.strip().upper())
         valid_langs = ["EN", "MM", "HI", "AR", "UR", "BN", "ID", "TH", "ZH", "JA", "KO", "RU", "ES", "FR", "PT", "DE", "TR", "FA"]
-        if text not in valid_langs:
+        if clean not in valid_langs:
             return
         user_id = event.sender_id
         lang_map = {
@@ -1323,8 +1274,8 @@ async def lang_select(event):
             "ES": "es", "FR": "fr", "PT": "pt", "DE": "de",
             "TR": "tr", "FA": "fa",
         }
-        user_langs[user_id] = lang_map[text]
-        msg = await bot.send_message(event.chat_id, f"Language set to {text}\n\nNow use the menu below:", buttons=main_menu_keyboard())
+        user_langs[user_id] = lang_map[clean]
+        msg = await bot.send_message(event.chat_id, f"✅ Language set to **{clean}**\n\nNow use the menu below:", buttons=main_menu_keyboard())
         track_bot(user_id, msg.id)
     except Exception as e:
         print(f"Lang Select Error: {e}")
@@ -1336,7 +1287,7 @@ async def feedback_handler(event):
     try:
         if not event.is_private or not event.text:
             return
-        if event.text.strip().upper() != "FEEDBACK":
+        if clean_btn_text(event.text) != "FEEDBACK":
             return
         user_id = event.sender_id
         msg = await bot.send_message(event.chat_id, FEEDBACK_MSG, buttons=back_keyboard())
@@ -1351,7 +1302,7 @@ async def live_chat_handler(event):
     try:
         if not event.is_private or not event.text:
             return
-        if event.text.strip().upper() != "LIVE CHAT":
+        if clean_btn_text(event.text) != "LIVE CHAT":
             return
         user_id = event.sender_id
         live_chat_mode[user_id] = True
@@ -1367,7 +1318,7 @@ async def back_handler(event):
     try:
         if not event.is_private or not event.text:
             return
-        if event.text.strip().upper() != "BACK":
+        if clean_btn_text(event.text) != "BACK":
             return
         user_id = event.sender_id
         ai_mode[user_id] = False
@@ -1385,8 +1336,6 @@ async def key_verify_handler(event):
         if not event.is_private or not event.text:
             return
         text = event.text.strip().upper()
-        if not text.startswith("ROVIX-"):
-            return
         if not re.match(r'^ROVIX-\d{5}$', text):
             return
 
@@ -1394,7 +1343,7 @@ async def key_verify_handler(event):
         key = text
 
         if key not in active_keys:
-            msg = await bot.send_message(event.chat_id, "Invalid Code!\n\nPlease check and try again.", buttons=back_keyboard())
+            msg = await bot.send_message(event.chat_id, "❌ **Invalid Code!**\n\nPlease check and try again.", buttons=back_keyboard())
             track_bot(user_id, msg.id)
             return
 
@@ -1402,7 +1351,7 @@ async def key_verify_handler(event):
 
         if key_data.get("used"):
             if key_data.get("user_id") != user_id:
-                msg = await bot.send_message(event.chat_id, "This code is already used!", buttons=back_keyboard())
+                msg = await bot.send_message(event.chat_id, "❌ **This code is already used!**", buttons=back_keyboard())
                 track_bot(user_id, msg.id)
                 return
 
@@ -1415,23 +1364,23 @@ async def key_verify_handler(event):
         active_keys[key]["expires_at"] = expires_str
         save_keys()
 
-        success_msg = f"""ACCESS GRANTED!
+        success_msg = f"""🎉 **ACCESS GRANTED!**
 
 ━━━━━━━━━━━━━━━━━━━━━━
-Code Verified!
-Code: `{key}`
-Valid until: `{expires_str}`
+✅ Code Verified!
+🔑 Code: `{key}`
+⏱️ Valid until: `{expires_str}`
 ━━━━━━━━━━━━━━━━━━━━━━
 
-YOUR FILE PASSWORD:
+🔐 **YOUR FILE PASSWORD:**
 `{FILE_PASSWORD}`
 ━━━━━━━━━━━━━━━━━━━━━━
 
-File: Check the pinned message in the channel.
+📂 **File:** Check the pinned message in the channel.
 
-Do NOT share this password!
+⚠️ **Do NOT share this password!**
 
-Expires in {KEY_EXPIRY_MINUTES} minutes."""
+⏳ Expires in {KEY_EXPIRY_MINUTES} minutes."""
 
         msg = await bot.send_message(event.chat_id, success_msg, buttons=back_keyboard())
         track_bot(user_id, msg.id)
@@ -1439,8 +1388,8 @@ Expires in {KEY_EXPIRY_MINUTES} minutes."""
         try:
             sender = await event.get_sender()
             await notify_owner(
-                "CODE ACTIVATED!",
-                f"Name: {sender.first_name}\nID: `{user_id}`\nCode: `{key}`\nExpires: `{expires_str}`"
+                "🔑 CODE ACTIVATED!",
+                f"👤 Name: {sender.first_name}\n🆔 ID: `{user_id}`\n🔑 Code: `{key}`\n⏱️ Expires: `{expires_str}`"
             )
         except Exception:
             pass
@@ -1456,7 +1405,7 @@ async def image_handler(event):
             return
         user_id = event.sender_id
 
-        progress = await bot.send_message(event.chat_id, "Analyzing your screenshot...")
+        progress = await bot.send_message(event.chat_id, "🔍 Analyzing your screenshot...")
         path = await event.download_media()
 
         payment_info = await extract_payment_info(path)
@@ -1468,30 +1417,30 @@ async def image_handler(event):
             pass
 
         if payment_info and payment_info.get("amount") != "Not detected":
-            await progress.edit("PAYMENT RECEIVED!\n\nYour payment screenshot has been sent to admin.\n\nPlease wait for verification.\n\nAdmin will contact you soon.")
+            await progress.edit("✅ **PAYMENT RECEIVED!**\n\n📸 Your payment screenshot has been sent to admin.\n\n⏳ Please wait for verification.\n\n📩 Admin will contact you soon.")
 
             sender = await event.get_sender()
             username = f"@{sender.username}" if sender.username else "No username"
 
             await notify_owner(
-                "NEW PAYMENT RECEIVED!",
-                f"Name: {sender.first_name}\n"
-                f"Username: {username}\n"
-                f"ID: `{user_id}`\n\n"
-                f"Amount: {payment_info.get('amount', 'N/A')}\n"
-                f"Date: {payment_info.get('date', 'N/A')}\n"
-                f"Txn: {payment_info.get('txn_id', 'N/A')}\n"
-                f"Method: {payment_info.get('method', 'N/A')}\n\n"
+                "💰 NEW PAYMENT RECEIVED!",
+                f"👤 Name: {sender.first_name}\n"
+                f"🔗 Username: {username}\n"
+                f"🆔 ID: `{user_id}`\n\n"
+                f"💵 Amount: {payment_info.get('amount', 'N/A')}\n"
+                f"📅 Date: {payment_info.get('date', 'N/A')}\n"
+                f"🔢 Txn: {payment_info.get('txn_id', 'N/A')}\n"
+                f"💳 Method: {payment_info.get('method', 'N/A')}\n\n"
                 f"`/approve {user_id}` to approve\n"
                 f"`/reject {user_id}` to reject"
             )
 
             try:
-                await bot.send_file(OWNER_ID, event.photo, caption=f"Payment from `{user_id}`")
+                await bot.send_file(OWNER_ID, event.photo, caption=f"📸 Payment from `{user_id}`")
             except Exception as e:
                 print(f"Forward error: {e}")
         else:
-            await progress.edit("Could not analyze screenshot.\n\nPlease send a clear payment screenshot.")
+            await progress.edit("⚠️ Could not analyze screenshot.\n\nPlease send a clear payment screenshot.")
     except Exception as e:
         print(f"Image Handler Error: {e}")
 
@@ -1508,26 +1457,23 @@ async def live_chat_forwarder(event):
         if event.text.startswith("/"):
             return
 
-        # Skip button texts
         btn_texts = ["ASK AI", "PUBG", "MLBB", "CONTACT", "JOIN CHANNEL", "LANGUAGE",
                      "FEEDBACK", "LIVE CHAT", "PASSWORD", "PUBG PURCHASE", "FULL SEASON",
                      "ONE MONTH", "BACK", "I JOINED", "I SHARED", "NOT SHARED",
-                     "MLBB PURCHASE", "SEND PAYMENT SCREENSHOT",
-                     "EN", "MM", "HI", "AR", "UR", "BN", "ID", "TH", "ZH",
-                     "JA", "KO", "RU", "ES", "FR", "PT", "DE", "TR", "FA"]
-        if event.text.strip().upper() in btn_texts:
+                     "MLBB PURCHASE", "SEND PAYMENT SCREENSHOT"]
+        if clean_btn_text(event.text) in btn_texts:
             return
 
         try:
             sender = await event.get_sender()
             username = f"@{sender.username}" if sender.username else "No username"
             await notify_owner(
-                "LIVE CHAT MESSAGE",
-                f"Name: {sender.first_name}\nUsername: {username}\nID: `{user_id}`\nMessage: {event.text}\n\nReply: `/reply {user_id} your_message`"
+                "💬 LIVE CHAT MESSAGE",
+                f"👤 Name: {sender.first_name}\n🔗 Username: {username}\n🆔 ID: `{user_id}`\n💬 Message: {event.text}\n\n👉 Reply: `/reply {user_id} your_message`"
             )
         except Exception:
             pass
-        await event.reply("Message sent to admin. Please wait for reply.")
+        await event.reply("✅ Message sent to admin. Please wait for reply.")
     except Exception as e:
         print(f"Live Chat Error: {e}")
 
@@ -1540,8 +1486,8 @@ async def admin_reply_handler(event):
             return
         user_id = int(event.pattern_match.group(1))
         message = event.pattern_match.group(2)
-        await bot.send_message(user_id, f"Admin Reply:\n\n{message}")
-        await event.respond(f"Reply sent to `{user_id}`")
+        await bot.send_message(user_id, f"👤 **Admin Reply:**\n\n{message}")
+        await event.respond(f"✅ Reply sent to `{user_id}`")
     except Exception as e:
         print(f"Admin Reply Error: {e}")
 
@@ -1570,21 +1516,22 @@ async def ai_reply_handler(event):
         if live_chat_mode.get(user_id):
             return
 
-        text_upper = text.strip().upper()
+        clean = clean_btn_text(text)
 
-        # Block all button texts & keywords
         blocked = [
-            "PASSWORD", "PURCHASE", "FULL SEASON", "ONE MONTH",
-            "MLBB", "PUBG", "ASK AI", "CONTACT", "JOIN CHANNEL",
-            "LANGUAGE", "FEEDBACK", "LIVE CHAT", "BACK",
-            "I JOINED", "I SHARED", "NOT SHARED",
+            "ASK AI", "PUBG", "MLBB", "CONTACT", "JOIN CHANNEL",
+            "LANGUAGE", "FEEDBACK", "LIVE CHAT", "PASSWORD",
+            "PUBG PURCHASE", "FULL SEASON", "ONE MONTH",
+            "MLBB PURCHASE", "BACK",
             "SEND PAYMENT SCREENSHOT",
-            "EN", "MM", "HI", "AR", "UR", "BN", "ID", "TH", "ZH",
-            "JA", "KO", "RU", "ES", "FR", "PT", "DE", "TR", "FA",
         ]
-        for kw in blocked:
-            if text_upper == kw:
-                return
+        if clean in blocked:
+            return
+
+        lang_codes = ["EN", "MM", "HI", "AR", "UR", "BN", "ID", "TH", "ZH",
+                      "JA", "KO", "RU", "ES", "FR", "PT", "DE", "TR", "FA"]
+        if clean in lang_codes:
+            return
 
         reply = await ask_ai(text, user_id)
         msg = await bot.send_message(event.chat_id, reply, buttons=back_keyboard())
@@ -1603,21 +1550,21 @@ async def approve_handler(event):
             return
         user_id = int(event.pattern_match.group(1))
 
-        approve_msg = f"""PAYMENT VERIFIED!
+        approve_msg = f"""✅ **PAYMENT VERIFIED!**
 
 ━━━━━━━━━━━━━━━━━━━━━━
-Your payment has been approved!
+🎉 Your payment has been approved!
 
-Contact admin for VIP file:
-{DM_ADMIN_1}
-{DM_ADMIN_2}
+📩 **Contact admin for VIP file:**
+👤 {DM_ADMIN_1}
+👤 {DM_ADMIN_2}
 
 ━━━━━━━━━━━━━━━━━━━━━━
 
-Admin will send you the file shortly."""
+⏳ Admin will send you the file shortly."""
 
         await bot.send_message(user_id, approve_msg)
-        await event.respond(f"Approval message sent to `{user_id}`")
+        await event.respond(f"✅ Approval message sent to `{user_id}`")
     except Exception as e:
         print(f"Approve Error: {e}")
 
@@ -1632,18 +1579,18 @@ async def reject_handler(event):
             return
         user_id = int(event.pattern_match.group(1))
 
-        reject_msg = f"""PAYMENT NOT VERIFIED
+        reject_msg = f"""❌ **PAYMENT NOT VERIFIED**
 
 ━━━━━━━━━━━━━━━━━━━━━━
-We couldn't verify your payment.
+😔 We couldn't verify your payment.
 
-Please contact admin:
-{DM_ADMIN_1}
-{DM_ADMIN_2}
+📩 Please contact admin:
+👤 {DM_ADMIN_1}
+👤 {DM_ADMIN_2}
 ━━━━━━━━━━━━━━━━━━━━━━"""
 
         await bot.send_message(user_id, reject_msg)
-        await event.respond(f"Rejection message sent to `{user_id}`")
+        await event.respond(f"❌ Rejection message sent to `{user_id}`")
     except Exception as e:
         print(f"Reject Error: {e}")
 
@@ -1660,7 +1607,7 @@ async def auto_backup_loop():
                 await bot.send_file(
                     OWNER_ID,
                     file,
-                    caption=f"AUTO BACKUP\n\n{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\nTotal Keys: {len(active_keys)}"
+                    caption=f"💾 AUTO BACKUP\n\n📅 {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n🔑 Total Keys: {len(active_keys)}"
                 )
         except Exception as e:
             print(f"Auto-backup error: {e}")
@@ -1690,7 +1637,7 @@ async def key_expiry_checker():
                         try:
                             await bot.send_message(
                                 user_id,
-                                f"KEY EXPIRY WARNING\n\nYour key `{key}` will expire in 5 minutes!\n\nContact admin for new key:\n{DM_ADMIN_1}\n{DM_ADMIN_2}"
+                                f"⚠️ **KEY EXPIRY WARNING**\n\n🔑 Your key `{key}` will expire in **5 minutes**!\n\n📩 Contact admin for new key:\n👤 {DM_ADMIN_1}\n👤 {DM_ADMIN_2}"
                             )
                             notified["warning"].append(key)
                         except Exception:
@@ -1700,7 +1647,7 @@ async def key_expiry_checker():
                         try:
                             await bot.send_message(
                                 user_id,
-                                f"KEY EXPIRED\n\nYour key `{key}` has expired.\n\nDM admin for a new key:\n{DM_ADMIN_1}\n{DM_ADMIN_2}"
+                                f"❌ **KEY EXPIRED**\n\n🔑 Your key `{key}` has expired.\n\n📩 DM admin for a new key:\n👤 {DM_ADMIN_1}\n👤 {DM_ADMIN_2}"
                             )
                             notified["expired"].append(key)
                         except Exception:

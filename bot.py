@@ -527,24 +527,20 @@ async def userbot_handler(event):
         if count >= MAX_AUTO_REPLIES:
             return
         user_message = event.raw_text or ""
-        ai_reply = await ask_ai_userbot(user_message)
-        away_text = f"""💎 **ROVIXBY AUTO-REPLY**
-━━━━━━━━━━━━━━━━━━━━━━━━━━
+        away_text = f"""💎    A U T O - R E P L Y 💎
+━━━━━━━━━━━━━━━━━━
+💠 OWNER IS BUSY
 
-💠 **Owner is Busy**
+📢 Please contact with the bot
+for instant help!
+━━━━━━━━━━━━━━━━━━
+🤖 ROVIXBY BOT
+{BOT_LINK}
 
-📢 Contact the bot for instant help.
+📢 ROVIXBY CHANNEL
+{CHANNEL_LINK}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-💬 {ai_reply}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-🤖 {BOT_LINK}
-📢 {CHANNEL_LINK}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━
 ⚡ ROVIXBY ULTIMATE"""
         msg = await userbot.send_file(event.chat_id, USERBOT_GIF, caption=away_text)
         track_userbot(user_id, msg.id)
@@ -777,7 +773,7 @@ async def free_file_handler(event):
 🎉 Almost done...
 ━━━━━━━━━━━━━━━━━━━━━━""")
             await asyncio.sleep(0.5)
-            if random.random() < 0.30:
+            if random.random() < 0.20:
                 await verify_msg.edit("""❌ **Verification Failed**
 ━━━━━━━━━━━━━━━━━━━━━━
 😔 Access could not be verified.
@@ -830,7 +826,7 @@ async def try_again_handler(event):
 `[██████████] 100%`
 ━━━━━━━━━━━━━━━━━━━━━━""")
         await asyncio.sleep(0.5)
-        if random.random() < 0.30:
+        if random.random() < 0.20:
             await verify_msg.edit("""❌ **Verification Failed Again**
 ━━━━━━━━━━━━━━━━━━━━━━
 😔 Still could not verify.

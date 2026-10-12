@@ -32,7 +32,6 @@ USERBOT_GIF = "https://media.giphy.com/media/OQS9HFAZuLvJEoUdR1/giphy.gif"
 
 LANG_CODES = {"en":"en","hi":"hi","mm":"my","ar":"ar","ur":"ur","th":"th","vi":"vi","eg":"ar","bn":"bn","id":"id","zh":"zh-CN","ja":"ja","ko":"ko","ru":"ru","es":"es","fr":"fr","pt":"pt","de":"de","tr":"tr","fa":"fa"}
 
-user_langs = {}
 last_owner_activity = {}
 user_auto_reply_count = {}
 AWAY_TIMEOUT = 300
@@ -44,6 +43,8 @@ SPAM_LIMIT_3 = 20
 KEY_FILE = "license_keys.json"
 SPAM_FILE = "spam_data.json"
 LANG_FILE = "user_langs.json"
+TRACK_FILE = "tracked_messages.json"
+BACKUP_FILE = "backup_data.json"
 KEY_EXPIRY_MINUTES = 30
 
 
@@ -65,20 +66,16 @@ def save_json_file(path, data):
         print(f"Save error {path}: {e}")
 
 
-def load_keys():
-    return load_json_file(KEY_FILE, {})
-
-
 def save_keys():
     save_json_file(KEY_FILE, active_keys)
 
 
-active_keys = load_keys()
+active_keys = load_json_file(KEY_FILE, {})
 
 
 def create_key():
     while True:
-        key = f"ROVIX-{random.randint(10000, 99999)}"
+        key = f"ROVIXU-{random.randint(1000, 9999)}-{random.randint(1000, 9999)}-{random.randint(1000, 9999)}"
         if key not in active_keys:
             break
     active_keys[key] = {"used": False, "user_id": None, "created": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "activated_at": None, "expires_at": None}
@@ -86,18 +83,15 @@ def create_key():
     return key
 
 
-def load_spam():
-    return load_json_file(SPAM_FILE, {"banned": [], "muted": {}, "warnings": {}})
+_spam_data = load_json_file(SPAM_FILE, {"banned": [], "muted": {}, "warnings": {}})
+banned_users = {int(k): True for k in _spam_data.get("banned", [])}
+muted_users = {int(k): v for k, v in _spam_data.get("muted", {}).items()}
+spam_warnings = {int(k): v for k, v in _spam_data.get("warnings", {}).items()}
 
 
 def save_spam():
     save_json_file(SPAM_FILE, {"banned": list(banned_users.keys()), "muted": {str(k): v for k, v in muted_users.items()}, "warnings": {str(k): v for k, v in spam_warnings.items()}})
 
-
-_spam_data = load_spam()
-banned_users = {int(k): True for k in _spam_data.get("banned", [])}
-muted_users = {int(k): v for k, v in _spam_data.get("muted", {}).items()}
-spam_warnings = {int(k): v for k, v in _spam_data.get("warnings", {}).items()}
 
 _lang_data = load_json_file(LANG_FILE, {})
 user_langs = {int(k): v for k, v in _lang_data.items()}
@@ -107,7 +101,27 @@ def save_langs():
     save_json_file(LANG_FILE, {str(k): v for k, v in user_langs.items()})
 
 
-BACKUP_FILE = "backup_data.json"
+tracked_msgs = load_json_file(TRACK_FILE, {"bot": {}, "userbot": {}})
+
+
+def save_tracking():
+    save_json_file(TRACK_FILE, tracked_msgs)
+
+
+def track_bot(user_id, msg_id):
+    uid = str(user_id)
+    if uid not in tracked_msgs["bot"]:
+        tracked_msgs["bot"][uid] = []
+    tracked_msgs["bot"][uid].append(msg_id)
+    save_tracking()
+
+
+def track_userbot(user_id, msg_id):
+    uid = str(user_id)
+    if uid not in tracked_msgs["userbot"]:
+        tracked_msgs["userbot"][uid] = []
+    tracked_msgs["userbot"][uid].append(msg_id)
+    save_tracking()
 
 
 def create_backup():
@@ -122,6 +136,10 @@ def create_backup():
 
 
 lang_selected = {}
+
+# ==========================================
+# MESSAGES
+# ==========================================
 WELCOME_MSG = """╔══════════════════════════╗
 ║   💎  **𝐑𝐎𝐕𝐈𝐗𝐁𝐘 𝐁𝐎𝐓**  💎  ║
 ╚══════════════════════════╝
@@ -193,7 +211,7 @@ PUBG_ENTER_KEY_MSG = f"""╔═════════════════�
 ━━━━━━━━━━━━━━━━━━━━━━
 📩 **Enter your license code below:**
 
-Format:  `ROVIX-XXXXX`
+Format:  `ROVIXU-1234-1234-1234`
 
 ━━━━━━━━━━━━━━━━━━━━━━
 
@@ -335,6 +353,9 @@ FEEDBACK_MSG = f"""╔═══════════════════�
 ❤️ **Thank you for your support!**"""
 
 
+# ==========================================
+# KEYBOARDS
+# ==========================================
 def language_keyboard():
     return [
         [Button.text("🇬🇧 EN"), Button.text("🇲🇲 MM"), Button.text("🇮🇳 HI")],
@@ -395,36 +416,9 @@ def screenshot_keyboard():
         [Button.text("📸 Send Payment Screenshot")],
         [Button.text("⬅️ BACK")],
     ]
-    TRACK_FILE = "tracked_messages.json"
-
-
-def load_tracking():
-    return load_json_file(TRACK_FILE, {"bot": {}, "userbot": {}})
-
-
-def save_tracking():
-    save_json_file(TRACK_FILE, tracked_msgs)
-
-
-tracked_msgs = load_tracking()
-
-
-def track_bot(user_id, msg_id):
-    uid = str(user_id)
-    if uid not in tracked_msgs["bot"]:
-        tracked_msgs["bot"][uid] = []
-    tracked_msgs["bot"][uid].append(msg_id)
-    save_tracking()
-
-
-def track_userbot(user_id, msg_id):
-    uid = str(user_id)
-    if uid not in tracked_msgs["userbot"]:
-        tracked_msgs["userbot"][uid] = []
-    tracked_msgs["userbot"][uid].append(msg_id)
-    save_tracking()
-
-
+    # ==========================================
+# UTILITY FUNCTIONS
+# ==========================================
 async def notify_owner(title, details):
     try:
         if OWNER_ID == 0:
@@ -562,76 +556,48 @@ async def voice_to_text(audio_path, language="en"):
         return None
 
 
-async def ask_ai(user_message, user_id=None):
+async def translate_auto(text, target_lang):
     if not ai_client:
-        return "AI not available."
-    if user_id and user_id not in user_langs:
-        user_langs[user_id] = await detect_language(user_message)
-        save_langs()
-    lang = user_langs.get(user_id, "en") if user_id else "en"
-    context = ""
-    if EXA_API_KEY and len(user_message) > 5:
-        try:
-            exa_result = await asyncio.wait_for(exa_search(user_message), timeout=5.0)
-            if exa_result:
-                context = f"\n\nWeb search:\n{exa_result}"
-        except:
-            pass
+        return text
+    if not text:
+        return text
     try:
         def _call():
             return ai_client.chat.completions.create(
                 model="llama-3.3-70b-versatile",
                 messages=[
-                    {"role": "system", "content": f"You are ROVIXBY Assistant. Reply in {LANG_CODES.get(lang, 'en')}. Short, helpful, 3-5 lines.{context}"},
-                    {"role": "user", "content": user_message}
+                    {"role": "system", "content": f"Translate the following text to {LANG_CODES.get(target_lang, target_lang)}. Keep formatting, emojis, links. Reply ONLY the translation."},
+                    {"role": "user", "content": text}
                 ],
-                max_tokens=700, temperature=0.75
+                max_tokens=700, temperature=0.3
             )
         loop = asyncio.get_event_loop()
         response = await loop.run_in_executor(None, _call)
         return response.choices[0].message.content
     except Exception as e:
-        print(f"AI Error: {e}")
-        return "AI error. Try again."
-
-
-async def translate_auto(text, target_lang):
-    if not ai_client:
-        return text
-    if target_lang == "en":
-        try:
-            def _call():
-                return ai_client.chat.completions.create(
-                    model="llama-3.3-70b-versatile",
-                    messages=[
-                        {"role": "system", "content": "Translate the following text to English. Reply ONLY the translation. Keep formatting."},
-                        {"role": "user", "content": text}
-                    ],
-                    max_tokens=500, temperature=0.3
-                )
-            loop = asyncio.get_event_loop()
-            response = await loop.run_in_executor(None, _call)
-            return response.choices[0].message.content
-        except Exception as e:
-            print(f"Translate EN error: {e}")
-            return text
-    try:
-        def _call2():
-            return ai_client.chat.completions.create(
-                model="llama-3.3-70b-versatile",
-                messages=[
-                    {"role": "system", "content": f"Translate the following text to {LANG_CODES.get(target_lang, target_lang)} language. Reply ONLY the translation. Keep formatting."},
-                    {"role": "user", "content": text}
-                ],
-                max_tokens=500, temperature=0.3
-            )
-        loop = asyncio.get_event_loop()
-        response = await loop.run_in_executor(None, _call2)
-        return response.choices[0].message.content
-    except Exception as e:
         print(f"Translate error: {e}")
         return text
-        userbot = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
+
+
+async def is_user_joined(user_id):
+    try:
+        await bot(GetParticipantRequest(channel=CHANNEL_USERNAME, participant=user_id))
+        return True
+    except (UserNotParticipantError, ChatAdminRequiredError):
+        return False
+    except:
+        return False
+
+
+def clean_btn_text(text):
+    text = text.strip().upper()
+    return re.sub(r'[^A-Z ]', '', text).strip()
+
+
+# ==========================================
+# USERBOT
+# ==========================================
+userbot = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
 
 
 @userbot.on(events.NewMessage(incoming=True))
@@ -654,11 +620,9 @@ async def userbot_handler(event):
         user_id = event.sender_id
         now = time.time()
 
-        # Away mode check
         if now - last_owner_activity.get(user_id, 0) < AWAY_TIMEOUT:
             return
 
-        # Spam check
         if user_id in banned_users:
             return
         if user_id in muted_users:
@@ -690,7 +654,6 @@ async def userbot_handler(event):
                 await event.reply("⚠️ Don't spam.")
             return
 
-        # Voice handling
         if event.voice or event.audio:
             voice_path = await event.download_media()
             try:
@@ -712,14 +675,11 @@ async def userbot_handler(event):
                     pass
             return
 
-        # Auto-reply limit
         count = user_auto_reply_count.get(user_id, 0)
         if count >= MAX_AUTO_REPLIES:
             return
 
         user_message = event.raw_text or ""
-
-        # Translate user's message to English for owner
         english_msg = await translate_auto(user_message, "en")
 
         away_text = f"""💎    𝐀𝐔𝐓𝐎-𝐑𝐄𝐏𝐋𝐘 💎
@@ -747,12 +707,7 @@ for instant help!
             username = f"@{sender.username}" if sender.username else "No username"
             await notify_owner(
                 "📩 New Personal Message!",
-                f"👤 {sender.first_name}\n"
-                f"🔗 {username}\n"
-                f"🆔 `{user_id}`\n"
-                f"💬 Original: {user_message[:100]}\n"
-                f"🇬🇧 English: {english_msg[:100]}\n"
-                f"🔢 Auto-reply: {count + 1}/{MAX_AUTO_REPLIES}"
+                f"👤 {sender.first_name}\n🔗 {username}\n🆔 `{user_id}`\n💬 Original: {user_message[:100]}\n🇬🇧 English: {english_msg[:100]}\n🔢 Auto-reply: {count + 1}/{MAX_AUTO_REPLIES}"
             )
         except:
             pass
@@ -771,7 +726,6 @@ async def owner_reply_handler(event):
 
         text = event.text or ""
 
-        # Manual translate command
         if text.startswith("tr//"):
             try:
                 parts = text.split(" ", 1)
@@ -785,7 +739,6 @@ async def owner_reply_handler(event):
             except Exception as e:
                 print(f"Translation error: {e}")
 
-        # Voice from owner
         if event.voice or event.audio:
             voice_path = await event.download_media()
             try:
@@ -804,11 +757,9 @@ async def owner_reply_handler(event):
                     pass
             return
 
-        # Skip commands
         if text and text.startswith("/"):
             return
 
-        # AUTO-TRANSLATE: Owner's message → User's language
         if text:
             target_lang = user_langs.get(user_id, "en")
             if target_lang != "en":
@@ -819,7 +770,6 @@ async def owner_reply_handler(event):
                 except Exception as e:
                     print(f"Auto-translate owner msg error: {e}")
 
-        # Auto-delete tracked messages
         if str(user_id) in tracked_msgs["bot"]:
             for msg_id in list(tracked_msgs["bot"][str(user_id)]):
                 try:
@@ -839,22 +789,10 @@ async def owner_reply_handler(event):
         save_tracking()
     except Exception as e:
         print(f"Owner Reply Error: {e}")
-        bot = TelegramClient('bot_session', API_ID, API_HASH)
-
-
-async def is_user_joined(user_id):
-    try:
-        await bot(GetParticipantRequest(channel=CHANNEL_USERNAME, participant=user_id))
-        return True
-    except (UserNotParticipantError, ChatAdminRequiredError):
-        return False
-    except:
-        return False
-
-
-def clean_btn_text(text):
-    text = text.strip().upper()
-    return re.sub(r'[^A-Z ]', '', text).strip()
+        # ==========================================
+# BOT
+# ==========================================
+bot = TelegramClient('bot_session', API_ID, API_HASH)
 
 
 # === START (Language First) ===
@@ -898,7 +836,7 @@ async def lang_select(event):
         print(f"Lang Select Error: {e}")
 
 
-# === KEY GENERATION ===
+# === NEWKEY ===
 @bot.on(events.NewMessage(pattern=r'^/newkey$'))
 async def newkey_handler(event):
     try:
@@ -1050,7 +988,7 @@ async def free_file_handler(event):
         print(f"FREE FILE Error: {e}")
 
 
-# === PUBG: FILE PASSWORD (Join + Loading + License) ===
+# === PUBG: FILE PASSWORD ===
 @bot.on(events.NewMessage(incoming=True))
 async def file_password_handler(event):
     try:
@@ -1118,7 +1056,6 @@ async def file_password_handler(event):
         print(f"FILE PASSWORD Error: {e}")
 
 
-# === TRY AGAIN ===
 @bot.on(events.NewMessage(incoming=True))
 async def try_again_handler(event):
     try:
@@ -1175,7 +1112,6 @@ async def try_again_handler(event):
         print(f"Try Again Error: {e}")
 
 
-# === I'VE JOINED ===
 @bot.on(events.NewMessage(incoming=True))
 async def joined_handler(event):
     try:
@@ -1196,9 +1132,9 @@ async def joined_handler(event):
         print(f"Joined Error: {e}")
 
 
-# === PUBG PURCHASE ===
+# === VIP PURCHASE ===
 @bot.on(events.NewMessage(incoming=True))
-async def pubg_purchase_handler(event):
+async def vip_purchase_handler(event):
     try:
         if not event.is_private or not event.text:
             return
@@ -1282,14 +1218,14 @@ async def back_handler(event):
         print(f"Back Error: {e}")
 
 
-# === LICENSE KEY VERIFY ===
+# === LICENSE KEY VERIFY (NEW FORMAT) ===
 @bot.on(events.NewMessage(incoming=True))
 async def key_verify_handler(event):
     try:
         if not event.is_private or not event.text:
             return
         text = event.text.strip().upper()
-        if not re.match(r'^ROVIX-\d{5}$', text):
+        if not re.match(r'^ROVIXU-\d{4}-\d{4}-\d{4}$', text):
             return
         user_id = event.sender_id
         key = text
@@ -1438,9 +1374,7 @@ async def reject_handler(event):
         await event.respond(f"❌ Sent to `{user_id}`")
     except Exception as e:
         print(f"Reject Error: {e}")
-
-
-# === AUTO BACKUP ===
+        # === AUTO BACKUP ===
 async def auto_backup_loop():
     while True:
         try:
@@ -1452,7 +1386,7 @@ async def auto_backup_loop():
             print(f"Auto-backup error: {e}")
 
 
-# === KEY EXPIRY ===
+# === KEY EXPIRY CHECKER ===
 async def key_expiry_checker():
     notified = {"warning": [], "expired": []}
     while True:

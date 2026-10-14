@@ -29,7 +29,6 @@ ai_client = OpenAI(base_url="https://api.groq.com/openai/v1", api_key=GROQ_API_K
 ocr_client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=OPENROUTER_API_KEY) if OPENROUTER_API_KEY else None
 VISION_MODELS = ["google/gemini-2.0-flash-exp:free", "meta-llama/llama-3.2-11b-vision-instruct:free"]
 
-# === GIFs ===
 OFFLINE_GIF = "https://media.giphy.com/media/WykUqckDqi95YIqtFZ/giphy.gif"
 ONLINE_GIF = "https://media.giphy.com/media/L3X9GvVhP1nY23Ah6u/giphy.gif"
 
@@ -45,11 +44,9 @@ LANG_FLAGS = {
     "fa": ("🇮🇷", "Persian"),
 }
 
-# === Timing ===
-AWAY_TIMEOUT = 420          # 7 min — owner offline maana jaye
-OFFLINE_COOLDOWN = 360      # 6 min — offline replies ke beech gap
-ONLINE_COOLDOWN = 900       # 15 min — online replies ke beech gap
-MAX_AUTO_REPLIES = 3
+AWAY_TIMEOUT = 420
+OFFLINE_COOLDOWN = 360
+ONLINE_COOLDOWN = 900
 
 last_owner_activity = {}
 user_last_offline_reply = {}
@@ -573,7 +570,6 @@ async def voice_to_text(audio_path, language="en"):
 
 
 async def translate_auto(text, target_lang):
-    """Translate with beautiful format"""
     if not ai_client:
         return text
     if not text:
@@ -605,7 +601,6 @@ async def translate_auto(text, target_lang):
 
 
 async def translate_auto_simple(text, target_lang):
-    """Simple translation without formatting"""
     if not ai_client:
         return text
     if not text:
@@ -773,7 +768,8 @@ async def userbot_handler(event):
 ━━━━━━━━━━━━━━━━━━"""
 
             try:
-                await userbot.send_file(event.chat_id, OFFLINE_GIF, caption=offline_text)
+                msg = await userbot.send_file(event.chat_id, OFFLINE_GIF, caption=offline_text)
+                track_userbot(user_id, msg.id)
                 user_last_offline_reply[user_id] = now
             except Exception as e:
                 print(f"Offline reply error: {e}")
@@ -791,7 +787,8 @@ async def userbot_handler(event):
 ပိုင်ရှင် မကြာမီ ပြန်လည် ဖြေကြားပါမည်။"""
 
             try:
-                await userbot.send_file(event.chat_id, ONLINE_GIF, caption=online_text)
+                msg = await userbot.send_file(event.chat_id, ONLINE_GIF, caption=online_text)
+                track_userbot(user_id, msg.id)
                 user_last_online_reply[user_id] = now
             except Exception as e:
                 print(f"Online reply error: {e}")
@@ -881,7 +878,6 @@ async def owner_reply_handler(event):
 bot = TelegramClient('bot_session', API_ID, API_HASH)
 
 
-# === HELPER: Translate + Send ===
 async def send_translated(chat_id, text, buttons, user_id, track=True):
     try:
         user_lang = user_langs.get(user_id, "en")
@@ -898,7 +894,7 @@ async def send_translated(chat_id, text, buttons, user_id, track=True):
         return None
 
 
-# === START (Language First) ===
+# === START ===
 @bot.on(events.NewMessage(pattern=r'^/start$'))
 async def start_handler(event):
     try:
@@ -1073,7 +1069,7 @@ async def feedback_handler(event):
         print(f"Feedback Error: {e}")
 
 
-# === PUBG: FREE FILE ===
+# === FREE FILE ===
 @bot.on(events.NewMessage(incoming=True))
 async def free_file_handler(event):
     try:
@@ -1087,7 +1083,7 @@ async def free_file_handler(event):
         print(f"FREE FILE Error: {e}")
 
 
-# === PUBG: FILE PASSWORD ===
+# === FILE PASSWORD ===
 @bot.on(events.NewMessage(incoming=True))
 async def file_password_handler(event):
     try:
@@ -1375,7 +1371,7 @@ async def admin_reply_handler(event):
         print(f"Admin Reply Error: {e}")
 
 
-# === APPROVE (Auto-Key) ===
+# === APPROVE ===
 @bot.on(events.NewMessage(pattern=r'^/approve (\d+)$'))
 async def approve_handler(event):
     try:

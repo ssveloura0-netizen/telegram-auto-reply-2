@@ -758,7 +758,7 @@ async def userbot_handler(event):
             if now - last_reply < OFFLINE_COOLDOWN:
                 return
 
-            offline_text = """💎 **AUTO-REPLY** 💎
+            offline_text = f"""💎 **AUTO-REPLY** 💎
 ━━━━━━━━━━━━━━━━━━
 💠 **OWNER IS OFFLINE**
 ပိုင်ရှင် အော့ဖ်လိုင်း ဖြစ်နေပါသည်။

@@ -28,7 +28,10 @@ FILE_PASSWORD = "buyViP@79o"
 ai_client = OpenAI(base_url="https://api.groq.com/openai/v1", api_key=GROQ_API_KEY) if GROQ_API_KEY else None
 ocr_client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=OPENROUTER_API_KEY) if OPENROUTER_API_KEY else None
 VISION_MODELS = ["google/gemini-2.0-flash-exp:free", "meta-llama/llama-3.2-11b-vision-instruct:free"]
-USERBOT_GIF = "https://media.giphy.com/media/OQS9HFAZuLvJEoUdR1/giphy.gif"
+
+# === GIFs ===
+OFFLINE_GIF = "https://media.giphy.com/media/WykUqckDqi95YIqtFZ/giphy.gif"
+ONLINE_GIF = "https://media.giphy.com/media/L3X9GvVhP1nY23Ah6u/giphy.gif"
 
 LANG_CODES = {"en":"en","hi":"hi","mm":"my","ar":"ar","ur":"ur","th":"th","vi":"vi","eg":"ar","bn":"bn","id":"id","zh":"zh-CN","ja":"ja","ko":"ko","ru":"ru","es":"es","fr":"fr","pt":"pt","de":"de","tr":"tr","fa":"fa"}
 
@@ -42,14 +45,20 @@ LANG_FLAGS = {
     "fa": ("🇮🇷", "Persian"),
 }
 
-last_owner_activity = {}
-user_auto_reply_count = {}
-AWAY_TIMEOUT = 300
+# === Timing ===
+AWAY_TIMEOUT = 420          # 7 min — owner offline maana jaye
+OFFLINE_COOLDOWN = 360      # 6 min — offline replies ke beech gap
+ONLINE_COOLDOWN = 900       # 15 min — online replies ke beech gap
 MAX_AUTO_REPLIES = 3
+
+last_owner_activity = {}
+user_last_offline_reply = {}
+user_last_online_reply = {}
 user_message_times = {}
 SPAM_LIMIT_1 = 5
 SPAM_LIMIT_2 = 10
 SPAM_LIMIT_3 = 20
+
 KEY_FILE = "license_keys.json"
 SPAM_FILE = "spam_data.json"
 LANG_FILE = "user_langs.json"
@@ -660,9 +669,7 @@ async def userbot_handler(event):
         user_id = event.sender_id
         now = time.time()
 
-        if now - last_owner_activity.get(user_id, 0) < AWAY_TIMEOUT:
-            return
-
+        # Spam check
         if user_id in banned_users:
             return
         if user_id in muted_users:
@@ -694,6 +701,7 @@ async def userbot_handler(event):
                 await event.reply("⚠️ Don't spam.")
             return
 
+        # Voice handling
         if event.voice or event.audio:
             voice_path = await event.download_media()
             try:
@@ -715,12 +723,8 @@ async def userbot_handler(event):
                     pass
             return
 
-        count = user_auto_reply_count.get(user_id, 0)
-        if count >= MAX_AUTO_REPLIES:
-            return
-
         user_message = event.raw_text or ""
-        
+
         # Auto-translate user message for owner notification
         if user_message and len(user_message.strip()) > 1:
             try:
@@ -732,38 +736,66 @@ async def userbot_handler(event):
                         "🌐 **Translation**",
                         f"{flag} **{lang_name}:**\n{user_message}\n\n🇬🇧 **English:**\n{en_text}"
                     )
+                else:
+                    try:
+                        sender = await event.get_sender()
+                        username = f"@{sender.username}" if sender.username else "No username"
+                        await notify_owner(
+                            "📩 New Message",
+                            f"👤 {sender.first_name}\n🔗 {username}\n🆔 `{user_id}`\n💬 {user_message[:150]}"
+                        )
+                    except:
+                        pass
             except Exception as e:
-                print(f"User message translate error: {e}")
+                print(f"Translate error: {e}")
 
-        away_text = f"""💎    𝐀𝐔𝐓𝐎-𝐑𝐄𝐏𝐋𝐘 💎
-━━━━━━━━━━━━━━━━━━
-💠 **𝐎𝐖𝐍𝐄𝐑 𝐈𝐒 𝐁𝐔𝐒𝐘**
+        # Check offline/online
+        is_offline = (now - last_owner_activity.get(user_id, 0)) >= AWAY_TIMEOUT
 
-📢 Please contact with the bot
-for instant help!
+        if is_offline:
+            # === OFFLINE AUTO-REPLY (6 min cooldown) ===
+            last_reply = user_last_offline_reply.get(user_id, 0)
+            if now - last_reply < OFFLINE_COOLDOWN:
+                return
+
+            offline_text = """💎 **AUTO-REPLY** 💎
 ━━━━━━━━━━━━━━━━━━
-🤖 **ROVIXBY BOT**
+💠 **OWNER IS OFFLINE**
+ပိုင်ရှင် အော့ဖ်လိုင်း ဖြစ်နေပါသည်။
+
+📢 Please contact the bot for help.
+အမြန်အကူအညီအတွက် ဘော့ကို ဆက်သွယ်ပါ။
+━━━━━━━━━━━━━━━━━━
+🤖 ROVIXBY BOT
 {BOT_LINK}
-
-📢 **ROVIXBY CHANNEL**
+📢 ROVIXBY CHANNEL
 {CHANNEL_LINK}
+━━━━━━━━━━━━━━━━━━"""
 
-━━━━━━━━━━━━━━━━━━
-⚡ **ROVIXBY ULTIMATE**"""
+            try:
+                await userbot.send_file(event.chat_id, OFFLINE_GIF, caption=offline_text)
+                user_last_offline_reply[user_id] = now
+            except Exception as e:
+                print(f"Offline reply error: {e}")
 
-        msg = await userbot.send_file(event.chat_id, USERBOT_GIF, caption=away_text)
-        track_userbot(user_id, msg.id)
-        user_auto_reply_count[user_id] = count + 1
+        else:
+            # === ONLINE AUTO-REPLY (15 min cooldown) ===
+            last_reply = user_last_online_reply.get(user_id, 0)
+            if now - last_reply < ONLINE_COOLDOWN:
+                return
 
-        try:
-            sender = await event.get_sender()
-            username = f"@{sender.username}" if sender.username else "No username"
-            await notify_owner(
-                "📩 New Personal Message!",
-                f"👤 {sender.first_name}\n🔗 {username}\n🆔 `{user_id}`\n🔢 Auto-reply: {count + 1}/{MAX_AUTO_REPLIES}"
-            )
-        except:
-            pass
+            online_text = """✅ **Message Received**
+မက်ဆေ့ခ်ျ ရရှိပါသည်။
+
+👤 Owner will reply soon.
+ပိုင်ရှင် မကြာမီ ပြန်လည် ဖြေကြားပါမည်။"""
+
+            try:
+                await userbot.send_file(event.chat_id, ONLINE_GIF, caption=online_text)
+                user_last_online_reply[user_id] = now
+            except Exception as e:
+                print(f"Online reply error: {e}")
+
     except Exception as e:
         print(f"Userbot Error: {e}")
 
@@ -775,7 +807,6 @@ async def owner_reply_handler(event):
             return
         user_id = event.chat_id
         last_owner_activity[user_id] = time.time()
-        user_auto_reply_count[user_id] = 0
 
         text = event.text or ""
 

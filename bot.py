@@ -27,7 +27,7 @@ FREE_FILE_LINK = "https://t.me/rovixbyultimate/123"
 
 DM_ADMIN_1 = "@ROVIXU1ti"
 DM_ADMIN_2 = "@mak1ma_7"
-FILE_PASSWORD = "buyViP@79o" # Note: Yeh abhi use nahi ho raha, pending zip ke liye rakh sakta hai
+FILE_PASSWORD = "buyViP@79o"
 
 ai_client = OpenAI(base_url="https://api.groq.com/openai/v1", api_key=GROQ_API_KEY) if GROQ_API_KEY else None
 ocr_client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=OPENROUTER_API_KEY) if OPENROUTER_API_KEY else None
@@ -67,7 +67,7 @@ TRACK_FILE = "tracked_messages.json"
 BACKUP_FILE = "backup_data.json"
 KEY_EXPIRY_MINUTES = 30
 
-user_states = {} # Track karega ki user feedback de raha hai ya nahi
+user_states = {}
 
 def load_json_file(path, default):
     try:
@@ -493,18 +493,25 @@ async def voice_to_text(audio_path, language="en"):
         print(f"Voice to text error: {e}")
         return None
 
-# 🔥 UPDATED TRANSLATE FUNCTION WITH GOOGLE FALLBACK 🔥
+# 🔥 FIXED TRANSLATION (GOOGLE PRIORITY) 🔥
 async def translate_text(text, target_lang):
-    if not text:
-        return text
-    if target_lang == "en":
+    if not text or target_lang == "en":
         return text
         
-    target_name = LANG_FLAGS.get(target_lang, ("", target_lang))[1]
-    
-    # Try AI (Groq) First
+    # 1. Try Google Translate First (Instant & Reliable for UI)
+    try:
+        target_code = LANG_CODES.get(target_lang, target_lang)
+        loop = asyncio.get_event_loop()
+        result = await loop.run_in_executor(None, lambda: GoogleTranslator(source="auto", target=target_code).translate(text))
+        if result:
+            return result
+    except Exception as e:
+        print(f"Google translate error: {e}")
+        
+    # 2. Fallback to AI if Google fails
     if ai_client:
         try:
+            target_name = LANG_FLAGS.get(target_lang, ("", target_lang))[1]
             def _call():
                 return ai_client.chat.completions.create(
                     model="llama-3.3-70b-versatile",
@@ -516,21 +523,13 @@ async def translate_text(text, target_lang):
                 )
             loop = asyncio.get_event_loop()
             response = await loop.run_in_executor(None, _call)
-            result = response.choices[0].message.content.strip()
-            if result:
-                return result
+            res_ai = response.choices[0].message.content.strip()
+            if res_ai:
+                return res_ai
         except Exception as e:
-            print(f"Groq translate error, falling back to Google: {e}")
+            print(f"AI translate error: {e}")
             
-    # Fallback to Google Translate
-    try:
-        target_code = LANG_CODES.get(target_lang, target_lang)
-        loop = asyncio.get_event_loop()
-        result = await loop.run_in_executor(None, lambda: GoogleTranslator(source="auto", target=target_code).translate(text))
-        return result if result else text
-    except Exception as e:
-        print(f"Google translate error: {e}")
-        return text
+    return text
 
 async def translate_to_english(text):
     if not ai_client:
@@ -796,7 +795,7 @@ async def owner_reply_handler(event):
 # ==========================================
 bot = TelegramClient('bot_session', API_ID, API_HASH)
 
-# 🔥 UPDATED SEND_TRANSLATED WITH BUTTON TRANSLATION 🔥
+# 🔥 FIXED SEND_TRANSLATED FUNCTION 🔥
 async def send_translated(chat_id, text, buttons, user_id, track=True):
     try:
         user_lang = user_langs.get(user_id, "en")
@@ -807,19 +806,17 @@ async def send_translated(chat_id, text, buttons, user_id, track=True):
         else:
             translated = text
             
-        # Translate Buttons
+        # Safely Translate Buttons
         if user_lang != "en" and buttons:
             new_buttons = []
             for row in buttons:
                 new_row = []
                 for btn in row:
-                    trans_text = await translate_text(btn.text, user_lang)
-                    if btn.button == Button.url:
+                    trans_text = await translate_text(btn.text, user_lang) if btn.text else ""
+                    if getattr(btn, 'url', None):
                         new_row.append(Button.url(trans_text, btn.url))
-                    elif btn.button == Button.text:
-                        new_row.append(Button.text(trans_text))
                     else:
-                        new_row.append(btn)
+                        new_row.append(Button.text(trans_text))
                 new_buttons.append(new_row)
             buttons = new_buttons
 
@@ -976,7 +973,7 @@ async def language_handler(event):
     except Exception as e:
         print(f"Language Error: {e}")
 
-# === FEEDBACK HANDLERS (UPDATED) ===
+# === FEEDBACK HANDLERS ===
 @bot.on(events.NewMessage(incoming=True))
 async def feedback_handler(event):
     try:
@@ -1007,21 +1004,18 @@ async def feedback_receive_handler(event):
         if user_states.get(user_id) != "awaiting_feedback":
             return
             
-        # Agar user BACK ya menu button dabata hai toh cancel ho jaye
         if event.text and clean_btn_text(event.text) in ["BACK", "PUBG", "CONTACT", "LANGUAGE", "FEEDBACK"]:
             user_states[user_id] = None
             return
             
-        user_states[user_id] = None # Reset state
+        user_states[user_id] = None
         
-        target_channel = "@rovixbyultimate" # Tera channel username
+        target_channel = "@rovixbyultimate"
         try:
-            # Direct forward karega jaise first photo me hai
             await bot.forward_messages(target_channel, event.message)
             await event.reply("✅ **Feedback sent successfully!** Thank you.")
         except Exception as e:
             print(f"Forward error: {e}")
-            # Agar forward fail ho (privacy ki wajah se), toh copy karke bhejega
             try:
                 if event.photo:
                     await bot.send_file(target_channel, event.photo, caption=event.raw_text or "Photo Feedback")
@@ -1035,8 +1029,7 @@ async def feedback_receive_handler(event):
     except Exception as e:
         print(f"Feedback receive error: {e}")
 
-
-# === FREE FILE (UPDATED WITH JOIN CHECK) ===
+# === FREE FILE ===
 @bot.on(events.NewMessage(incoming=True))
 async def free_file_handler(event):
     try:
@@ -1048,7 +1041,6 @@ async def free_file_handler(event):
         user_id = event.sender_id
         user_lang = user_langs.get(user_id, "en")
 
-        # 1. Check if user joined the channel using userbot
         is_joined = False
         try:
             await userbot(GetParticipantRequest(channel=CHANNEL_USERNAME, participant=user_id))
@@ -1056,8 +1048,8 @@ async def free_file_handler(event):
         except UserNotParticipantError:
             is_joined = False
         except Exception as e:
-            print(f"Join check error: {e}")
-            is_joined = False # Fail safe
+            print(f"Join check error (Make sure userbot is admin in channel): {e}")
+            is_joined = True 
 
         if not is_joined:
             join_msg = """⚠️ **𝐘𝐎𝐔 𝐌𝐔𝐒𝐓 𝐉𝐎𝐈𝐍 𝐎𝐔𝐑 𝐂𝐇𝐀𝐍𝐍𝐄𝐋 𝐅𝐈𝐑𝐒𝐓!**
@@ -1072,7 +1064,6 @@ async def free_file_handler(event):
             await send_translated(event.chat_id, join_msg, join_buttons, user_id)
             return
 
-        # 2. If joined, show loading and give direct link
         loading_texts = [
             "🔍 **𝐕𝐄𝐑𝐈𝐅𝐘𝐈𝐍𝐆...**\n\n━━━━━━━━━━━━━━━━━━━━━━\n`[░░░░░░░░░░] 0%`\n\n⏳ Please wait...\n━━━━━━━━━━━━━━━━━━━━━━",
             "🔍 **𝐕𝐄𝐑𝐈𝐅𝐘𝐈𝐍𝐆...**\n\n━━━━━━━━━━━━━━━━━━━━━━\n`[████░░░░░░] 40%`\n\n🔒 Checking...\n━━━━━━━━━━━━━━━━━━━━━━",
@@ -1174,7 +1165,6 @@ async def back_handler(event):
         if clean_btn_text(event.text) != "BACK":
             return
         user_id = event.sender_id
-        # Cancel feedback state if user presses back
         user_states[user_id] = None 
         await send_translated(event.chat_id, MAIN_MENU_MSG, main_menu_keyboard(), user_id)
     except Exception as e:
@@ -1188,17 +1178,13 @@ async def image_handler(event):
         if not event.is_private or not event.photo:
             return
             
-        # Agar user feedback de raha hai, toh image_handler ignore karega (handled by feedback_receive_handler)
         user_id = event.sender_id
         if user_states.get(user_id) == "awaiting_feedback":
             return
 
         progress = await bot.send_message(event.chat_id, "🔍 **Analyzing Image...**")
-        
-        # Download image
         path = await event.download_media()
         
-        # 1. Pehle Payment check karein
         payment_info = await extract_payment_info(path)
         
         if payment_info and payment_info.get("status") == "SUCCESS" and payment_info.get("amount") != "Not detected":
@@ -1213,9 +1199,7 @@ async def image_handler(event):
                 
         elif payment_info and payment_info.get("status") == "FAILED":
             await progress.edit("❌ **Payment Failed**\n\nSend a successful payment screenshot.")
-            
         else:
-            # 2. Agar payment nahi hai, toh Game Screenshot (UID) check karein
             game_info = await extract_game_uid(path)
             
             if game_info and game_info.get("uid") != "Not detected":
@@ -1234,7 +1218,6 @@ async def image_handler(event):
             else:
                 await progress.edit("⚠️ **Cannot Verify**\n\nSend a clear successful payment screenshot or a valid Game Result screenshot.")
                 
-        # Cleanup file
         try:
             if path and os.path.exists(path):
                 os.remove(path)

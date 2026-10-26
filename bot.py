@@ -22,8 +22,8 @@ BOT_LINK = "https://t.me/Vixby_bot"
 CHANNEL_USERNAME = "rovixbyultimate"
 CHANNEL_LINK = "https://t.me/rovixbyultimate"
 
-# 🔴 YAHAN APNA FREE FILE KA LINK PASTE KAR
-FREE_FILE_LINK = "https://t.me/rovixbyultimate/123" 
+# 🔴 YAHAN APNA FREE FILE KA LINK PASTE KAR (Link change karne ke liye sirf yeh number badalna)
+FREE_FILE_LINK = "https://t.me/rovixbyultimate/49" 
 
 DM_ADMIN_1 = "@ROVIXU1ti"
 DM_ADMIN_2 = "@mak1ma_7"
@@ -31,9 +31,6 @@ DM_ADMIN_2 = "@mak1ma_7"
 ai_client = OpenAI(base_url="https://api.groq.com/openai/v1", api_key=GROQ_API_KEY) if GROQ_API_KEY else None
 ocr_client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=OPENROUTER_API_KEY) if OPENROUTER_API_KEY else None
 VISION_MODELS = ["google/gemini-2.0-flash-exp:free", "meta-llama/llama-3.2-11b-vision-instruct:free"]
-
-OFFLINE_GIF = "https://media.giphy.com/media/WykUqckDqi95YIqtFZ/giphy.gif"
-ONLINE_GIF = "https://media.giphy.com/media/L3X9GvVhP1nY23Ah6u/giphy.gif"
 
 AWAY_TIMEOUT = 420
 OFFLINE_COOLDOWN = 360
@@ -418,7 +415,6 @@ def clean_btn_text(text):
     text = text.strip().upper()
     return re.sub(r'[^A-Z ]', '', text).strip()
 
-# 🔥 BILINGUAL TRANSLATOR (English + Burmese) 🔥
 async def translate_burmese(text):
     try:
         loop = asyncio.get_event_loop()
@@ -539,10 +535,8 @@ async def userbot_handler(event):
             last_reply = user_last_offline_reply.get(user_id, 0)
             if now - last_reply < OFFLINE_COOLDOWN: return
 
-            # 🔥 SIMPLE AUTO-REPLY WITHOUT EMOJIS 🔥
-            offline_text = f"""AUTO-REPLY
-
-OWNER IS OFFLINE
+            # Simple text, no gif, no "AUTO-REPLY" text
+            offline_text = f"""OWNER IS OFFLINE
 ပိုင်ရှင် အော့ဖ်လိုင်း ဖြစ်နေပါသည်။
 
 Please contact the bot for help.
@@ -554,7 +548,7 @@ ROVIXBY CHANNEL
 {CHANNEL_LINK}"""
 
             try:
-                msg = await userbot.send_file(event.chat_id, OFFLINE_GIF, caption=offline_text)
+                msg = await userbot.send_message(event.chat_id, offline_text)
                 track_userbot(user_id, msg.id)
                 user_last_offline_reply[user_id] = now
             except Exception as e:
@@ -564,7 +558,7 @@ ROVIXBY CHANNEL
             last_reply = user_last_online_reply.get(user_id, 0)
             if now - last_reply < ONLINE_COOLDOWN: return
 
-            # 🔥 SIMPLE ONLINE REPLY WITHOUT EMOJIS 🔥
+            # Simple text, no gif
             online_text = """Message Received
 မက်ဆေ့ခ်ျ ရရှိပါသည်။
 
@@ -572,7 +566,7 @@ Owner will reply soon.
 ပိုင်ရှင် မကြာမီ ပြန်လည် ဖြေကြားပါမည်။"""
 
             try:
-                msg = await userbot.send_file(event.chat_id, ONLINE_GIF, caption=online_text)
+                msg = await userbot.send_message(event.chat_id, online_text)
                 track_userbot(user_id, msg.id)
                 user_last_online_reply[user_id] = now
             except Exception as e:
@@ -658,7 +652,6 @@ async def start_handler(event):
             await notify_owner("🔔 New User!", f"👤 {sender.first_name}\n🆔 `{user_id}`")
         except: pass
         
-        # Direct Main Menu, No Language Picker
         await send_bilingual(event.chat_id, MAIN_MENU_MSG, main_menu_keyboard())
     except Exception as e:
         print(f"Start Error: {e}")
@@ -696,7 +689,6 @@ async def pubg_handler(event):
     try:
         if not event.is_private or not event.text: return
         if clean_btn_text(event.text) != "PUBG": return
-        # Bilkul original jesa
         await send_bilingual(event.chat_id, PUBG_MENU_MSG, pubg_menu_keyboard())
     except Exception as e: print(f"PUBG Error: {e}")
 
@@ -751,7 +743,7 @@ async def feedback_receive_handler(event):
             except: await event.reply("⚠️ Could not send feedback. Try again later.")
     except Exception as e: print(f"Feedback receive error: {e}")
 
-# === FREE FILE ===
+# === FREE FILE (UPDATED NO FAKE LOADING) ===
 @bot.on(events.NewMessage(incoming=True))
 async def free_file_handler(event):
     try:
@@ -781,31 +773,14 @@ async def free_file_handler(event):
             await send_bilingual(event.chat_id, join_msg, join_buttons)
             return
 
-        loading_texts = [
-            "🔍 **VERIFYING...**\n\n`[░░░░░░░░░░] 0%`\n⏳ Please wait...",
-            "🔍 **VERIFYING...**\n\n`[████░░░░░░] 40%`\n🔒 Checking...",
-            "🔍 **VERIFYING...**\n\n`[████████░░] 80%`\n🔐 Validating...",
-            "✅ **COMPLETED!**\n\n`[██████████] 100%`\n🎉 Success!"
-        ]
-
-        verify_msg = await bot.send_message(event.chat_id, loading_texts[0])
-        await asyncio.sleep(0.5)
-        await verify_msg.edit(loading_texts[1])
-        await asyncio.sleep(0.5)
-        await verify_msg.edit(loading_texts[2])
-        await asyncio.sleep(0.5)
-        await verify_msg.edit(loading_texts[3])
-        await asyncio.sleep(0.4)
-        try: await verify_msg.delete()
-        except: pass
-
+        # Directly send the file link without fake loading
         file_msg = """✅ **CHANNEL JOINED!**
 ━━━━━━━━━━━━━━━━━━━━━━
 
 👇 **Click below to get your FREE FILE:**"""
         
         file_buttons = [
-            [Button.url("📁 GET FILE", FREE_FILE_LINK)],
+            [Button.url("Click Here", FREE_FILE_LINK)],
             [Button.text("⬅️ BACK")]
         ]
         await send_bilingual(event.chat_id, file_msg, file_buttons)
